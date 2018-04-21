@@ -38,15 +38,6 @@ public class ModbusTCPReader extends AbstractModbusTCPClient {
 		return new ModbusResult<Long>(operation, result);
 	}
 
-	/**
-	 * @return TODO Rückgabe Wert ist aktuell immer ein Long. Man sollte aber auch
-	 *         Methoden mit String (und float?) haben. Vllt im Enum irgendwie
-	 *         festlegen?
-	 * @throws IOException
-	 * @throws ModbusException
-	 * @throws SocketException
-	 * @throws UnknownHostException
-	 */
 	private long readOperationFromDeviceInternal(ModbusOperation operation, ModbusDevice device)
 			throws UnknownHostException, SocketException, ModbusException, IOException {
 		modbusClient.setUnitIdentifier(device.getUnitId());

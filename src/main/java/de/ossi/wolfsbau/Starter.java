@@ -48,8 +48,6 @@ public class Starter {
 
 	public void speichereAktuelleVictronDaten() {
 		ModbusResult<Long> stateOfCharge = modbusReader.readOperationFromDevice(ModbusOperation.BATTERY_STATE_OF_CHARGE, ModbusDevice.GRID_METER_2);
-		// ModbusResult<Long> stateOfCharge =
-		// modbusReader.read(ModbusOperation.BATTERY_STATE_OF_CHARGE);
 		System.out.println(stateOfCharge.toString());
 	}
 

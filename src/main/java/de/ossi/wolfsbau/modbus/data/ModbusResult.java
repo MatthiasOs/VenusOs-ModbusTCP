@@ -5,12 +5,12 @@ import java.time.LocalDateTime;
 public class ModbusResult<T extends Number> {
 
 	private final ModbusOperation operation;
-	private final T value;
+	private final T wert;
 	private final LocalDateTime zeitpunkt;
 
 	public ModbusResult(ModbusOperation operation, T value) {
 		this.operation = operation;
-		this.value = value;
+		this.wert = value;
 		this.zeitpunkt = LocalDateTime.now();
 	}
 
@@ -18,8 +18,8 @@ public class ModbusResult<T extends Number> {
 		return operation;
 	}
 
-	public T getValue() {
-		return value;
+	public T getWert() {
+		return wert;
 	}
 
 	public LocalDateTime getZeitpunkt() {
@@ -33,21 +33,78 @@ public class ModbusResult<T extends Number> {
 		socAusgabe.append(": ");
 		socAusgabe.append(berechneSkaliertenWert());
 		socAusgabe.append(" ");
-		socAusgabe.append(operation.getDbusUnit());
+		socAusgabe.append(ermittleDbusUnit());
 		return socAusgabe.toString();
 	}
 
 	private double berechneSkaliertenWert() {
-		if (value instanceof Double) {
-			return operation.getScaleFactor() * (Double) value;
-		} else if (value instanceof Float) {
-			return operation.getScaleFactor() * (Float) value;
-		} else if (value instanceof Long) {
-			return operation.getScaleFactor() * (Long) value;
-		} else if (value instanceof Integer) {
-			return operation.getScaleFactor() * (Integer) value;
+		if (wert instanceof Double) {
+			return operation.getScaleFactor() * (Double) wert;
+		} else if (wert instanceof Float) {
+			return operation.getScaleFactor() * (Float) wert;
+		} else if (wert instanceof Long) {
+			return operation.getScaleFactor() * (Long) wert;
+		} else if (wert instanceof Integer) {
+			return operation.getScaleFactor() * (Integer) wert;
 		}
 		throw new RuntimeException("Datentyp nicht erkannt.");
+	}
+
+	private String ermittleDbusUnit() {
+		switch (operation.getDbusUnit()) {
+		case RELAY_STATE:
+			return relayStateToString();
+		case BATTERY_STATE:
+			return batteryStateToString();
+		case SOURCE:
+			return sourceToString();
+		default:
+			return operation.getDbusUnit().toString();
+		}
+	}
+
+	// TODO gibt es einen besseren Weg als hier davon auszugehen, dass der wert auch
+	// wirklich in eine int Zahl passt?
+	/** 0=Available;1=Grid;2=Generator;3=Shore Power;240=Not Connected **/
+	private String sourceToString() {
+		switch ((int) wert) {
+		case 0:
+			return "Available";
+		case 1:
+			return "Grid";
+		case 2:
+			return "Generator";
+		case 3:
+			return "Shore Power";
+		case 240:
+			return "Not Connected";
+
+		}
+		return null;
+	}
+
+	/** 0=Idle;1=Charging;2=Discharging **/
+	private String batteryStateToString() {
+		switch ((int) wert) {
+		case 0:
+			return "Idle";
+		case 1:
+			return "Charging";
+		case 2:
+			return "Discharging";
+		}
+		return null;
+	}
+
+	/** 0=Open;1=Closed **/
+	private String relayStateToString() {
+		switch ((int) wert) {
+		case 0:
+			return "Open";
+		case 1:
+			return "Closed";
+		}
+		return null;
 	}
 
 }
