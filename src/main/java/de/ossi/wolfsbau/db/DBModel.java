@@ -23,6 +23,7 @@ import de.ossi.wolfsbau.db.data.Measurement;
  */
 public class DBModel {
 
+	private static final String COL_REQUEST_TIME = "requestTime";
 	/**
 	 * Default sqlite Pfad
 	 */
@@ -59,7 +60,7 @@ public class DBModel {
 			cs = openConnection();
 			Dao<Device, Long> deviceDao = DaoManager.createDao(cs, Device.class);
 			QueryBuilder<Device, Long> qb = deviceDao.queryBuilder();
-			qb.where().between("requestTime", von, bis);
+			qb.where().between(COL_REQUEST_TIME, von, bis);
 			CloseableIterator<Device> iterator = deviceDao.iterator(qb.prepare());
 			try {
 				iterator.forEachRemaining(devices::add);

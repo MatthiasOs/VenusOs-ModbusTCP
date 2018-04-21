@@ -10,7 +10,7 @@ public class Measurement {
 	@DatabaseField(generatedId = true)
 	private long id;
 
-	// TODO hier keine ID in der DB
+	// FIXME beim E2E Test aufgefallen: DeviceId Spalte ist immer null
 	@DatabaseField(foreign = true)
 	private Device device;
 
