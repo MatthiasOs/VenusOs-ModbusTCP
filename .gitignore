@@ -1,0 +1,6 @@
+.dbeaver-data-sources.xml
+/Scripts
+/files
+/target
+.settings
+*.sqlite
