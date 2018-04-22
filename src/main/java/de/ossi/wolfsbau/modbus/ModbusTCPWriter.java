@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import com.ghgande.j2mod.modbus.ModbusException;
+
 import de.ossi.wolfsbau.modbus.data.ModbusDevice;
 import de.ossi.wolfsbau.modbus.data.ModbusOperation;
-import de.re.easymodbus.exceptions.ModbusException;
 
 public abstract class ModbusTCPWriter extends AbstractModbusTCPClient {
 
@@ -18,7 +19,7 @@ public abstract class ModbusTCPWriter extends AbstractModbusTCPClient {
 		connect();
 		try {
 			writeOperationToDeviceInternal(operation, wert, device);
-		} catch (ModbusException | IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
 			disconnect();
@@ -35,7 +36,7 @@ public abstract class ModbusTCPWriter extends AbstractModbusTCPClient {
 	 * 
 	 */
 	private void writeOperationToDeviceInternal(ModbusOperation operation, int wert, ModbusDevice device)
-			throws UnknownHostException, SocketException, ModbusException, IOException {
-		modbusClient.WriteSingleRegister(operation.getAddress(), wert);
+			throws UnknownHostException, SocketException, IOException {
+		// modbusMaster.writeSingleRegister(ModbusDevice.operation.getAddress(), wert);
 	}
 }

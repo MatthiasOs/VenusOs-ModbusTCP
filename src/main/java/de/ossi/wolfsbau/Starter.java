@@ -30,7 +30,7 @@ public class Starter {
 
 	public static void main(String[] args) throws IOException, JAXBException {
 		Starter starter = new Starter();
-		starter.speichereAktuelleWRDaten();
+//		 starter.speichereAktuelleWRDaten();
 		starter.speichereAktuelleVictronDaten();
 	}
 
@@ -47,8 +47,18 @@ public class Starter {
 	}
 
 	public void speichereAktuelleVictronDaten() {
-		ModbusResult<Long> stateOfCharge = modbusReader.readOperationFromDevice(ModbusOperation.BATTERY_STATE_OF_CHARGE, ModbusDevice.GRID_METER_2);
+		ModbusResult<Integer> stateOfCharge = modbusReader
+				.readOperationFromDevice(ModbusOperation.BATTERY_STATE_OF_CHARGE, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
 		System.out.println(stateOfCharge.toString());
+		ModbusResult<Integer> gridPowerL1 = modbusReader
+				.readOperationFromDevice(ModbusOperation.GRID_L1, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
+		System.out.println(gridPowerL1.toString());
+		ModbusResult<Integer> gridPowerL2 = modbusReader
+				.readOperationFromDevice(ModbusOperation.GRID_L2, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
+		System.out.println(gridPowerL2.toString());
+		ModbusResult<Integer> gridPowerL3 = modbusReader
+				.readOperationFromDevice(ModbusOperation.GRID_L3, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
+		System.out.println(gridPowerL3.toString());
 	}
 
 }

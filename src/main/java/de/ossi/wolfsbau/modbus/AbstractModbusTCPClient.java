@@ -1,12 +1,10 @@
 package de.ossi.wolfsbau.modbus;
 
-import java.io.IOException;
-
-import de.re.easymodbus.modbusclient.ModbusClient;
+import com.ghgande.j2mod.modbus.facade.ModbusTCPMaster;
 
 /**
- * Abstrakte Überklasse zum Öffnen und Schließen der Verbindung. 
- * Für Reader und Writer
+ * Abstrakte Überklasse zum Öffnen und Schließen der Verbindung. Für Reader
+ * und Writer
  * 
  * ip:192.168.0.81; port:502
  * 
@@ -15,25 +13,24 @@ import de.re.easymodbus.modbusclient.ModbusClient;
  */
 public abstract class AbstractModbusTCPClient {
 
-	ModbusClient modbusClient;
+	ModbusTCPMaster modbusMaster;
 
 	protected AbstractModbusTCPClient(String ip, int port) {
-		modbusClient = new ModbusClient(ip, port);
-		modbusClient.setUDPFlag(false);
+		modbusMaster = new ModbusTCPMaster(ip, port);
 	}
 
 	void connect() {
 		try {
-			modbusClient.Connect();
-		} catch (IOException e) {
+			modbusMaster.connect();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	void disconnect() {
 		try {
-			modbusClient.Disconnect();
-		} catch (IOException e) {
+			modbusMaster.disconnect();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
