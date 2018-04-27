@@ -2,7 +2,7 @@ package de.ossi.wolfsbau.modbus;
 
 import de.ossi.wolfsbau.modbus.data.ModbusDevice;
 import de.ossi.wolfsbau.modbus.data.ModbusOperation;
-import de.ossi.wolfsbau.modbus.data.ModbusResult;
+import de.ossi.wolfsbau.modbus.data.ModbusResultInt;
 
 /**
  * Stellt eine Read Methode zum Überschreiben zur Verfügung. Aufgerufen zum
@@ -11,7 +11,7 @@ import de.ossi.wolfsbau.modbus.data.ModbusResult;
  * @author ossi
  *
  */
-public class ModbusTCPReader extends AbstractModbusTCPClient {
+public class ModbusTCPReader extends ModbusConnection {
 
 	/**
 	 * Modubs TCP Client mit Ip und Port erstellen
@@ -20,7 +20,7 @@ public class ModbusTCPReader extends AbstractModbusTCPClient {
 		super(ip, port);
 	}
 
-	public ModbusResult<Integer> readOperationFromDevice(ModbusOperation operation, ModbusDevice device) {
+	public ModbusResultInt readOperationFromDevice(ModbusOperation operation, ModbusDevice device) {
 		int result = Integer.MIN_VALUE;
 		connect();
 		try {
@@ -28,7 +28,7 @@ public class ModbusTCPReader extends AbstractModbusTCPClient {
 		} finally {
 			disconnect();
 		}
-		return new ModbusResult<Integer>(operation, result);
+		return new ModbusResultInt(operation, result);
 	}
 
 	private int readOperationFromDeviceInternal(ModbusOperation operation, ModbusDevice device) {
