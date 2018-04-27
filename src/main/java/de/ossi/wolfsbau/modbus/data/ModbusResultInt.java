@@ -83,7 +83,7 @@ public class ModbusResultInt {
 	private String sourceToString() {
 		switch (wert) {
 		case 0:
-			return "Available";
+			return "Not Available";
 		case 1:
 			return "Grid";
 		case 2:

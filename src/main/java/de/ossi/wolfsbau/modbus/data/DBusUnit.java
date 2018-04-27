@@ -11,7 +11,7 @@ public enum DBusUnit {
 	RELAY_STATE("Relay State"),
 	/** 0=Idle;1=Charging;2=Discharging **/
 	BATTERY_STATE("Battery State"),
-	/** 0=Available;1=Grid;2=Generator;3=Shore Power;240=Not Connected **/
+	/** 0=Not Available;1=Grid;2=Generator;3=Shore Power;240=Not Connected **/
 	SOURCE("Source"),
 	;
 

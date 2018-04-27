@@ -2,8 +2,8 @@ package de.ossi.wolfsbau.modbus.data;
 
 /**
  * 
- * Werte von UnitId Tabelle aus: CCGX-Modbus-TCP-register-list-2.12.xlsx
- * 
+ * Unterstützte Modbus Geräte nach dem Excel Sheet:
+ * CCGX-Modbus-TCP-register-list-2.12.xlsx 
  * @author ossi
  *
  */
@@ -11,14 +11,10 @@ public class ModbusDevice {
 
 	public static final ModbusDevice CCGX_VE_BUS = new ModbusDevice("CCGX VE.Bus port (ttyO1)", 246, 257);
 	public static final ModbusDevice CCGX_VE_DIRECT_1 = new ModbusDevice("CCGX VE.Direct 1 port (ttyO0)", 247, 256);
-	public static final ModbusDevice CCGX_VE_DIRECT_2 = new ModbusDevice(
-			"CCGX VE.Direct 2 port, Venus GX VE.Direct 1 port (ttyO2)", 245, 258);
-	public static final ModbusDevice VENUS_GX_VE_DIRECT_2 = new ModbusDevice("Venus GX VE.Direct 2 port (ttyO4)", 243,
-			260);
+	public static final ModbusDevice CCGX_VE_DIRECT_2 = new ModbusDevice("CCGX VE.Direct 2 port, Venus GX VE.Direct 1 port (ttyO2)", 245, 258);
+	public static final ModbusDevice VENUS_GX_VE_DIRECT_2 = new ModbusDevice("Venus GX VE.Direct 2 port (ttyO4)", 243,			260);
 	public static final ModbusDevice VENUS_GX_VE_PORT = new ModbusDevice("Venus GX VE.Bus port (ttyO5)", 242, 261);
-
-	public static final ModbusDevice VE_CAN_AND_SYSTEM_DEVICE_0 = new ModbusDevice(
-			"VE.Can device instance 0 and system device", 100, 0);
+	public static final ModbusDevice VE_CAN_AND_SYSTEM_DEVICE_0 = new ModbusDevice("VE.Can device instance 0 and system device", 100, 0);
 	public static final ModbusDevice VE_CAN_DEVICE_1 = new ModbusDevice("VE.Can device instance 1", 1, 1);
 	public static final ModbusDevice VE_CAN_DEVICE_2 = new ModbusDevice("VE.Can device instance 2", 2, 2);
 	public static final ModbusDevice VE_CAN_DEVICE_3 = new ModbusDevice("VE.Can device instance 3", 3, 3);
