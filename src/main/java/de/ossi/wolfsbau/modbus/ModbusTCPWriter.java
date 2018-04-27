@@ -9,7 +9,7 @@ import com.ghgande.j2mod.modbus.ModbusException;
 import de.ossi.wolfsbau.modbus.data.ModbusDevice;
 import de.ossi.wolfsbau.modbus.data.ModbusOperation;
 
-public abstract class ModbusTCPWriter extends AbstractModbusTCPClient {
+public abstract class ModbusTCPWriter extends ModbusConnection {
 
 	public ModbusTCPWriter(String ip, int port) {
 		super(ip, port);

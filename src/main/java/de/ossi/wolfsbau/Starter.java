@@ -11,7 +11,7 @@ import de.ossi.wolfsbau.db.util.XMLtoDBConverter;
 import de.ossi.wolfsbau.modbus.ModbusTCPReader;
 import de.ossi.wolfsbau.modbus.data.ModbusDevice;
 import de.ossi.wolfsbau.modbus.data.ModbusOperation;
-import de.ossi.wolfsbau.modbus.data.ModbusResult;
+import de.ossi.wolfsbau.modbus.data.ModbusResultInt;
 import de.ossi.wolfsbau.parser.WRAntwortParser;
 import de.ossi.wolfsbau.xml.XDevice;
 import de.ossi.wolfsbau.xml.XRoot;
@@ -47,16 +47,16 @@ public class Starter {
 	}
 
 	public void speichereAktuelleVictronDaten() {
-		ModbusResult<Integer> stateOfCharge = modbusReader
+		ModbusResultInt stateOfCharge = modbusReader
 				.readOperationFromDevice(ModbusOperation.BATTERY_STATE_OF_CHARGE, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
 		System.out.println(stateOfCharge.toString());
-		ModbusResult<Integer> gridPowerL1 = modbusReader
+		ModbusResultInt gridPowerL1 = modbusReader
 				.readOperationFromDevice(ModbusOperation.GRID_L1, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
 		System.out.println(gridPowerL1.toString());
-		ModbusResult<Integer> gridPowerL2 = modbusReader
+		ModbusResultInt gridPowerL2 = modbusReader
 				.readOperationFromDevice(ModbusOperation.GRID_L2, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
 		System.out.println(gridPowerL2.toString());
-		ModbusResult<Integer> gridPowerL3 = modbusReader
+		ModbusResultInt gridPowerL3 = modbusReader
 				.readOperationFromDevice(ModbusOperation.GRID_L3, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
 		System.out.println(gridPowerL3.toString());
 	}
