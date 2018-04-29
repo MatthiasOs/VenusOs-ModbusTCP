@@ -2,6 +2,15 @@ package de.ossi.wolfsbau.modbus.data;
 
 import java.time.LocalDateTime;
 
+/**
+ * FIXME Im Register stehen immer die Werte von 0..65k Einfacher Rechenweg:
+ * RegisterRange 0..65k im Register Range 0..32|-32..-1 ? 
+ * MesswertRange-32k..+32k Messwert -10 
+ * RegisterWert / Scale > Range_MAX ? -((Range_MAX*2) - ScalierterWertRegister) : ScalierterWertRegister
+ * 
+ * @author ossi
+ *
+ */
 public class ModbusResultInt {
 
 	private final ModbusOperation operation;
@@ -28,11 +37,26 @@ public class ModbusResultInt {
 
 	@Override
 	public String toString() {
-		StringBuilder socAusgabe = new StringBuilder();
-		socAusgabe.append(operation.getDescription());
-		socAusgabe.append(" ");
-		socAusgabe.append(ermittleWertMitUnitAusgabe());
-		return socAusgabe.toString();
+		System.out.println("Wert: " + wert);
+		StringBuilder ausgabe = new StringBuilder();
+		ausgabe.append("Register: ");
+		ausgabe.append(operation.getAddress());
+		ausgabe.append(" ");
+		ausgabe.append(operation.getDescription());
+		ausgabe.append(" ");
+		ausgabe.append(ermittleWertMitUnitAusgabe());
+		ausgabe.append(System.lineSeparator());
+		return ausgabe.toString();
+	}
+
+	private double berechneSkaliertenWertNeu() {
+		double skalierterWert = wert / operation.getScaleFactor();
+		int nullabziehen = -1;
+		int range = operation.getWertRange().getMaximum();
+		int doppelteRange = range*2; 
+		return skalierterWert > range
+				? -(doppelteRange - nullabziehen - skalierterWert)
+				: skalierterWert;
 	}
 
 	private double berechneSkaliertenWert() {
@@ -40,8 +64,8 @@ public class ModbusResultInt {
 	}
 
 	/**
-	 * Wenn der Wert außerhalb der Range des Rückgabewert liegt, müssen wir ihn wie
-	 * ein Overflow behandeln und um
+	 * Wenn der Wert außerhalb der Range des Rückgabewert liegt, müssen wir ihn
+	 * wie ein Overflow behandeln und um
 	 * 
 	 * @return
 	 */
@@ -75,7 +99,8 @@ public class ModbusResultInt {
 		case SOURCE:
 			return sourceToString();
 		default:
-			return new StringBuilder().append(berechneSkaliertenWert()).append(" ").append(operation.getDbusUnit().toString()).toString();
+			return new StringBuilder().append(berechneSkaliertenWert()).append(" ").append(berechneSkaliertenWertNeu())
+					.append(" ").append(operation.getDbusUnit().toString()).toString();
 		}
 	}
 
