@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 
 /**
  * FIXME Im Register stehen immer die Werte von 0..65k Einfacher Rechenweg:
- * RegisterRange 0..65k im Register Range 0..32|-32..-1 ? 
- * MesswertRange-32k..+32k Messwert -10 
- * RegisterWert / Scale > Range_MAX ? -((Range_MAX*2) - ScalierterWertRegister) : ScalierterWertRegister
+ * RegisterRange 0..65k im Register Range 0..32|-32..-1 ?
+ * MesswertRange-32k..+32k Messwert -10 RegisterWert / Scale > Range_MAX ?
+ * -((Range_MAX*2) - ScalierterWertRegister) : ScalierterWertRegister
  * 
  * @author ossi
  *
@@ -49,45 +49,14 @@ public class ModbusResultInt {
 		return ausgabe.toString();
 	}
 
-	private double berechneSkaliertenWertNeu() {
+	/**
+	 * TODO Javadoc;
+	 */
+	double berechneSkaliertenWertInRange() {
 		double skalierterWert = wert / operation.getScaleFactor();
-		int nullabziehen = -1;
-		int range = operation.getWertRange().getMaximum();
-		int doppelteRange = range*2; 
-		return skalierterWert > range
-				? -(doppelteRange - nullabziehen - skalierterWert)
-				: skalierterWert;
-	}
-
-	private double berechneSkaliertenWert() {
-		return ermittleWertInRange() * operation.getScaleFactor();
-	}
-
-	/**
-	 * Wenn der Wert außerhalb der Range des Rückgabewert liegt, müssen wir ihn
-	 * wie ein Overflow behandeln und um
-	 * 
-	 * @return
-	 */
-	public int ermittleWertInRange() {
-		if (operation.getWertRange().isBefore(wert)) {
-			// groesser als Max Wert der Range
-			return wert - werteInRange();
-		} else if (operation.getWertRange().isAfter(wert)) {
-			// kleiner als Min Wert der Range
-			return wert + werteInRange();
-		} else {
-			// Wert liegt in Range
-			return wert;
-		}
-	}
-
-	/**
-	 * Zahlen in der Range berechnen. Die Grenzen können negativ sein, deshalb
-	 * Betrag davon rechnen.
-	 */
-	private Integer werteInRange() {
-		return Math.abs(operation.getWertRange().getMinimum()) + Math.abs(operation.getWertRange().getMaximum());
+		double rangeMax = operation.getWertRange().getMaximum();
+		double rangeMaxDoppelt = rangeMax * 2;
+		return skalierterWert > rangeMax ? -(rangeMaxDoppelt - skalierterWert) : skalierterWert;
 	}
 
 	private String ermittleWertMitUnitAusgabe() {
@@ -99,8 +68,8 @@ public class ModbusResultInt {
 		case SOURCE:
 			return sourceToString();
 		default:
-			return new StringBuilder().append(berechneSkaliertenWert()).append(" ").append(berechneSkaliertenWertNeu())
-					.append(" ").append(operation.getDbusUnit().toString()).toString();
+			return new StringBuilder().append(berechneSkaliertenWertInRange()).append(" ")
+					.append(operation.getDbusUnit().toString()).toString();
 		}
 	}
 
