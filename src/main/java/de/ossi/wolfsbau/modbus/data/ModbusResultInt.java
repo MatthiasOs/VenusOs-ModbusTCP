@@ -2,15 +2,6 @@ package de.ossi.wolfsbau.modbus.data;
 
 import java.time.LocalDateTime;
 
-/**
- * FIXME Im Register stehen immer die Werte von 0..65k Einfacher Rechenweg:
- * RegisterRange 0..65k im Register Range 0..32|-32..-1 ?
- * MesswertRange-32k..+32k Messwert -10 RegisterWert / Scale > Range_MAX ?
- * -((Range_MAX*2) - ScalierterWertRegister) : ScalierterWertRegister
- * 
- * @author ossi
- *
- */
 public class ModbusResultInt {
 
 	private final ModbusOperation operation;
@@ -49,9 +40,6 @@ public class ModbusResultInt {
 		return ausgabe.toString();
 	}
 
-	/**
-	 * TODO Javadoc;
-	 */
 	double berechneSkaliertenWertInRange() {
 		double skalierterWert = wert / operation.getScaleFactor();
 		double rangeMax = operation.getWertRange().getMaximum();
