@@ -2,14 +2,11 @@ package de.ossi.wolfsbau.modbus.data;
 
 import java.time.LocalDateTime;
 
-import de.ossi.wolfsbau.modbus.RegisterZuWertUmwandler;
-
 public class ModbusResultInt {
 
 	private final ModbusOperation operation;
 	private final Integer wert;
 	private final LocalDateTime zeitpunkt;
-	private final RegisterZuWertUmwandler umwandler = new RegisterZuWertUmwandler();
 
 	public ModbusResultInt(ModbusOperation operation, Integer wert) {
 		this.operation = operation;
@@ -52,7 +49,7 @@ public class ModbusResultInt {
 		case SOURCE:
 			return sourceToString();
 		default:
-			return new StringBuilder().append(umwandler.getWert(this)).append(" ")
+			return new StringBuilder().append(operation.getWert(this.wert)).append(" ")
 					.append(operation.getDbusUnit().toString()).toString();
 		}
 	}
