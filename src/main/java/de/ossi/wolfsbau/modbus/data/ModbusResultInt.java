@@ -40,13 +40,6 @@ public class ModbusResultInt {
 		return ausgabe.toString();
 	}
 
-	double berechneSkaliertenWertInRange() {
-		double skalierterWert = wert / operation.getScaleFactor();
-		double rangeMax = operation.getWertRange().getMaximum();
-		double rangeMaxDoppelt = rangeMax * 2;
-		return skalierterWert > rangeMax ? -(rangeMaxDoppelt - skalierterWert) : skalierterWert;
-	}
-
 	private String ermittleWertMitUnitAusgabe() {
 		switch (operation.getDbusUnit()) {
 		case RELAY_STATE:
@@ -56,7 +49,7 @@ public class ModbusResultInt {
 		case SOURCE:
 			return sourceToString();
 		default:
-			return new StringBuilder().append(berechneSkaliertenWertInRange()).append(" ")
+			return new StringBuilder().append(operation.getWert(this.wert)).append(" ")
 					.append(operation.getDbusUnit().toString()).toString();
 		}
 	}
