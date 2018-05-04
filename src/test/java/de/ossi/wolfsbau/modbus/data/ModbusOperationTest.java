@@ -1,8 +1,8 @@
 package de.ossi.wolfsbau.modbus.data;
 
-import static de.ossi.wolfsbau.modbus.data.ModbusOperation.AC_CONSUMPTION_L1;
-import static de.ossi.wolfsbau.modbus.data.ModbusOperation.BATTERY_CURRENT_SYSTEM;
-import static de.ossi.wolfsbau.modbus.data.ModbusOperation.GRID_L1_POWER;
+import static de.ossi.wolfsbau.modbus.data.ModbusOperation.SYS_AC_CONSUMPTION_L1;
+import static de.ossi.wolfsbau.modbus.data.ModbusOperation.SYS_BATTERY_CURRENT_SYSTEM;
+import static de.ossi.wolfsbau.modbus.data.ModbusOperation.GRI_GRID_L1_POWER;
 import static java.lang.Double.valueOf;
 import static org.junit.Assert.assertThat;
 
@@ -26,14 +26,14 @@ public class ModbusOperationTest {
 	@Parameters(name = "{index}: Operation {0}; Registerwert={1}; Erwarteter Messwert={2}")
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] { 
-			{ BATTERY_CURRENT_SYSTEM, MAX_SIGNED + 1, -3276.8D }, 
-			{ GRID_L1_POWER, MIN_UNSIGNED, d(MIN_UNSIGNED) }, 
-			{ GRID_L1_POWER, MAX_SIGNED, d(MAX_SIGNED) },
-			{ GRID_L1_POWER, MAX_SIGNED + 1, d(MIN_SIGNED) },
-			{ GRID_L1_POWER, MAX_UNSIGNED, -1D },
-			{ AC_CONSUMPTION_L1, MIN_UNSIGNED, d(MIN_UNSIGNED) },
-			{ AC_CONSUMPTION_L1, MAX_UNSIGNED, d(MAX_UNSIGNED) },
-			{ AC_CONSUMPTION_L1, MAX_SIGNED + 1, d(MAX_SIGNED + 1) },
+			{ SYS_BATTERY_CURRENT_SYSTEM, MAX_SIGNED + 1, -3276.8D }, 
+			{ GRI_GRID_L1_POWER, MIN_UNSIGNED, d(MIN_UNSIGNED) }, 
+			{ GRI_GRID_L1_POWER, MAX_SIGNED, d(MAX_SIGNED) },
+			{ GRI_GRID_L1_POWER, MAX_SIGNED + 1, d(MIN_SIGNED) },
+			{ GRI_GRID_L1_POWER, MAX_UNSIGNED, -1D },
+			{ SYS_AC_CONSUMPTION_L1, MIN_UNSIGNED, d(MIN_UNSIGNED) },
+			{ SYS_AC_CONSUMPTION_L1, MAX_UNSIGNED, d(MAX_UNSIGNED) },
+			{ SYS_AC_CONSUMPTION_L1, MAX_SIGNED + 1, d(MAX_SIGNED + 1) },
 			});
 	}
 

@@ -13,6 +13,7 @@ public class DBusUnit {
 	public static final DBusUnit A = new DBusUnit("A");
 	public static final DBusUnit W = new DBusUnit("W");
 	public static final DBusUnit HZ = new DBusUnit("Hz");
+	public static final DBusUnit KWH = new DBusUnit("kWh");
 	public static final DBusUnit VA_OR_WATTS = new DBusUnit("VA or Watts");
 	public static final DBusUnit PERCENT = new DBusUnit("%");
 	public static final DBusUnit ACTIVE_INPUT = new ActiveInput("Active Input");
@@ -26,6 +27,9 @@ public class DBusUnit {
 	public static final DBusUnit BATTERY_STATE = new BatteryState("Battery State");
 	public static final DBusUnit AH = new DBusUnit("Ah");
 	public static final DBusUnit S = new DBusUnit("s");
+	public static final DBusUnit CELSIUS = new DBusUnit("Degrees celsius");
+	public static final DBusUnit CHARGER_ON_OFF = new ChargerOnOff("Charger On/Off");
+	public static final DBusUnit CHARGE_STATE = new ChargeState("Charge state");
 
 	private final String name;
 	protected final Map<Integer, String> values = new HashMap<>();
