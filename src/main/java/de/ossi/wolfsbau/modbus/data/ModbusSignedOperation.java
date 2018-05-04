@@ -9,9 +9,9 @@ public class ModbusSignedOperation extends ModbusOperation {
 	}
 
 	@Override
-	public Double getWert(Integer registerWert) {
-		double skalierterWert = skaliereWert(registerWert);
-		return skalierterWert > MAX_SIGNED ? skalierterWert - MAX_REGISTER -1  : skalierterWert;
+	public Double getSkaliertenWertInWertebreich(Integer registerWert) {
+		double wertInRange = registerWert > MAX_SIGNED ? registerWert - MAX_REGISTER -1  : registerWert;
+		return skaliereWert(wertInRange);
 	}
 
 }

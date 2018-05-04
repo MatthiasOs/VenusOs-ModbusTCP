@@ -11,7 +11,7 @@ import de.ossi.wolfsbau.modbus.data.ModbusResultInt;
  * @author ossi
  *
  */
-public class ModbusTCPReader extends ModbusConnection {
+public class ModbusTCPReader extends ModbusConnectionHandler {
 
 	/**
 	 * Modubs TCP Client mit Ip und Port erstellen

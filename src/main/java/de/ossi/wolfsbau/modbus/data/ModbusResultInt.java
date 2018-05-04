@@ -49,7 +49,7 @@ public class ModbusResultInt {
 		case SOURCE:
 			return sourceToString();
 		default:
-			return new StringBuilder().append(operation.getWert(this.wert)).append(" ")
+			return new StringBuilder().append(operation.getSkaliertenWertInWertebreich(wert)).append(" ")
 					.append(operation.getDbusUnit().toString()).toString();
 		}
 	}

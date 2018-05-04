@@ -11,11 +11,11 @@ import com.ghgande.j2mod.modbus.facade.ModbusTCPMaster;
  * @author ossi
  *
  */
-public abstract class ModbusConnection {
+public abstract class ModbusConnectionHandler {
 
 	ModbusTCPMaster modbusMaster;
 
-	protected ModbusConnection(String ip, int port) {
+	protected ModbusConnectionHandler(String ip, int port) {
 		modbusMaster = new ModbusTCPMaster(ip, port);
 	}
 
