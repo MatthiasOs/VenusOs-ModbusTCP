@@ -11,7 +11,7 @@ import de.ossi.wolfsbau.modbus.data.ModbusResultInt;
  * @author ossi
  *
  */
-public class ModbusTCPReader extends ModbusConnectionHandler {
+public class ModbusTCPReader extends ModbusReaderConnectionHandler {
 
 	/**
 	 * Modubs TCP Client mit Ip und Port erstellen
@@ -20,14 +20,8 @@ public class ModbusTCPReader extends ModbusConnectionHandler {
 		super(ip, port);
 	}
 
-	public ModbusResultInt readOperationFromDevice(ModbusOperation operation, ModbusDevice device) {
-		int result = Integer.MIN_VALUE;
-		connect();
-		try {
-			result = readOperationFromDeviceInternal(operation, device);
-		} finally {
-			disconnect();
-		}
+	protected ModbusResultInt readInternal(ModbusOperation operation, ModbusDevice device) {
+		int result = readOperationFromDeviceInternal(operation, device);
 		return new ModbusResultInt(operation, result);
 	}
 
