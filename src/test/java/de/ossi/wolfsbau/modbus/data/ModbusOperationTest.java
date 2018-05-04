@@ -49,7 +49,7 @@ public class ModbusOperationTest {
 	@Test
 	public void pruefeDaten() throws Exception {
 		ModbusResultInt result = new ModbusResultInt(operation, registerwert);
-		assertThat(operation.getSkaliertenWertInWertebreich(result.getWert()), Matchers.is(valueOf(messwert)));
+		assertThat(operation.getSkaliertenWertInWertebreich(result.wert), Matchers.is(valueOf(messwert)));
 	}
 	
 	private static double d(Integer i) {

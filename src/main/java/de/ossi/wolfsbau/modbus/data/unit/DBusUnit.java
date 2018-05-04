@@ -28,9 +28,9 @@ public class DBusUnit {
 	public static final DBusUnit S = new DBusUnit("s");
 
 	private final String name;
-	final Map<Integer, String> values = new HashMap<>();
+	protected final Map<Integer, String> values = new HashMap<>();
 
-	DBusUnit(String name) {
+	protected DBusUnit(String name) {
 		this.name = name;
 	}
 

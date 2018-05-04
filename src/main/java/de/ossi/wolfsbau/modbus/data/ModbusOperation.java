@@ -59,10 +59,10 @@ public abstract class ModbusOperation {
 	public static final ModbusOperation GRID_L2 = new ModbusSignedOperation(821, "Grid L2", 1, DBusUnit.W);
 	public static final ModbusOperation GRID_L3 = new ModbusSignedOperation(822, "Grid L3", 1, DBusUnit.W);
 
-	private final int address;
-	private final String description;
-	private final double scaleFactor;
-	private final DBusUnit dbusUnit;
+	public final int address;
+	public final String description;
+	public final double scaleFactor;
+	public final DBusUnit dbusUnit;
 
 	protected ModbusOperation(int address, String description, double scaleFactor, DBusUnit dbusUnit) {
 		this.address = address;
@@ -84,21 +84,4 @@ public abstract class ModbusOperation {
 	public String toString() {
 		return description;
 	}
-
-	public int getAddress() {
-		return address;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public double getScaleFactor() {
-		return scaleFactor;
-	}
-
-	public DBusUnit getDbusUnit() {
-		return dbusUnit;
-	}
-
 }

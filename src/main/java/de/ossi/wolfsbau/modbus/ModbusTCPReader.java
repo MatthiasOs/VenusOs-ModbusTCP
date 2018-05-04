@@ -27,7 +27,7 @@ public class ModbusTCPReader extends ModbusReaderConnectionHandler {
 
 	private int readOperationFromDeviceInternal(ModbusOperation operation, ModbusDevice device) {
 		try {
-			return modbusMaster.readMultipleRegisters(device.getUnitId(), operation.getAddress(), 1)[0].getValue();
+			return modbusMaster.readMultipleRegisters(device.unitId, operation.address, 1)[0].getValue();
 		} catch (com.ghgande.j2mod.modbus.ModbusException e) {
 			e.printStackTrace();
 		}
