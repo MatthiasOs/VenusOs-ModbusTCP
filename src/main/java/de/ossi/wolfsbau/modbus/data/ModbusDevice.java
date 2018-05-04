@@ -63,26 +63,18 @@ public class ModbusDevice {
 	public static final ModbusDevice VE_DIRECT_USB5 = new ModbusDevice("VE.Direct via USB (ttyUSB5)", 233, 293);
 	public static final ModbusDevice CAN_BUS_BMS = new ModbusDevice("CAN-bus BMS", 225, 512);
 
-	private final String name;
-	private final int unitId;
-	private final int deviceInstance;
+	public final String name;
+	public final int unitId;
+	public final int deviceInstance;
 
 	private ModbusDevice(String name, int unitId, int deviceInstance) {
 		this.name = name;
 		this.unitId = unitId;
 		this.deviceInstance = deviceInstance;
 	}
-
-	public String getName() {
+	
+	@Override
+	public String toString() {
 		return name;
 	}
-
-	public int getUnitId() {
-		return unitId;
-	}
-
-	public int getDeviceInstance() {
-		return deviceInstance;
-	}
-
 }

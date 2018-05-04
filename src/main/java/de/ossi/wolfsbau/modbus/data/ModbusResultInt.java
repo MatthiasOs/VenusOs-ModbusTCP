@@ -6,9 +6,9 @@ import de.ossi.wolfsbau.modbus.data.unit.DBusUnit;
 
 public class ModbusResultInt {
 
-	private final ModbusOperation operation;
-	private final Integer wert;
-	private final LocalDateTime zeitpunkt;
+	public final ModbusOperation operation;
+	public final Integer wert;
+	public final LocalDateTime zeitpunkt;
 
 	public ModbusResultInt(ModbusOperation operation, Integer wert) {
 		this.operation = operation;
@@ -16,26 +16,14 @@ public class ModbusResultInt {
 		this.zeitpunkt = LocalDateTime.now();
 	}
 
-	public ModbusOperation getOperation() {
-		return operation;
-	}
-
-	public Integer getWert() {
-		return wert;
-	}
-
-	public LocalDateTime getZeitpunkt() {
-		return zeitpunkt;
-	}
-
 	@Override
 	public String toString() {
 		System.out.println("Wert: " + wert);
 		StringBuilder ausgabe = new StringBuilder();
 		ausgabe.append("Register: ");
-		ausgabe.append(operation.getAddress());
+		ausgabe.append(operation.address);
 		ausgabe.append(" ");
-		ausgabe.append(operation.getDescription());
+		ausgabe.append(operation.description);
 		ausgabe.append(" ");
 		ausgabe.append(ermittleWertMitEinheit());
 		ausgabe.append(System.lineSeparator());
@@ -43,7 +31,7 @@ public class ModbusResultInt {
 	}
 
 	private String ermittleWertMitEinheit() {
-		DBusUnit einheit = operation.getDbusUnit();
+		DBusUnit einheit = operation.dbusUnit;
 		if (einheit.hatSpezielleEinheit()) {
 			return einheit.getMesswertMitEinheit(wert);
 		} else {
