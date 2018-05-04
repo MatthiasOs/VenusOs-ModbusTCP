@@ -49,30 +49,30 @@ public class Starter {
 
 	public void speichereAktuelleVictronDaten() {
 		ModbusResultInt stateOfCharge = modbusReader.readOperationFromDevice(
-				ModbusOperation.BATTERY_SOC_SYSTEM, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
+				ModbusOperation.SYS_BATTERY_SOC_SYSTEM, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
 		System.out.println(stateOfCharge.toString());
 		ModbusResultInt batteryVoltage = modbusReader.readOperationFromDevice(
-				ModbusOperation.BATTERY_VOLTAGE_SYSTEM, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
+				ModbusOperation.SYS_BATTERY_VOLTAGE_SYSTEM, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
 		System.out.println(batteryVoltage.toString());
 		ModbusResultInt gridL1 = modbusReader
-				.readOperationFromDevice(ModbusOperation.GRID_L1, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
+				.readOperationFromDevice(ModbusOperation.SYS_GRID_L1, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
 		System.out.println(gridL1.toString());
 		ModbusResultInt gridPowerL1 = modbusReader
-				.readOperationFromDevice(ModbusOperation.GRID_L1_POWER, ModbusDevice.GRID_METER_2);
+				.readOperationFromDevice(ModbusOperation.GRI_GRID_L1_POWER, ModbusDevice.GRID_METER_2);
 		System.out.println(gridPowerL1.toString());
 		
 		ModbusResultInt gridL2 = modbusReader
-				.readOperationFromDevice(ModbusOperation.GRID_L2, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
+				.readOperationFromDevice(ModbusOperation.SYS_GRID_L2, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
 		System.out.println(gridL2.toString());
 		ModbusResultInt gridPowerL2 = modbusReader
-				.readOperationFromDevice(ModbusOperation.GRID_L2_POWER, ModbusDevice.GRID_METER_2);
+				.readOperationFromDevice(ModbusOperation.GRI_GRID_L2_POWER, ModbusDevice.GRID_METER_2);
 		System.out.println(gridPowerL2.toString());
 		
 		ModbusResultInt gridL3 = modbusReader
-				.readOperationFromDevice(ModbusOperation.GRID_L3, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
+				.readOperationFromDevice(ModbusOperation.SYS_GRID_L3, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
 		System.out.println(gridL3.toString());
 		ModbusResultInt gridPowerL3 = modbusReader
-				.readOperationFromDevice(ModbusOperation.GRID_L3_POWER, ModbusDevice.GRID_METER_2);
+				.readOperationFromDevice(ModbusOperation.GRI_GRID_L3_POWER, ModbusDevice.GRID_METER_2);
 		System.out.println(gridPowerL3.toString());
 	}
 
