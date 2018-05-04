@@ -2,7 +2,7 @@ package de.ossi.wolfsbau.modbus.data;
 
 /**
  * Unterstuetzte Modbus Operationen nach dem Excel Sheet:
- * CCGX-Modbus-TCP-register-list-2.12.xlsx
+ * files/CCGX-Modbus-TCP-register-list-2.12.xlsx
  * 
  * @author ossi
  *
@@ -41,14 +41,14 @@ public abstract class ModbusOperation {
 		this.dbusUnit = dbusUnit;
 	}
 	
-	protected double skaliereWert(Integer registerWert) {
+	protected double skaliereWert(Double registerWert) {
 		return registerWert / this.scaleFactor;
 	}
 
 	/**
-	 * Ermittle den Wert skaliert und an die Range der Operation angepasst. 
+	 * Ermittle den Wert skaliert und an den Wertebereich der Operation angepasst. 
 	 */
-	public abstract Double getWert(Integer registerWert);
+	public abstract Double getSkaliertenWertInWertebreich(Integer registerWert);
 
 	@Override
 	public String toString() {
