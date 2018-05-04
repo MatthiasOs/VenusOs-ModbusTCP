@@ -49,7 +49,7 @@ public class Starter {
 
 	public void speichereAktuelleVictronDaten() {
 		ModbusResultInt stateOfCharge = modbusReader.readOperationFromDevice(
-				ModbusOperation.BATTERY_STATE_OF_CHARGE_SYSTEM, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
+				ModbusOperation.BATTERY_SOC_SYSTEM, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
 		System.out.println(stateOfCharge.toString());
 		ModbusResultInt batteryVoltage = modbusReader.readOperationFromDevice(
 				ModbusOperation.BATTERY_VOLTAGE_SYSTEM, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
