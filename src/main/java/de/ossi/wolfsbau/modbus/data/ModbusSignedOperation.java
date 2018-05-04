@@ -1,5 +1,7 @@
 package de.ossi.wolfsbau.modbus.data;
 
+import de.ossi.wolfsbau.modbus.data.unit.DBusUnit;
+
 public class ModbusSignedOperation extends ModbusOperation {
 	private static final double MAX_SIGNED = 32767D;
 	private static final double MAX_REGISTER = 65535D;

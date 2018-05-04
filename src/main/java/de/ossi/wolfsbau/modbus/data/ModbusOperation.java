@@ -1,5 +1,7 @@
 package de.ossi.wolfsbau.modbus.data;
 
+import de.ossi.wolfsbau.modbus.data.unit.DBusUnit;
+
 /**
  * Unterstuetzte Modbus Operationen nach dem Excel Sheet:
  * files/CCGX-Modbus-TCP-register-list-2.12.xlsx
@@ -35,7 +37,7 @@ public abstract class ModbusOperation {
 	public static final ModbusOperation LOW_BATTERY_ALARM_L1 = new ModbusUnsignedOperation(45, "Low battery alarm L1", 1, DBusUnit.ALARM);
 	public static final ModbusOperation OVERLOAD_ALARM_L1 = new ModbusUnsignedOperation(46, "Overload alarm L1", 1, DBusUnit.ALARM);
 	public static final ModbusOperation RIPPLE_ALARM_L1 = new ModbusUnsignedOperation(47, "Ripple alarm L1", 1, DBusUnit.ALARM);
-	public static final ModbusOperation DISABLE_PV_INVERTER = new ModbusUnsignedOperation(56, "Disable PV inverter", 1, DBusUnit.PV);
+	public static final ModbusOperation DISABLE_PV_INVERTER = new ModbusUnsignedOperation(56, "Disable PV inverter", 1, DBusUnit.PV_STATUS);
 
 	public static final ModbusOperation AC_CONSUMPTION_L1 = new ModbusUnsignedOperation(817, "AC Consumption L1", 1, DBusUnit.W);
 	public static final ModbusOperation AC_CONSUMPTION_L2 = new ModbusUnsignedOperation(818, "AC Consumption L2", 1, DBusUnit.W);
