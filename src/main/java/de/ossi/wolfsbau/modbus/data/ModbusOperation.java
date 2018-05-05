@@ -46,7 +46,7 @@ public abstract class ModbusOperation {
 	// >>>BAT_ = com.victronenergy.battery >>>
 	public static final ModbusOperation BAT_BATTERY_VOLTAGE = new UnsignedOperation(259, "Battery voltage", 100, DBusUnit.V_DC);
 	public static final ModbusOperation BAT_CURRENT = new SignedOperation(261, "Current", 10, DBusUnit.A_DC);
-	public static final ModbusOperation BAT_BATTERY_TEMPERATURE = new SignedOperation(262, "Current", 10, DBusUnit.CELSIUS);
+	public static final ModbusOperation BAT_BATTERY_TEMPERATURE = new SignedOperation(262, "Battery temperature", 10, DBusUnit.CELSIUS);
 	public static final ModbusOperation BAT_MID_POINT_VOLTAGE_BATTERY_BANK = new UnsignedOperation(263, "Mid-point voltage of the battery bank", 100, DBusUnit.V_DC);
 	public static final ModbusOperation BAT_MID_POINT_DEVIATION_BATTERY_BANK = new UnsignedOperation(264, "Mid-point deviation of the battery bank", 100, DBusUnit.PERCENT);
 	public static final ModbusOperation BAT_STATE_OF_CHARGE = new UnsignedOperation(266, "State of charge", 10, DBusUnit.PERCENT);
