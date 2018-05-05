@@ -1,5 +1,8 @@
 package de.ossi.wolfsbau.modbus.data;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * 
  * Unterstützte Modbus Geräte nach dem Excel Sheet:
@@ -75,6 +78,19 @@ public class ModbusDevice {
 	
 	@Override
 	public String toString() {
-		return name;
+		return new StringBuilder().append(name).append(" mit UnitId: ").append(unitId).toString();
+	}
+	
+	public static List<ModbusDevice> allDevices() {
+		return Arrays.asList( ModbusDevice.CAN_BUS_BMS, ModbusDevice.CCGX_VE_BUS, ModbusDevice.CCGX_VE_DIRECT_1, ModbusDevice.CCGX_VE_DIRECT_2, ModbusDevice.GRID_METER_0,
+				ModbusDevice.GRID_METER_1, ModbusDevice.GRID_METER_2, ModbusDevice.GRID_METER_3, ModbusDevice.GRID_METER_4, ModbusDevice.PV_INVERTER_0, ModbusDevice.PV_INVERTER_1,
+				ModbusDevice.PV_INVERTER_2, ModbusDevice.PV_INVERTER_3, ModbusDevice.PV_INVERTER_4, ModbusDevice.PV_INVERTER_5, ModbusDevice.PV_INVERTER_6,
+				ModbusDevice.PV_INVERTER_7, ModbusDevice.PV_INVERTER_8, ModbusDevice.PV_INVERTER_9, ModbusDevice.REDFLOW_BATTERY_1, ModbusDevice.REDFLOW_BATTERY_2,
+				ModbusDevice.REDFLOW_BATTERY_3, ModbusDevice.REDFLOW_BATTERY_4, ModbusDevice.REDFLOW_BATTERY_5, ModbusDevice.REDFLOW_BATTERY_6, ModbusDevice.REDFLOW_SYSTEM_TOOLS,
+				ModbusDevice.VE_BUS_AC_SENSOR_INPUT_1, ModbusDevice.VE_BUS_AC_SENSOR_INPUT_2, ModbusDevice.VE_BUS_AC_SENSOR_OUTPUT, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0,
+				ModbusDevice.VE_CAN_DEVICE_1, ModbusDevice.VE_CAN_DEVICE_2, ModbusDevice.VE_CAN_DEVICE_3, ModbusDevice.VE_CAN_DEVICE_4, ModbusDevice.VE_CAN_DEVICE_5,
+				ModbusDevice.VE_CAN_DEVICE_6, ModbusDevice.VE_CAN_DEVICE_7, ModbusDevice.VE_CAN_DEVICE_8, ModbusDevice.VE_CAN_DEVICE_9, ModbusDevice.VE_DIRECT_USB0,
+				ModbusDevice.VE_DIRECT_USB1, ModbusDevice.VE_DIRECT_USB2, ModbusDevice.VE_DIRECT_USB3, ModbusDevice.VE_DIRECT_USB4, ModbusDevice.VE_DIRECT_USB5,
+				ModbusDevice.VENUS_GX_VE_DIRECT_2, ModbusDevice.VENUS_GX_VE_PORT );
 	}
 }

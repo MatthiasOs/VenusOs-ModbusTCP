@@ -20,10 +20,7 @@ public class ModbusResultInt {
 	public String toString() {
 		System.out.println("Wert: " + wert);
 		StringBuilder ausgabe = new StringBuilder();
-		ausgabe.append("Register: ");
-		ausgabe.append(operation.address);
-		ausgabe.append(" ");
-		ausgabe.append(operation.description);
+		ausgabe.append(operation.toString());
 		ausgabe.append(" ");
 		ausgabe.append(ermittleWertMitEinheit());
 		ausgabe.append(System.lineSeparator());

@@ -1,5 +1,8 @@
 package de.ossi.wolfsbau.modbus.data;
 
+import java.util.Arrays;
+import java.util.List;
+
 import de.ossi.wolfsbau.modbus.data.unit.DBusUnit;
 
 /**
@@ -153,6 +156,32 @@ public abstract class ModbusOperation {
 
 	@Override
 	public String toString() {
-		return description;
+		return new StringBuilder().append(description).append(" an Register: ").append(address).toString();
+	}
+
+	public static List<ModbusOperation> allOperations() {
+		return Arrays.asList(ModbusOperation.VEB_INPUT_VOLTAGE_PHASE_1, ModbusOperation.VEB_INPUT_CURRENT_PHASE_1, ModbusOperation.VEB_INPUT_FREQUENCY_1,
+				ModbusOperation.VEB_INPUT_POWER_1, ModbusOperation.VEB_OUTPUT_FREQUENCY, ModbusOperation.VEB_ACTIVE_INPUT_CURRENT_LIMIT, ModbusOperation.VEB_OUTPUT_POWER_1,
+				ModbusOperation.VEB_BATTERY_VOLTAGE, ModbusOperation.VEB_BATTERY_CURRENT, ModbusOperation.VEB_ACTIVE_INPUT, ModbusOperation.VEB_VE_BUS_SOC,
+				ModbusOperation.VEB_SWITCH_POSITION, ModbusOperation.VEB_TEMPREATURE_ALARM, ModbusOperation.VEB_LOW_BATTERY_ALARM, ModbusOperation.VEB_OVERLOAD_ALARM,
+				ModbusOperation.VEB_ESS_POWER_SET_POINT_PHASE_1, ModbusOperation.VEB_ESS_DISABLE_CHARGE_FLAG_PHASE, ModbusOperation.VEB_ESS_DISABLE_FEEDBACK_FLAG_PHASE,
+				ModbusOperation.VEB_ESS_POWER_SET_POINT_PHASE_2, ModbusOperation.VEB_ESS_POWER_SET_POINT_PHASE_3, ModbusOperation.VEB_TEMPREATURE_SENSOR_ALARM,
+				ModbusOperation.VEB_VOLTAGE_SENSOR_ALARM, ModbusOperation.VEB_TEMPREATURE_ALARM_L1, ModbusOperation.VEB_LOW_BATTERY_ALARM_L1, ModbusOperation.VEB_OVERLOAD_ALARM_L1,
+				ModbusOperation.VEB_RIPPLE_ALARM_L1, ModbusOperation.VEB_DISABLE_PV_INVERTER, ModbusOperation.BAT_BATTERY_VOLTAGE, ModbusOperation.BAT_CURRENT,
+				ModbusOperation.BAT_BATTERY_TEMPERATURE, ModbusOperation.BAT_MID_POINT_VOLTAGE_BATTERY_BANK, ModbusOperation.BAT_MID_POINT_DEVIATION_BATTERY_BANK,
+				ModbusOperation.BAT_STATE_OF_CHARGE, ModbusOperation.BAT_MIN_CELL_TEMPERATURE, ModbusOperation.BAT_MAX_CELL_TEMPERATURE, ModbusOperation.SOL_CHARGER_ON_OFF,
+				ModbusOperation.SOL_CHARGER_STATE, ModbusOperation.SOL_PV_VOLTAGE, ModbusOperation.SOL_PV_CURRENT, ModbusOperation.SOL_YIELD_TODAY, ModbusOperation.SOL_PV_POWER,
+				ModbusOperation.SOL_USER_YIELD, ModbusOperation.SYS_CCGX_RELAY_1_STATE, ModbusOperation.SYS_CCGX_RELAY_2_STATE, ModbusOperation.SYS_PC_AC_COUPLED_OUTPUT_L1,
+				ModbusOperation.SYS_PC_AC_COUPLED_OUTPUT_L2, ModbusOperation.SYS_PC_AC_COUPLED_OUTPUT_L3, ModbusOperation.SYS_PC_AC_COUPLED_INPUT_L1,
+				ModbusOperation.SYS_PC_AC_COUPLED_INPUT_L2, ModbusOperation.SYS_PC_AC_COUPLED_INPUT_L3, ModbusOperation.SYS_AC_CONSUMPTION_L1,
+				ModbusOperation.SYS_AC_CONSUMPTION_L2, ModbusOperation.SYS_AC_CONSUMPTION_L3, ModbusOperation.SYS_GRID_L1, ModbusOperation.SYS_GRID_L2, ModbusOperation.SYS_GRID_L3,
+				ModbusOperation.SYS_ACTIVE_INPUT_SOURCE, ModbusOperation.SYS_BATTERY_VOLTAGE_SYSTEM, ModbusOperation.SYS_BATTERY_CURRENT_SYSTEM,
+				ModbusOperation.SYS_BATTERY_POWER_SYSTEM, ModbusOperation.SYS_BATTERY_SOC_SYSTEM, ModbusOperation.SYS_BATTERY_STATE_SYSTEM,
+				ModbusOperation.SYS_BATTERY_CONSUMED_SYSTEM, ModbusOperation.SYS_BATTERY_TIME_TO_GO_SYSTEM, ModbusOperation.SYS_PV_DC_COUPLED_POWER,
+				ModbusOperation.SYS_PC_DC_COUPLED_CURRENT, ModbusOperation.SYS_CHARGE_POWER, ModbusOperation.SYS_DC_SYSTEM_POWER, ModbusOperation.SYS_VE_BUS_CHARGE_POWER,
+				ModbusOperation.GRI_GRID_L1_POWER, ModbusOperation.GRI_GRID_L2_POWER, ModbusOperation.GRI_GRID_L3_POWER, ModbusOperation.GRI_GRID_L1_ENERGY_FROM_NET,
+				ModbusOperation.GRI_GRID_L2_ENERGY_FROM_NET, ModbusOperation.GRI_GRID_L3_ENERGY_FROM_NET, ModbusOperation.GRI_GRID_L1_ENERGY_TO_NET,
+				ModbusOperation.GRI_GRID_L2_ENERGY_TO_NET, ModbusOperation.GRI_GRID_L3_ENERGY_TO_NET, ModbusOperation.GRI_GRID_L1_VOLTAGE, ModbusOperation.GRI_GRID_L1_CURRENT,
+				ModbusOperation.GRI_GRID_L2_VOLTAGE, ModbusOperation.GRI_GRID_L2_CURRENT, ModbusOperation.GRI_GRID_L3_VOLTAGE, ModbusOperation.GRI_GRID_L3_CURRENT );
 	}
 }
