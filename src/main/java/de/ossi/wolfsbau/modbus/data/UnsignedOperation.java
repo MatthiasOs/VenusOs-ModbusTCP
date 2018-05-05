@@ -2,9 +2,9 @@ package de.ossi.wolfsbau.modbus.data;
 
 import de.ossi.wolfsbau.modbus.data.unit.DBusUnit;
 
-public class ModbusUnsignedOperation extends ModbusOperation {
+public class UnsignedOperation extends ModbusOperation {
 
-	ModbusUnsignedOperation(int address, String description, double scaleFactor, DBusUnit dbusUnit) {
+	UnsignedOperation(int address, String description, double scaleFactor, DBusUnit dbusUnit) {
 		super(address, description, scaleFactor, dbusUnit);
 	}
 
