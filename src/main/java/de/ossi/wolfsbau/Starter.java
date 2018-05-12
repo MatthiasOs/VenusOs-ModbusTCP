@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
 
+import com.ghgande.j2mod.modbus.ModbusException;
+
 import de.ossi.wolfsbau.anfrager.WRAnfrager;
 import de.ossi.wolfsbau.db.DBModel;
 import de.ossi.wolfsbau.db.util.XMLtoDBConverter;
@@ -32,7 +34,7 @@ public class Starter {
 	private final ModbusTCPReader modbusReader = new ModbusTCPReader(IP_VICTRON, MODBUS_DEFAULT_PORT);
 	private final ModbusTCPWriter modbusWriter = new ModbusTCPWriter(IP_VICTRON, MODBUS_DEFAULT_PORT);
 
-	public static void main(String[] args) throws IOException, JAXBException, ForbiddenAccessException {
+	public static void main(String[] args) throws IOException, JAXBException, ForbiddenAccessException, ModbusException {
 		Starter starter = new Starter();
 //		starter.speichereAktuelleWRDaten();
 //		starter.speichereAktuelleVictronDaten();
@@ -51,7 +53,7 @@ public class Starter {
 		schreiber.saveDevice(XMLtoDBConverter.from(dev));
 	}
 	
-	public void schreibeVictronDaten() throws ForbiddenAccessException {
+	public void schreibeVictronDaten() throws ForbiddenAccessException, ModbusException {
 		//Before
 		System.out.println("Before:");
 		ModbusResultInt before = modbusReader.readOperationFromDevice(ModbusOperation.HUB_ESS_CONSTROL_LOOP_SETPOINT, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
@@ -64,7 +66,7 @@ public class Starter {
 		System.out.println(after.toString());
 	}
 
-	public void leseVictronDaten() {
+	public void leseVictronDaten() throws ModbusException {
 		ModbusResultInt stateOfCharge = modbusReader.readOperationFromDevice(ModbusOperation.SYS_BATTERY_SOC_SYSTEM, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
 		System.out.println(stateOfCharge.toString());
 	}

@@ -1,5 +1,7 @@
 package de.ossi.wolfsbau.modbus;
 
+import com.ghgande.j2mod.modbus.ModbusException;
+
 import de.ossi.wolfsbau.modbus.data.ModbusDevice;
 import de.ossi.wolfsbau.modbus.data.ModbusOperation;
 import de.ossi.wolfsbau.modbus.data.ModbusResultInt;
@@ -19,9 +21,9 @@ public abstract class ModbusReaderConnectionHandler extends ModbusConnectionHand
 		super(ip, port);
 	}
 
-	protected abstract ModbusResultInt readInternal(ModbusOperation operation, ModbusDevice device);
+	protected abstract ModbusResultInt readInternal(ModbusOperation operation, ModbusDevice device) throws ModbusException;
 
-	public ModbusResultInt readOperationFromDevice(ModbusOperation operation, ModbusDevice device) {
+	public ModbusResultInt readOperationFromDevice(ModbusOperation operation, ModbusDevice device) throws ModbusException {
 		ModbusResultInt result = null;
 		connect();
 		try {
