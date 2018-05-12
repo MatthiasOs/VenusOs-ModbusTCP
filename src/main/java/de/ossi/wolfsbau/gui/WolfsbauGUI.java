@@ -23,6 +23,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.xml.bind.JAXBException;
 
+import com.ghgande.j2mod.modbus.ModbusException;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -144,18 +145,33 @@ public class WolfsbauGUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				output.append(createAnfrage());
-				ModbusResultInt result = modbusReader.readOperationFromDevice(selectedOperation(), selectedDevice());
-				output.append(createAntwort(result));
+				ModbusResultInt result;
+				try {
+					result = modbusReader.readOperationFromDevice(selectedOperation(), selectedDevice());
+					output.append(createAntwort(result));
+				} catch (ModbusException e1) {
+					output.append(createExceptionAntwort(e1));
+				}
 			}
 		});
 		return read;
+	}
+
+	private String createExceptionAntwort(ModbusException e) {
+		StringBuilder antwort = new StringBuilder();
+		antwort.append(">>> Antwort:");
+		antwort.append(System.lineSeparator());
+		antwort.append(e.toString());
+		antwort.append("<<<");
+		antwort.append(System.lineSeparator());
+		return antwort.toString();
 	}
 
 	private String createAntwort(ModbusResultInt result) {
 		StringBuilder antwort = new StringBuilder();
 		antwort.append(">>> Antwort:");
 		antwort.append(System.lineSeparator());
-		antwort.append(result != null ? result.toString() : "Keine Antwort, siehe Log!");
+		antwort.append(result.toString());
 		antwort.append("<<<");
 		antwort.append(System.lineSeparator());
 		return antwort.toString();
