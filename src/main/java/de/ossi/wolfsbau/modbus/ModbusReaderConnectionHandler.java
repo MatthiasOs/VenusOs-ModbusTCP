@@ -25,7 +25,7 @@ public abstract class ModbusReaderConnectionHandler extends ModbusConnectionHand
 		ModbusResultInt result = null;
 		connect();
 		try {
-			readInternal(operation, device);
+			result = readInternal(operation, device);
 		} finally {
 			disconnect();
 		}

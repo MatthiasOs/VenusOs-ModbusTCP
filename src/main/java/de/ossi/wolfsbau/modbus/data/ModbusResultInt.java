@@ -18,7 +18,6 @@ public class ModbusResultInt {
 
 	@Override
 	public String toString() {
-		System.out.println("Wert: " + wert);
 		StringBuilder ausgabe = new StringBuilder();
 		ausgabe.append(operation.toString());
 		ausgabe.append(" ");

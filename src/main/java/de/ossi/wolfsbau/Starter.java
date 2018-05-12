@@ -8,7 +8,9 @@ import javax.xml.bind.JAXBException;
 import de.ossi.wolfsbau.anfrager.WRAnfrager;
 import de.ossi.wolfsbau.db.DBModel;
 import de.ossi.wolfsbau.db.util.XMLtoDBConverter;
+import de.ossi.wolfsbau.modbus.ForbiddenAccessException;
 import de.ossi.wolfsbau.modbus.ModbusTCPReader;
+import de.ossi.wolfsbau.modbus.ModbusTCPWriter;
 import de.ossi.wolfsbau.modbus.data.ModbusDevice;
 import de.ossi.wolfsbau.modbus.data.ModbusOperation;
 import de.ossi.wolfsbau.modbus.data.ModbusResultInt;
@@ -28,11 +30,13 @@ public class Starter {
 	private final WRAntwortParser parser = new WRAntwortParser();
 	private final DBModel schreiber = new DBModel(JDBC_PATH);
 	private final ModbusTCPReader modbusReader = new ModbusTCPReader(IP_VICTRON, MODBUS_DEFAULT_PORT);
+	private final ModbusTCPWriter modbusWriter = new ModbusTCPWriter(IP_VICTRON, MODBUS_DEFAULT_PORT);
 
-	public static void main(String[] args) throws IOException, JAXBException {
+	public static void main(String[] args) throws IOException, JAXBException, ForbiddenAccessException {
 		Starter starter = new Starter();
 //		 starter.speichereAktuelleWRDaten();
-		starter.speichereAktuelleVictronDaten();
+//		starter.speichereAktuelleVictronDaten();
+		starter.schreibeVictronDaten();
 	}
 
 	public void speichereAktuelleWRDaten() throws IOException, JAXBException {
@@ -46,8 +50,32 @@ public class Starter {
 		// XML Objekt in Entität umwandeln und un DB Speichern
 		schreiber.saveDevice(XMLtoDBConverter.from(dev));
 	}
+	
+	public void schreibeVictronDaten() throws ForbiddenAccessException {
+//		//Before
+//		System.out.println("Before:");
+//		ModbusResultInt ccgxRelay2StateBefore = modbusReader.readOperationFromDevice(ModbusOperation.SYS_CCGX_RELAY_2_STATE, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
+//		System.out.println(ccgxRelay2StateBefore.toString());
+//		//Write
+//		modbusWriter.writeOperationFromDevice(ModbusOperation.SYS_CCGX_RELAY_2_STATE, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0, 0);
+//		//After
+//		System.out.println("After:");
+//		ModbusResultInt ccgxRelay2StateAfter = modbusReader.readOperationFromDevice(ModbusOperation.SYS_CCGX_RELAY_2_STATE, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
+//		System.out.println(ccgxRelay2StateAfter.toString());
+		//Before
+		System.out.println("Before:");
+		ModbusResultInt before = modbusReader.readOperationFromDevice(ModbusOperation.HUB_ESS_CONSTROL_LOOP_SETPOINT, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
+		System.out.println(before.toString());
+		//Write
+		modbusWriter.writeOperationFromDevice(ModbusOperation.HUB_ESS_CONSTROL_LOOP_SETPOINT, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0, 0);
+		//After
+		System.out.println("After:");
+		ModbusResultInt after = modbusReader.readOperationFromDevice(ModbusOperation.HUB_ESS_CONSTROL_LOOP_SETPOINT, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
+		System.out.println(after.toString());
+	}
 
-	public void speichereAktuelleVictronDaten() {
+	public void leseVictronDaten() {
+		
 		ModbusResultInt stateOfCharge = modbusReader.readOperationFromDevice(
 				ModbusOperation.SYS_BATTERY_SOC_SYSTEM, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
 		System.out.println(stateOfCharge.toString());

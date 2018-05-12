@@ -60,6 +60,7 @@ public class WolfsbauGUI extends JFrame {
 		setTitle("WolfsbauGUI");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
+		setResizable(false);
 		setVisible(true);
 	}
 
@@ -155,9 +156,7 @@ public class WolfsbauGUI extends JFrame {
 		antwort.append(">>> Antwort:");
 		antwort.append(System.lineSeparator());
 		antwort.append(result != null ? result.toString() : "Keine Antwort, siehe Log!");
-		antwort.append(System.lineSeparator());
 		antwort.append("<<<");
-		antwort.append(System.lineSeparator());
 		antwort.append(System.lineSeparator());
 		return antwort.toString();
 	}

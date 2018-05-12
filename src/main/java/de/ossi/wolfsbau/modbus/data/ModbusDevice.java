@@ -43,8 +43,11 @@ public class ModbusDevice {
 	public static final ModbusDevice PV_INVERTER_8 = new ModbusDevice("PV Inverter instance 8", 28, 28);
 	public static final ModbusDevice PV_INVERTER_9 = new ModbusDevice("PV Inverter instance 9", 29, 29);
 
+	//Energiezähler am Netz
 	public static final ModbusDevice GRID_METER_0 = new ModbusDevice("Carlo Gavazi grid meters instance 0", 30, 30);
+	//Energiezähler West
 	public static final ModbusDevice GRID_METER_1 = new ModbusDevice("Carlo Gavazi grid meters instance 1", 31, 31);
+	//Energiezähler Ost
 	public static final ModbusDevice GRID_METER_2 = new ModbusDevice("Carlo Gavazi grid meters instance 2", 32, 32);
 	public static final ModbusDevice GRID_METER_3 = new ModbusDevice("Carlo Gavazi grid meters instance 3", 33, 33);
 	public static final ModbusDevice GRID_METER_4 = new ModbusDevice("Carlo Gavazi grid meters instance 4", 34, 34);
