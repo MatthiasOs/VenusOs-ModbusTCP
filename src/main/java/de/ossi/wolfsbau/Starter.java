@@ -34,7 +34,7 @@ public class Starter {
 
 	public static void main(String[] args) throws IOException, JAXBException, ForbiddenAccessException {
 		Starter starter = new Starter();
-//		 starter.speichereAktuelleWRDaten();
+//		starter.speichereAktuelleWRDaten();
 //		starter.speichereAktuelleVictronDaten();
 		starter.schreibeVictronDaten();
 	}
@@ -52,16 +52,6 @@ public class Starter {
 	}
 	
 	public void schreibeVictronDaten() throws ForbiddenAccessException {
-//		//Before
-//		System.out.println("Before:");
-//		ModbusResultInt ccgxRelay2StateBefore = modbusReader.readOperationFromDevice(ModbusOperation.SYS_CCGX_RELAY_2_STATE, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
-//		System.out.println(ccgxRelay2StateBefore.toString());
-//		//Write
-//		modbusWriter.writeOperationFromDevice(ModbusOperation.SYS_CCGX_RELAY_2_STATE, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0, 0);
-//		//After
-//		System.out.println("After:");
-//		ModbusResultInt ccgxRelay2StateAfter = modbusReader.readOperationFromDevice(ModbusOperation.SYS_CCGX_RELAY_2_STATE, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
-//		System.out.println(ccgxRelay2StateAfter.toString());
 		//Before
 		System.out.println("Before:");
 		ModbusResultInt before = modbusReader.readOperationFromDevice(ModbusOperation.HUB_ESS_CONSTROL_LOOP_SETPOINT, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
@@ -75,33 +65,8 @@ public class Starter {
 	}
 
 	public void leseVictronDaten() {
-		
-		ModbusResultInt stateOfCharge = modbusReader.readOperationFromDevice(
-				ModbusOperation.SYS_BATTERY_SOC_SYSTEM, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
+		ModbusResultInt stateOfCharge = modbusReader.readOperationFromDevice(ModbusOperation.SYS_BATTERY_SOC_SYSTEM, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
 		System.out.println(stateOfCharge.toString());
-		ModbusResultInt batteryVoltage = modbusReader.readOperationFromDevice(
-				ModbusOperation.SYS_BATTERY_VOLTAGE_SYSTEM, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
-		System.out.println(batteryVoltage.toString());
-		ModbusResultInt gridL1 = modbusReader
-				.readOperationFromDevice(ModbusOperation.SYS_GRID_L1, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
-		System.out.println(gridL1.toString());
-		ModbusResultInt gridPowerL1 = modbusReader
-				.readOperationFromDevice(ModbusOperation.GRI_GRID_L1_POWER, ModbusDevice.GRID_METER_2);
-		System.out.println(gridPowerL1.toString());
-		
-		ModbusResultInt gridL2 = modbusReader
-				.readOperationFromDevice(ModbusOperation.SYS_GRID_L2, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
-		System.out.println(gridL2.toString());
-		ModbusResultInt gridPowerL2 = modbusReader
-				.readOperationFromDevice(ModbusOperation.GRI_GRID_L2_POWER, ModbusDevice.GRID_METER_2);
-		System.out.println(gridPowerL2.toString());
-		
-		ModbusResultInt gridL3 = modbusReader
-				.readOperationFromDevice(ModbusOperation.SYS_GRID_L3, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
-		System.out.println(gridL3.toString());
-		ModbusResultInt gridPowerL3 = modbusReader
-				.readOperationFromDevice(ModbusOperation.GRI_GRID_L3_POWER, ModbusDevice.GRID_METER_2);
-		System.out.println(gridPowerL3.toString());
 	}
 
 }
