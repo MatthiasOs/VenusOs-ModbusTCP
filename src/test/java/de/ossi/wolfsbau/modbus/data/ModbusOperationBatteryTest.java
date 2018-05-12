@@ -1,7 +1,7 @@
 package de.ossi.wolfsbau.modbus.data;
 
 import static de.ossi.wolfsbau.modbus.data.ModbusOperation.BAT_BATTERY_TEMPERATURE;
-import static de.ossi.wolfsbau.modbus.data.ModbusOperation.BAT_MID_POINT_VOLTAGE_BATTERY_BANK;
+import static de.ossi.wolfsbau.modbus.data.ModbusOperation.BAT_BATTERY_VOLTAGE;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,11 +21,11 @@ public class ModbusOperationBatteryTest extends ModbusOperationTest {
 			{ BAT_BATTERY_TEMPERATURE, 0, 0D }, 
 			{ BAT_BATTERY_TEMPERATURE, MAX_SIGNED, 3276.7D }, 
 			{ BAT_BATTERY_TEMPERATURE, MAX_UNSIGNED, -0.1D }, 
-			/*BAT_MID_POINT_VOLTAGE_BATTERY_BANK: Unsigned; Scalefactor=100*/
-			{ BAT_MID_POINT_VOLTAGE_BATTERY_BANK, MAX_SIGNED + 1, 327.68 }, 
-			{ BAT_MID_POINT_VOLTAGE_BATTERY_BANK, 0, 0D }, 
-			{ BAT_MID_POINT_VOLTAGE_BATTERY_BANK, MAX_SIGNED, 327.67D }, 
-			{ BAT_MID_POINT_VOLTAGE_BATTERY_BANK, MAX_UNSIGNED, 655.35 }, 
+			/*BAT_BATTERY_VOLTAGE: Unsigned; Scalefactor=100*/
+			{ BAT_BATTERY_VOLTAGE, MAX_SIGNED + 1, 327.68 }, 
+			{ BAT_BATTERY_VOLTAGE, 0, 0D }, 
+			{ BAT_BATTERY_VOLTAGE, MAX_SIGNED, 327.67D }, 
+			{ BAT_BATTERY_VOLTAGE, MAX_UNSIGNED, 655.35 }, 
 			});
 	}
 
