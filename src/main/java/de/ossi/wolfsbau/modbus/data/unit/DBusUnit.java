@@ -31,6 +31,8 @@ public class DBusUnit {
 	public static final DBusUnit CHARGER_ON_OFF = new ChargerOnOff("Charger On/Off");
 	public static final DBusUnit CHARGE_STATE = new ChargeState("Charge state");
 	public static final DBusUnit POSITION = new Position("Position");
+	public static final DBusUnit BATTERYLIFE_STATE = new BatteryLifeState("BatteryLife State");
+	public static final DBusUnit START = new Start("Start");
 
 	private final String name;
 	protected final Map<Integer, String> values = new HashMap<>();

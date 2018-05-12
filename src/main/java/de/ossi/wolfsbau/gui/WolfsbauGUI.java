@@ -24,6 +24,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.xml.bind.JAXBException;
 
 import com.ghgande.j2mod.modbus.ModbusException;
+import com.ghgande.j2mod.modbus.ModbusSlaveException;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -148,7 +149,9 @@ public class WolfsbauGUI extends JFrame {
 				ModbusResultInt result;
 				try {
 					result = modbusReader.readOperationFromDevice(selectedOperation(), selectedDevice());
-					output.append(createAntwort(result));
+					output.append(createResultAntwort(result));
+				}catch (ModbusSlaveException e1) {
+					output.append(createAntwort("Das angegebene Gerät, unterstützt die Operation nicht!"));
 				} catch (ModbusException e1) {
 					output.append(createExceptionAntwort(e1));
 				}
@@ -157,24 +160,22 @@ public class WolfsbauGUI extends JFrame {
 		return read;
 	}
 
-	private String createExceptionAntwort(ModbusException e) {
+	private String createAntwort(String result) {
 		StringBuilder antwort = new StringBuilder();
 		antwort.append(">>> Antwort:");
 		antwort.append(System.lineSeparator());
-		antwort.append(e.toString());
+		antwort.append(result);
 		antwort.append("<<<");
 		antwort.append(System.lineSeparator());
 		return antwort.toString();
 	}
 
-	private String createAntwort(ModbusResultInt result) {
-		StringBuilder antwort = new StringBuilder();
-		antwort.append(">>> Antwort:");
-		antwort.append(System.lineSeparator());
-		antwort.append(result.toString());
-		antwort.append("<<<");
-		antwort.append(System.lineSeparator());
-		return antwort.toString();
+	private String createExceptionAntwort(ModbusException e) {
+		return createAntwort(e.toString());
+	}
+
+	private String createResultAntwort(ModbusResultInt result) {
+		return createAntwort(result.toString());
 	}
 
 	private String createAnfrage() {
