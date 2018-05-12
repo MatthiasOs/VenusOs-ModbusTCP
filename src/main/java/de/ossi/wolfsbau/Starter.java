@@ -8,7 +8,9 @@ import javax.xml.bind.JAXBException;
 import de.ossi.wolfsbau.anfrager.WRAnfrager;
 import de.ossi.wolfsbau.db.DBModel;
 import de.ossi.wolfsbau.db.util.XMLtoDBConverter;
+import de.ossi.wolfsbau.modbus.ForbiddenAccessException;
 import de.ossi.wolfsbau.modbus.ModbusTCPReader;
+import de.ossi.wolfsbau.modbus.ModbusTCPWriter;
 import de.ossi.wolfsbau.modbus.data.ModbusDevice;
 import de.ossi.wolfsbau.modbus.data.ModbusOperation;
 import de.ossi.wolfsbau.modbus.data.ModbusResultInt;
@@ -28,11 +30,13 @@ public class Starter {
 	private final WRAntwortParser parser = new WRAntwortParser();
 	private final DBModel schreiber = new DBModel(JDBC_PATH);
 	private final ModbusTCPReader modbusReader = new ModbusTCPReader(IP_VICTRON, MODBUS_DEFAULT_PORT);
+	private final ModbusTCPWriter modbusWriter = new ModbusTCPWriter(IP_VICTRON, MODBUS_DEFAULT_PORT);
 
-	public static void main(String[] args) throws IOException, JAXBException {
+	public static void main(String[] args) throws IOException, JAXBException, ForbiddenAccessException {
 		Starter starter = new Starter();
-//		 starter.speichereAktuelleWRDaten();
-		starter.speichereAktuelleVictronDaten();
+//		starter.speichereAktuelleWRDaten();
+//		starter.speichereAktuelleVictronDaten();
+		starter.schreibeVictronDaten();
 	}
 
 	public void speichereAktuelleWRDaten() throws IOException, JAXBException {
@@ -46,34 +50,23 @@ public class Starter {
 		// XML Objekt in Entität umwandeln und un DB Speichern
 		schreiber.saveDevice(XMLtoDBConverter.from(dev));
 	}
+	
+	public void schreibeVictronDaten() throws ForbiddenAccessException {
+		//Before
+		System.out.println("Before:");
+		ModbusResultInt before = modbusReader.readOperationFromDevice(ModbusOperation.HUB_ESS_CONSTROL_LOOP_SETPOINT, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
+		System.out.println(before.toString());
+		//Write
+		modbusWriter.writeOperationFromDevice(ModbusOperation.HUB_ESS_CONSTROL_LOOP_SETPOINT, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0, 0);
+		//After
+		System.out.println("After:");
+		ModbusResultInt after = modbusReader.readOperationFromDevice(ModbusOperation.HUB_ESS_CONSTROL_LOOP_SETPOINT, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
+		System.out.println(after.toString());
+	}
 
-	public void speichereAktuelleVictronDaten() {
-		ModbusResultInt stateOfCharge = modbusReader.readOperationFromDevice(
-				ModbusOperation.SYS_BATTERY_SOC_SYSTEM, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
+	public void leseVictronDaten() {
+		ModbusResultInt stateOfCharge = modbusReader.readOperationFromDevice(ModbusOperation.SYS_BATTERY_SOC_SYSTEM, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
 		System.out.println(stateOfCharge.toString());
-		ModbusResultInt batteryVoltage = modbusReader.readOperationFromDevice(
-				ModbusOperation.SYS_BATTERY_VOLTAGE_SYSTEM, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
-		System.out.println(batteryVoltage.toString());
-		ModbusResultInt gridL1 = modbusReader
-				.readOperationFromDevice(ModbusOperation.SYS_GRID_L1, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
-		System.out.println(gridL1.toString());
-		ModbusResultInt gridPowerL1 = modbusReader
-				.readOperationFromDevice(ModbusOperation.GRI_GRID_L1_POWER, ModbusDevice.GRID_METER_2);
-		System.out.println(gridPowerL1.toString());
-		
-		ModbusResultInt gridL2 = modbusReader
-				.readOperationFromDevice(ModbusOperation.SYS_GRID_L2, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
-		System.out.println(gridL2.toString());
-		ModbusResultInt gridPowerL2 = modbusReader
-				.readOperationFromDevice(ModbusOperation.GRI_GRID_L2_POWER, ModbusDevice.GRID_METER_2);
-		System.out.println(gridPowerL2.toString());
-		
-		ModbusResultInt gridL3 = modbusReader
-				.readOperationFromDevice(ModbusOperation.SYS_GRID_L3, ModbusDevice.VE_CAN_AND_SYSTEM_DEVICE_0);
-		System.out.println(gridL3.toString());
-		ModbusResultInt gridPowerL3 = modbusReader
-				.readOperationFromDevice(ModbusOperation.GRI_GRID_L3_POWER, ModbusDevice.GRID_METER_2);
-		System.out.println(gridPowerL3.toString());
 	}
 
 }

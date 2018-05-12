@@ -18,10 +18,10 @@ public class ModbusResultInt {
 
 	@Override
 	public String toString() {
-		System.out.println("Wert: " + wert);
 		StringBuilder ausgabe = new StringBuilder();
 		ausgabe.append(operation.toString());
-		ausgabe.append(" ");
+		ausgabe.append(System.lineSeparator());
+		ausgabe.append("Wert: ");
 		ausgabe.append(ermittleWertMitEinheit());
 		ausgabe.append(System.lineSeparator());
 		return ausgabe.toString();
