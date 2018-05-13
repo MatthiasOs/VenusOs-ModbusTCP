@@ -8,12 +8,12 @@ import de.ossi.wolfsbau.anfrager.WRAnfragerTest;
 import de.ossi.wolfsbau.db.DBModelTest;
 import de.ossi.wolfsbau.db.util.EnumPairTest;
 import de.ossi.wolfsbau.db.util.XMLtoDBConverterTest;
-import de.ossi.wolfsbau.modbus.data.ModbusOperationBatteryTest;
-import de.ossi.wolfsbau.modbus.data.ModbusOperationGridTest;
-import de.ossi.wolfsbau.modbus.data.ModbusOperationSolarTest;
-import de.ossi.wolfsbau.modbus.data.ModbusOperationSystemTest;
-import de.ossi.wolfsbau.modbus.data.ModbusOperationTemperatureTest;
-import de.ossi.wolfsbau.modbus.data.ModbusOperationVebusTest;
+import de.ossi.wolfsbau.modbus.data.operation.ModbusOperationBatteryTest;
+import de.ossi.wolfsbau.modbus.data.operation.ModbusOperationGridTest;
+import de.ossi.wolfsbau.modbus.data.operation.ModbusOperationSolarTest;
+import de.ossi.wolfsbau.modbus.data.operation.ModbusOperationSystemTest;
+import de.ossi.wolfsbau.modbus.data.operation.ModbusOperationTemperatureTest;
+import de.ossi.wolfsbau.modbus.data.operation.ModbusOperationVebusTest;
 import de.ossi.wolfsbau.parser.WRAntwortParserTest;
 
 @RunWith(Suite.class)

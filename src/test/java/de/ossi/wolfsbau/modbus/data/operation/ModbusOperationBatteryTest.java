@@ -1,7 +1,7 @@
-package de.ossi.wolfsbau.modbus.data;
+package de.ossi.wolfsbau.modbus.data.operation;
 
-import static de.ossi.wolfsbau.modbus.data.ModbusOperation.BAT_BATTERY_TEMPERATURE;
-import static de.ossi.wolfsbau.modbus.data.ModbusOperation.BAT_BATTERY_VOLTAGE;
+import static de.ossi.wolfsbau.modbus.data.operation.ModbusOperation.BAT_BATTERY_TEMPERATURE;
+import static de.ossi.wolfsbau.modbus.data.operation.ModbusOperation.BAT_BATTERY_VOLTAGE;
 
 import java.util.Arrays;
 import java.util.Collection;

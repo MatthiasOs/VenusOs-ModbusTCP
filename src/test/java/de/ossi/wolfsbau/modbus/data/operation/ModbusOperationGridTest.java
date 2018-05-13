@@ -1,7 +1,7 @@
-package de.ossi.wolfsbau.modbus.data;
+package de.ossi.wolfsbau.modbus.data.operation;
 
-import static de.ossi.wolfsbau.modbus.data.ModbusOperation.GRI_GRID_L1_ENERGY_TO_NET;
-import static de.ossi.wolfsbau.modbus.data.ModbusOperation.GRI_GRID_L1_POWER;
+import static de.ossi.wolfsbau.modbus.data.operation.ModbusOperation.GRI_GRID_L1_ENERGY_TO_NET;
+import static de.ossi.wolfsbau.modbus.data.operation.ModbusOperation.GRI_GRID_L1_POWER;
 
 import java.util.Arrays;
 import java.util.Collection;

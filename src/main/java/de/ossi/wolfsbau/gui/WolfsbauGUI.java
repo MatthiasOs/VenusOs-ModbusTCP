@@ -31,8 +31,8 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import de.ossi.wolfsbau.modbus.ModbusTCPReader;
 import de.ossi.wolfsbau.modbus.data.ModbusDevice;
-import de.ossi.wolfsbau.modbus.data.ModbusOperation;
 import de.ossi.wolfsbau.modbus.data.ModbusResultInt;
+import de.ossi.wolfsbau.modbus.data.operation.ModbusOperation;
 
 public class WolfsbauGUI extends JFrame {
 

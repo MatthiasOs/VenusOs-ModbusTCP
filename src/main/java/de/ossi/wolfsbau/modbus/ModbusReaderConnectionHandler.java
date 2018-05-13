@@ -3,8 +3,8 @@ package de.ossi.wolfsbau.modbus;
 import com.ghgande.j2mod.modbus.ModbusException;
 
 import de.ossi.wolfsbau.modbus.data.ModbusDevice;
-import de.ossi.wolfsbau.modbus.data.ModbusOperation;
 import de.ossi.wolfsbau.modbus.data.ModbusResultInt;
+import de.ossi.wolfsbau.modbus.data.operation.ModbusOperation;
 
 /**
  * Abstrakte Überklasse zum Öffnen und Schließen der Verbindung. Für Reader und
