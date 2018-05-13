@@ -2,6 +2,7 @@ package de.ossi.wolfsbau.modbus.data;
 
 import java.time.LocalDateTime;
 
+import de.ossi.wolfsbau.modbus.data.operation.ModbusOperation;
 import de.ossi.wolfsbau.modbus.data.unit.DBusUnit;
 
 public class ModbusResultInt {

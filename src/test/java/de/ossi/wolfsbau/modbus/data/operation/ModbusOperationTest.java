@@ -1,4 +1,4 @@
-package de.ossi.wolfsbau.modbus.data;
+package de.ossi.wolfsbau.modbus.data.operation;
 
 import static java.lang.Double.valueOf;
 import static org.junit.Assert.assertThat;
@@ -6,6 +6,8 @@ import static org.junit.Assert.assertThat;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameter;
+
+import de.ossi.wolfsbau.modbus.data.ModbusResultInt;
 
 /**
  * Definiert die Tests für die ModbusOperationen.

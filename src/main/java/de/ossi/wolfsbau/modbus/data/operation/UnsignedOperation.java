@@ -1,11 +1,11 @@
-package de.ossi.wolfsbau.modbus.data;
+package de.ossi.wolfsbau.modbus.data.operation;
 
 import de.ossi.wolfsbau.modbus.data.unit.DBusUnit;
 
 public class UnsignedOperation extends ModbusOperation {
 
-	UnsignedOperation(int address, String description, double scaleFactor, DBusUnit dbusUnit, AccessMode mode) {
-		super(address, description, scaleFactor, dbusUnit, mode);
+	UnsignedOperation(Category category, int address, String description, double scaleFactor, DBusUnit dbusUnit, AccessMode mode) {
+		super(category, address, description, scaleFactor, dbusUnit, mode);
 	}
 
 	@Override

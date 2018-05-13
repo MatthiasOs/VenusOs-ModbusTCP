@@ -4,8 +4,8 @@ import com.ghgande.j2mod.modbus.ModbusException;
 import com.ghgande.j2mod.modbus.procimg.SimpleInputRegister;
 
 import de.ossi.wolfsbau.modbus.data.ModbusDevice;
-import de.ossi.wolfsbau.modbus.data.ModbusOperation;
-import de.ossi.wolfsbau.modbus.data.ModbusOperation.AccessMode;
+import de.ossi.wolfsbau.modbus.data.operation.ModbusOperation;
+import de.ossi.wolfsbau.modbus.data.operation.ModbusOperation.AccessMode;
 
 public class ModbusTCPWriter extends ModbusWriteConnectionHandler {
 

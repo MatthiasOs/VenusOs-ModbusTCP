@@ -1,7 +1,7 @@
-package de.ossi.wolfsbau.modbus.data;
+package de.ossi.wolfsbau.modbus.data.operation;
 
-import static de.ossi.wolfsbau.modbus.data.ModbusOperation.VEB_BATTERY_VOLTAGE;
-import static de.ossi.wolfsbau.modbus.data.ModbusOperation.VEB_INPUT_POWER_1;
+import static de.ossi.wolfsbau.modbus.data.operation.ModbusOperation.VEB_BATTERY_VOLTAGE;
+import static de.ossi.wolfsbau.modbus.data.operation.ModbusOperation.VEB_INPUT_POWER_1;
 
 import java.util.Arrays;
 import java.util.Collection;

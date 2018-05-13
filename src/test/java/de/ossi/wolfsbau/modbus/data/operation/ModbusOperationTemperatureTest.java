@@ -1,6 +1,6 @@
-package de.ossi.wolfsbau.modbus.data;
+package de.ossi.wolfsbau.modbus.data.operation;
 
-import static de.ossi.wolfsbau.modbus.data.ModbusOperation.TEM_TEMPERATURE;
+import static de.ossi.wolfsbau.modbus.data.operation.ModbusOperation.TEM_TEMPERATURE;
 
 import java.util.Arrays;
 import java.util.Collection;

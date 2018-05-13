@@ -1,7 +1,7 @@
-package de.ossi.wolfsbau.modbus.data;
+package de.ossi.wolfsbau.modbus.data.operation;
 
-import static de.ossi.wolfsbau.modbus.data.ModbusOperation.SOL_PV_CURRENT;
-import static de.ossi.wolfsbau.modbus.data.ModbusOperation.SOL_YIELD_TODAY;
+import static de.ossi.wolfsbau.modbus.data.operation.ModbusOperation.SOL_PV_CURRENT;
+import static de.ossi.wolfsbau.modbus.data.operation.ModbusOperation.SOL_YIELD_TODAY;
 
 import java.util.Arrays;
 import java.util.Collection;
