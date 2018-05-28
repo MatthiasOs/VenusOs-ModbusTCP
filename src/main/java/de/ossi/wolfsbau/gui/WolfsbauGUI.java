@@ -1,5 +1,6 @@
 package de.ossi.wolfsbau.gui;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -19,6 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.xml.bind.JAXBException;
@@ -40,9 +42,11 @@ public class WolfsbauGUI extends JFrame {
 	private static final int MODBUS_DEFAULT_PORT = 502;
 	private static final long serialVersionUID = 1L;
 	private static final String SPALTEN = "4dlu,170dlu,8dlu,215dlu,8dlu,50dlu,4dlu";
-	private static final String ZEILEN = "4dlu,p,3dlu,p,8dlu,p,3dlu,100dlu,4dlu";
-	private final ModbusTCPReader modbusReader = new ModbusTCPReader(IP_VICTRON, MODBUS_DEFAULT_PORT);
+	private static final String ZEILEN = "4dlu,p,3dlu,p,3dlu,p,3dlu,p,8dlu,p,3dlu,100dlu,4dlu";
+	private ModbusTCPReader modbusReader;
 
+	private JTextField ipAdress;
+	private JTextField port;
 	private JTextArea output;
 	private JComboBox<ModbusOperation> operations;
 	private JComboBox<ModbusDevice> devices;
@@ -83,14 +87,20 @@ public class WolfsbauGUI extends JFrame {
 		FormLayout layout = new FormLayout(SPALTEN, ZEILEN);
 		PanelBuilder builder = new PanelBuilder(layout);
 		CellConstraints c = new CellConstraints();
-		builder.add(createOperationLabel(), c.xy(2, 2));
-		builder.add(createOperationsCombobox(), c.xy(2, 4));
-		builder.add(createDeviceLabel(), c.xy(4, 2));
-		builder.add(createDevicesCombobox(), c.xy(4, 4));
-		builder.add(createReadButton(), c.xy(6, 4));
-		builder.add(createOutputLabel(), c.xy(2, 6));
-		builder.add(createOutputArea(), c.xyw(2, 8, 5));
-		return builder.getPanel();
+		builder.add(createIpAdressLabel(), c.xy(2, 2));
+		builder.add(createPortLabel(), c.xy(4, 2));
+		builder.add(createIpAdressField(), c.xy(2, 4));
+		builder.add(createPortField(), c.xy(4, 4));
+		builder.add(createOperationLabel(), c.xy(2, 6));
+		builder.add(createOperationsCombobox(), c.xy(2, 8));
+		builder.add(createDeviceLabel(), c.xy(4, 6));
+		builder.add(createDevicesCombobox(), c.xy(4, 8));
+		builder.add(createReadButton(), c.xy(6, 8));
+		builder.add(createOutputLabel(), c.xy(2, 10));
+		builder.add(createOutputArea(), c.xyw(2, 12, 5));
+		JPanel panel = builder.getPanel();
+		panel.setBackground(Color.ORANGE);
+		return panel;
 	}
 
 	private JComponent createOutputLabel() {
@@ -103,9 +113,29 @@ public class WolfsbauGUI extends JFrame {
 		return operationLabel;
 	}
 
+	private JComponent createIpAdressLabel() {
+		JLabel adressLabel = new JLabel("Ip-Adresse:");
+		return adressLabel;
+	}
+
+	private JComponent createPortLabel() {
+		JLabel portLabel = new JLabel("Port:");
+		return portLabel;
+	}
+
 	private JComponent createDeviceLabel() {
 		JLabel deviceLabel = new JLabel("Device:");
 		return deviceLabel;
+	}
+
+	private JComponent createIpAdressField() {
+		ipAdress = new JTextField(IP_VICTRON);
+		return ipAdress;
+	}
+
+	private JComponent createPortField() {
+		port = new JTextField(String.valueOf(MODBUS_DEFAULT_PORT));
+		return port;
 	}
 
 	private JComponent createOperationsCombobox() {
@@ -148,9 +178,10 @@ public class WolfsbauGUI extends JFrame {
 				output.append(createAnfrage());
 				ModbusResultInt result;
 				try {
+					modbusReader = new ModbusTCPReader(ipAdress.getText().trim(), Integer.parseInt(port.getText().trim()));
 					result = modbusReader.readOperationFromDevice(selectedOperation(), selectedDevice());
 					output.append(createResultAntwort(result));
-				}catch (ModbusSlaveException e1) {
+				} catch (ModbusSlaveException e1) {
 					output.append(createAntwort("Das angegebene Gerät, unterstützt die Operation nicht!"));
 				} catch (ModbusException e1) {
 					output.append(createExceptionAntwort(e1));
