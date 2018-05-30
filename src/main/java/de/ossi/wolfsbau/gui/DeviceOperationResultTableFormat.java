@@ -2,6 +2,11 @@ package de.ossi.wolfsbau.gui;
 
 import ca.odell.glazedlists.gui.TableFormat;
 
+/**
+ * Tableformat welches angibt, wie die Tabelle aussieht, also Spalten Anzahl und Bezeichnung.
+ * @author ossi
+ *
+ */
 class DeviceOperationResultTableFormat implements TableFormat<DeviceOperationResultTO> {
 
 	@Override

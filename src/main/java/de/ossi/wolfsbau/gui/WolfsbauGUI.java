@@ -203,8 +203,7 @@ public class WolfsbauGUI extends JFrame {
 		add.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				DeviceOperationResultTO resultTO = new DeviceOperationResultTO(getSelected(operations), getSelected(devices));
-				resultEventList.add(resultTO);
+				resultEventList.add(new DeviceOperationResultTO(getSelected(operations), getSelected(devices)));
 			}
 		});
 		return add;

@@ -10,6 +10,12 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Transportopjekt für den Client um die Daten der Tabelle zu halten.
+ * 
+ * @author ossi
+ *
+ */
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @Getter
