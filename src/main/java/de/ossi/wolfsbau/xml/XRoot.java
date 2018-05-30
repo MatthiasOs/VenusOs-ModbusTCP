@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @XmlRootElement(name = "root")
@@ -14,6 +15,7 @@ import lombok.Setter;
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter
 @Setter
+@NoArgsConstructor
 public class XRoot {
 
 	@XmlElement(name = "Device")

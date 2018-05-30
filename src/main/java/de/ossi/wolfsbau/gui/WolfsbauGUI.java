@@ -185,6 +185,12 @@ public class WolfsbauGUI extends JFrame {
 		return devices.toArray(new ModbusDevice[devices.size()]);
 	}
 
+	private JComponent createReadButton() {
+		JButton read = new JButton("ReadAll");
+		read.addActionListener(new ReadAllAction());
+		return read;
+	}
+
 	private JComponent createDeleteButton() {
 		JButton remove = new JButton("Delete Selected");
 		remove.addActionListener(new ActionListener() {
@@ -211,12 +217,6 @@ public class WolfsbauGUI extends JFrame {
 
 	private <T> T getSelected(JComboBox<T> cb) {
 		return cb.getItemAt(cb.getSelectedIndex());
-	}
-
-	private JComponent createReadButton() {
-		JButton read = new JButton("ReadAll");
-		read.addActionListener(new ReadAllAction());
-		return read;
 	}
 
 	private final class ReadAllAction implements ActionListener {

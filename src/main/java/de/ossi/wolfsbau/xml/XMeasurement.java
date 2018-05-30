@@ -6,12 +6,14 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter
 @Setter
+@NoArgsConstructor
 public class XMeasurement {
 
 	@XmlAttribute(name = "Value")

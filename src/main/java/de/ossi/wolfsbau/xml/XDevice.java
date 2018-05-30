@@ -15,12 +15,14 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import de.ossi.wolfsbau.xml.adapter.LocalDateTimeAdapter;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter
 @Setter
+@NoArgsConstructor
 public class XDevice {
 
 	@XmlElementWrapper(name = "Measurements")
