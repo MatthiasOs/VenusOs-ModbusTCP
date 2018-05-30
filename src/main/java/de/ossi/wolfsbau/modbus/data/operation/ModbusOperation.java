@@ -4,6 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.ossi.wolfsbau.modbus.data.unit.DBusUnit;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Unterstuetzte Modbus Operationen nach dem Excel Sheet:
@@ -14,6 +18,10 @@ import de.ossi.wolfsbau.modbus.data.unit.DBusUnit;
  * @author ossi
  *
  */
+@EqualsAndHashCode
+@AllArgsConstructor
+@Getter
+@Setter
 public abstract class ModbusOperation {
 
 	public enum AccessMode {
@@ -196,26 +204,17 @@ public abstract class ModbusOperation {
 	// <<<
 
 	/** letzter Teil des dbus-service name im Excel: com.victronenergy. */
-	public final Category category;
+	private final Category category;
 	/** Address Spalte im Excel */
-	public final int address;
+	private final int address;
 	/** description Spalte im Excel */
-	public final String description;
+	private final String description;
 	/** Scalefactor Spalte im Excel */
-	public final double scaleFactor;
+	private final double scaleFactor;
 	/** dbus-unit Spalte im Excel */
-	public final DBusUnit dbusUnit;
+	private final DBusUnit dbusUnit;
 	/** writable Spalte im Excel */
-	public final AccessMode mode;
-
-	protected ModbusOperation(Category category, int address, String description, double scaleFactor, DBusUnit dbusUnit, AccessMode mode) {
-		this.category = category;
-		this.address = address;
-		this.description = description;
-		this.scaleFactor = scaleFactor;
-		this.dbusUnit = dbusUnit;
-		this.mode = mode;
-	}
+	private final AccessMode mode;
 
 	public abstract Double getSkaliertenWertInWertebreich(Integer registerWert);
 
@@ -225,7 +224,11 @@ public abstract class ModbusOperation {
 
 	@Override
 	public String toString() {
-		return new StringBuilder().append(description).append(" an Register: ").append(address).toString();
+		return new StringBuilder().append(category).append(": ").append(description).append(" an Register: ").append(address).toString();
+	}
+
+	public String getName() {
+		return new StringBuilder().append(category).append(": ").append(description).toString();
 	}
 
 	public static List<ModbusOperation> allOperations() {

@@ -18,6 +18,21 @@
 	</properties>
 
 	<dependencies>
+		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.16.22</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.glazedlists/glazedlists -->
+		<dependency>
+			<groupId>com.glazedlists</groupId>
+			<artifactId>glazedlists</artifactId>
+			<version>1.11.0</version>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/com.jgoodies/jgoodies-looks -->
 		<dependency>
 			<groupId>com.jgoodies</groupId>

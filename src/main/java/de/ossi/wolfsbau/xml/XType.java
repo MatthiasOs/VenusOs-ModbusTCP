@@ -4,8 +4,16 @@ import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+
 @XmlType
 @XmlEnum(String.class)
+@Getter
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@ToString
 public enum XType {
 	@XmlEnumValue("AC_Voltage")
 	AC_VOLTAGE(0, "AC_Voltage"),
@@ -34,25 +42,7 @@ public enum XType {
 	@XmlEnumValue("Derating")
 	DERATING(8, "Derating");
 
-	private final String name;
+	@ToString.Exclude
 	private final int ordinal;
-
-	XType(final int ordinal, final String name) {
-		this.name = name;
-		this.ordinal = ordinal;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public int getOrdinal() {
-		return ordinal;
-	}
-
-	@Override
-	public String toString() {
-		return name;
-	}
-
+	private final String name;
 }

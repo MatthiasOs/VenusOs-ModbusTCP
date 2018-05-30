@@ -6,20 +6,17 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @XmlRootElement(name = "root")
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
+@Getter
+@Setter
 public class XRoot {
 
 	@XmlElement(name = "Device")
 	private XDevice device;
-
-	public XDevice getDevice() {
-		return device;
-	}
-
-	public void setDevice(XDevice device) {
-		this.device = device;
-	}
 
 }

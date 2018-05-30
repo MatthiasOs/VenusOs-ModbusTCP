@@ -4,12 +4,16 @@ import java.time.LocalDateTime;
 
 import de.ossi.wolfsbau.modbus.data.operation.ModbusOperation;
 import de.ossi.wolfsbau.modbus.data.unit.DBusUnit;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
+@Getter
+@EqualsAndHashCode
 public class ModbusResultInt {
 
-	public final ModbusOperation operation;
-	public final Integer wert;
-	public final LocalDateTime zeitpunkt;
+	private final ModbusOperation operation;
+	private final Integer wert;
+	private final LocalDateTime zeitpunkt;
 
 	public ModbusResultInt(ModbusOperation operation, Integer wert) {
 		this.operation = operation;
@@ -29,12 +33,11 @@ public class ModbusResultInt {
 	}
 
 	private String ermittleWertMitEinheit() {
-		DBusUnit einheit = operation.dbusUnit;
+		DBusUnit einheit = operation.getDbusUnit();
 		if (einheit != null && einheit.hatSpezielleEinheit()) {
 			return einheit.getMesswertMitEinheit(wert);
 		} else {
-			return new StringBuilder().append(operation.getSkaliertenWertInWertebreich(wert))
-					.append(" ").append(einheit != null ? einheit.toString() : "").toString();
+			return new StringBuilder().append(operation.getSkaliertenWertInWertebreich(wert)).append(" ").append(einheit != null ? einheit.toString() : "").toString();
 		}
 	}
 }

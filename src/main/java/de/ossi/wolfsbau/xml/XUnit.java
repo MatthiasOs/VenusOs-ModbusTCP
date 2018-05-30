@@ -4,8 +4,16 @@ import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+
 @XmlType
 @XmlEnum(String.class)
+@Getter
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@ToString
 public enum XUnit {
 	@XmlEnumValue("V")
 	V(0, "V"),
@@ -25,24 +33,7 @@ public enum XUnit {
 	@XmlEnumValue("%")
 	PERCENT(5, "%");
 
-	private final String name;
+	@ToString.Exclude
 	private final int ordinal;
-
-	XUnit(final int ordinal, final String name) {
-		this.name = name;
-		this.ordinal = ordinal;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public int getOrdinal() {
-		return ordinal;
-	}
-
-	@Override
-	public String toString() {
-		return name;
-	}
+	private final String name;
 }

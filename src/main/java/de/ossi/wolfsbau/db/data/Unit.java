@@ -1,6 +1,18 @@
 package de.ossi.wolfsbau.db.data;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@ToString
 public enum Unit {
+	// all persisted classes must define a no-arg constructor
+	// with at least package visibility
 	V("V"),
 
 	A("A"),
@@ -15,21 +27,4 @@ public enum Unit {
 
 	private String name;
 
-	Unit() {
-		// all persisted classes must define a no-arg constructor
-		// with at least package visibility
-	}
-
-	Unit(final String name) {
-		this.name = name;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public String toString() {
-		return name;
-	}
 }

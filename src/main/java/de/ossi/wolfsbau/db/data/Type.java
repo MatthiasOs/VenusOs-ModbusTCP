@@ -1,6 +1,15 @@
 package de.ossi.wolfsbau.db.data;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.ToString;
+
+@Getter
+@AllArgsConstructor
+@ToString
 public enum Type {
+	// all persisted classes must define a no-arg constructor
+	// with at least package visibility
 	AC_VOLTAGE("AC_Voltage"),
 
 	AC_CURRENT("AC_Current"),
@@ -20,22 +29,4 @@ public enum Type {
 	DERATING("Derating");
 
 	private String name;
-
-	Type() {
-		// all persisted classes must define a no-arg constructor
-		// with at least package visibility
-	}
-
-	Type(final String name) {
-		this.name = name;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	@Override
-	public String toString() {
-		return name;
-	}
 }

@@ -14,9 +14,13 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import de.ossi.wolfsbau.xml.adapter.LocalDateTimeAdapter;
+import lombok.Getter;
+import lombok.Setter;
 
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
+@Getter
+@Setter
 public class XDevice {
 
 	@XmlElementWrapper(name = "Measurements")
@@ -41,22 +45,6 @@ public class XDevice {
 	@XmlAttribute(name = "DateTime")
 	private LocalDateTime requestTime;
 
-	public LocalDateTime getRequestTime() {
-		return requestTime;
-	}
-
-	public void setRequestTime(LocalDateTime requestTime) {
-		this.requestTime = requestTime;
-	}
-
-	public List<XMeasurement> getMeasurements() {
-		return measurements;
-	}
-
-	public void setMeasurements(List<XMeasurement> measurements) {
-		this.measurements = measurements;
-	}
-
 	public void addAll(Collection<XMeasurement> measurements) {
 		measurements.forEach(this::add);
 	}
@@ -66,62 +54,6 @@ public class XDevice {
 			this.measurements = new ArrayList<>();
 		}
 		this.measurements.add(measurement);
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Integer getNominalPower() {
-		return nominalPower;
-	}
-
-	public void setNominalPower(Integer nominalPower) {
-		this.nominalPower = nominalPower;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public String getSerial() {
-		return serial;
-	}
-
-	public void setSerial(String serial) {
-		this.serial = serial;
-	}
-
-	public Integer getBusAddress() {
-		return busAddress;
-	}
-
-	public void setBusAddress(Integer busAddress) {
-		this.busAddress = busAddress;
-	}
-
-	public String getNetBiosName() {
-		return netBiosName;
-	}
-
-	public void setNetBiosName(String netBiosName) {
-		this.netBiosName = netBiosName;
-	}
-
-	public String getIpAddress() {
-		return ipAddress;
-	}
-
-	public void setIpAddress(String ipAddress) {
-		this.ipAddress = ipAddress;
 	}
 
 }
