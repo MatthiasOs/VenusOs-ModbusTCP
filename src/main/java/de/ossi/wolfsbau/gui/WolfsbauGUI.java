@@ -47,7 +47,7 @@ public class WolfsbauGUI extends JFrame {
 	private static final String IP_VICTRON = "192.168.0.81";
 	private static final int MODBUS_DEFAULT_PORT = 502;
 	private static final long serialVersionUID = 1L;
-	private static final String SPALTEN = "4dlu,170dlu,8dlu,215dlu,8dlu,70dlu,4dlu";
+	private static final String SPALTEN = "3dlu,230dlu,8dlu,250dlu,8dlu,80dlu,1dlu";
 	private static final String ZEILEN = "4dlu,p,3dlu,p,3dlu,p,3dlu,p,8dlu,p,200dlu,3dlu,p,4dlu";
 	private ModbusTCPReader modbusReader;
 
@@ -109,7 +109,7 @@ public class WolfsbauGUI extends JFrame {
 		builder.add(createDevicesCombobox(), c.xy(4, 8));
 		builder.add(createAddButton(), c.xy(6, 8));
 		builder.add(createTablePane(), c.xywh(2, 10, 3, 2));
-		builder.add(createDeleteButton(), c.xy(6, 10));
+		builder.add(createRemoveButton(), c.xy(6, 10));
 		builder.add(createReadButton(), c.xy(4, 13));
 		JPanel panel = builder.getPanel();
 		panel.setBackground(Color.ORANGE);
@@ -191,14 +191,15 @@ public class WolfsbauGUI extends JFrame {
 		return read;
 	}
 
-	private JComponent createDeleteButton() {
-		JButton remove = new JButton("Delete Selected");
+	private JComponent createRemoveButton() {
+		JButton remove = new JButton("Remove Selected");
 		remove.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				List<DeviceOperationResultTO> tosToRemove = Arrays.stream(modbusOperationDeviceTable.getSelectedRows()).boxed().map(id -> resultEventList.get(id))
 						.collect(Collectors.toList());
 				tosToRemove.stream().forEach((to) -> resultEventList.remove(to));
+				modbusOperationDeviceTable.clearSelection();
 			}
 		});
 		return remove;
@@ -210,6 +211,7 @@ public class WolfsbauGUI extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				resultEventList.add(new DeviceOperationResultTO(getSelected(operations), getSelected(devices)));
+				modbusOperationDeviceTable.clearSelection();
 			}
 		});
 		return add;
