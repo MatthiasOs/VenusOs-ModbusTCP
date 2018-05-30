@@ -14,7 +14,7 @@ public class ForbiddenAccessException extends Exception {
 
 	private static String createExceptionMessage(ModbusOperation operation, ModbusDevice device, AccessMode requiredMode) {
 		return new StringBuilder().append("Es wurde versucht die Operation ").append(operation.toString()).append(" am Device ").append(device.toString())
-				.append(" aufzurufen. Die Operation hat den AccessMode: ").append(operation.mode).append(". Es wird aber der AccessMode: ").append(requiredMode)
+				.append(" aufzurufen. Die Operation hat den AccessMode: ").append(operation.getMode()).append(". Es wird aber der AccessMode: ").append(requiredMode)
 				.append(" benötigt!").toString();
 	}
 }

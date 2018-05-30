@@ -3,19 +3,27 @@ package de.ossi.wolfsbau.modbus.data;
 import java.util.Arrays;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
 /**
  * 
  * Unterstützte Modbus Geräte nach dem Excel Sheet:
- * CCGX-Modbus-TCP-register-list-2.12.xlsx 
+ * CCGX-Modbus-TCP-register-list-2.12.xlsx
+ * 
  * @author ossi
  *
  */
+@Getter
+@AllArgsConstructor
+@EqualsAndHashCode
 public class ModbusDevice {
 
 	public static final ModbusDevice CCGX_VE_BUS = new ModbusDevice("CCGX VE.Bus port (ttyO1)", 246, 257);
 	public static final ModbusDevice CCGX_VE_DIRECT_1 = new ModbusDevice("CCGX VE.Direct 1 port (ttyO0)", 247, 256);
 	public static final ModbusDevice CCGX_VE_DIRECT_2 = new ModbusDevice("CCGX VE.Direct 2 port, Venus GX VE.Direct 1 port (ttyO2)", 245, 258);
-	public static final ModbusDevice VENUS_GX_VE_DIRECT_2 = new ModbusDevice("Venus GX VE.Direct 2 port (ttyO4)", 243,			260);
+	public static final ModbusDevice VENUS_GX_VE_DIRECT_2 = new ModbusDevice("Venus GX VE.Direct 2 port (ttyO4)", 243, 260);
 	public static final ModbusDevice VENUS_GX_VE_PORT = new ModbusDevice("Venus GX VE.Bus port (ttyO5)", 242, 261);
 	public static final ModbusDevice VE_CAN_AND_SYSTEM_DEVICE_0 = new ModbusDevice("VE.Can device instance 0 and system device", 100, 0);
 	public static final ModbusDevice VE_CAN_DEVICE_1 = new ModbusDevice("VE.Can device instance 1", 1, 1);
@@ -43,11 +51,11 @@ public class ModbusDevice {
 	public static final ModbusDevice PV_INVERTER_8 = new ModbusDevice("PV Inverter instance 8", 28, 28);
 	public static final ModbusDevice PV_INVERTER_9 = new ModbusDevice("PV Inverter instance 9", 29, 29);
 
-	//Energiezähler am Netz
+	// Energiezähler am Netz
 	public static final ModbusDevice GRID_METER_0 = new ModbusDevice("Carlo Gavazi grid meters instance 0", 30, 30);
-	//Energiezähler West
+	// Energiezähler West
 	public static final ModbusDevice GRID_METER_1 = new ModbusDevice("Carlo Gavazi grid meters instance 1", 31, 31);
-	//Energiezähler Ost
+	// Energiezähler Ost
 	public static final ModbusDevice GRID_METER_2 = new ModbusDevice("Carlo Gavazi grid meters instance 2", 32, 32);
 	public static final ModbusDevice GRID_METER_3 = new ModbusDevice("Carlo Gavazi grid meters instance 3", 33, 33);
 	public static final ModbusDevice GRID_METER_4 = new ModbusDevice("Carlo Gavazi grid meters instance 4", 34, 34);
@@ -69,23 +77,17 @@ public class ModbusDevice {
 	public static final ModbusDevice VE_DIRECT_USB5 = new ModbusDevice("VE.Direct via USB (ttyUSB5)", 233, 293);
 	public static final ModbusDevice CAN_BUS_BMS = new ModbusDevice("CAN-bus BMS", 225, 512);
 
-	public final String name;
-	public final int unitId;
-	public final int deviceInstance;
+	private final String name;
+	private final int unitId;
+	private final int deviceInstance;
 
-	private ModbusDevice(String name, int unitId, int deviceInstance) {
-		this.name = name;
-		this.unitId = unitId;
-		this.deviceInstance = deviceInstance;
-	}
-	
 	@Override
 	public String toString() {
 		return new StringBuilder().append(name).append(" mit UnitId: ").append(unitId).toString();
 	}
-	
+
 	public static List<ModbusDevice> allDevices() {
-		return Arrays.asList( ModbusDevice.CAN_BUS_BMS, ModbusDevice.CCGX_VE_BUS, ModbusDevice.CCGX_VE_DIRECT_1, ModbusDevice.CCGX_VE_DIRECT_2, ModbusDevice.GRID_METER_0,
+		return Arrays.asList(ModbusDevice.CAN_BUS_BMS, ModbusDevice.CCGX_VE_BUS, ModbusDevice.CCGX_VE_DIRECT_1, ModbusDevice.CCGX_VE_DIRECT_2, ModbusDevice.GRID_METER_0,
 				ModbusDevice.GRID_METER_1, ModbusDevice.GRID_METER_2, ModbusDevice.GRID_METER_3, ModbusDevice.GRID_METER_4, ModbusDevice.PV_INVERTER_0, ModbusDevice.PV_INVERTER_1,
 				ModbusDevice.PV_INVERTER_2, ModbusDevice.PV_INVERTER_3, ModbusDevice.PV_INVERTER_4, ModbusDevice.PV_INVERTER_5, ModbusDevice.PV_INVERTER_6,
 				ModbusDevice.PV_INVERTER_7, ModbusDevice.PV_INVERTER_8, ModbusDevice.PV_INVERTER_9, ModbusDevice.REDFLOW_BATTERY_1, ModbusDevice.REDFLOW_BATTERY_2,
@@ -94,6 +96,6 @@ public class ModbusDevice {
 				ModbusDevice.VE_CAN_DEVICE_1, ModbusDevice.VE_CAN_DEVICE_2, ModbusDevice.VE_CAN_DEVICE_3, ModbusDevice.VE_CAN_DEVICE_4, ModbusDevice.VE_CAN_DEVICE_5,
 				ModbusDevice.VE_CAN_DEVICE_6, ModbusDevice.VE_CAN_DEVICE_7, ModbusDevice.VE_CAN_DEVICE_8, ModbusDevice.VE_CAN_DEVICE_9, ModbusDevice.VE_DIRECT_USB0,
 				ModbusDevice.VE_DIRECT_USB1, ModbusDevice.VE_DIRECT_USB2, ModbusDevice.VE_DIRECT_USB3, ModbusDevice.VE_DIRECT_USB4, ModbusDevice.VE_DIRECT_USB5,
-				ModbusDevice.VENUS_GX_VE_DIRECT_2, ModbusDevice.VENUS_GX_VE_PORT );
+				ModbusDevice.VENUS_GX_VE_DIRECT_2, ModbusDevice.VENUS_GX_VE_PORT);
 	}
 }

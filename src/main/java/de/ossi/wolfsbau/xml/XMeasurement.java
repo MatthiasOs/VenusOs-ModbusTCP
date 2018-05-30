@@ -5,8 +5,15 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 @XmlType
 @XmlAccessorType(XmlAccessType.FIELD)
+@Getter
+@Setter
+@NoArgsConstructor
 public class XMeasurement {
 
 	@XmlAttribute(name = "Value")
@@ -15,29 +22,4 @@ public class XMeasurement {
 	private XUnit unit;
 	@XmlAttribute(name = "Type")
 	private XType type;
-
-	public Double getValue() {
-		return value;
-	}
-
-	public void setValue(Double value) {
-		this.value = value;
-	}
-
-	public XUnit getUnit() {
-		return unit;
-	}
-
-	public void setUnit(XUnit unit) {
-		this.unit = unit;
-	}
-
-	public XType getType() {
-		return type;
-	}
-
-	public void setType(XType type) {
-		this.type = type;
-	}
-
 }

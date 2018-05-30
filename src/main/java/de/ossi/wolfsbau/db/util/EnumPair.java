@@ -8,7 +8,8 @@ import java.util.Optional;
  * Enum Pair welches zwei verschiedene Enums aufeinander matcht
  * 
  * TODO Besser generisch lösen. Problem ist type erasure. Deshalb kann man nicht
- * die beiden Methoden "V get(K k)" und "K get(V v)" haben.
+ * die beiden Methoden "V get(K k)" und "K get(V v)" haben. Andere Möglichkeit
+ * wäre beim Aufruf zu casten.
  * 
  * @author ossi
  *
@@ -42,8 +43,7 @@ public class EnumPair<K extends Enum<?>, V extends Enum<?>> {
 	}
 
 	public K getK(V v) {
-		Optional<K> kFound = enumPairs.entrySet().stream().filter(enumValue -> enumValue.getValue().equals(v))
-				.map(Map.Entry::getKey).findFirst();
+		Optional<K> kFound = enumPairs.entrySet().stream().filter(enumValue -> enumValue.getValue().equals(v)).map(Map.Entry::getKey).findFirst();
 		return kFound.isPresent() ? kFound.get() : null;
 	}
 

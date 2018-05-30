@@ -15,10 +15,10 @@ public class ModbusTCPWriter extends ModbusWriteConnectionHandler {
 
 	@Override
 	protected boolean writeInternal(ModbusOperation operation, ModbusDevice device, int wert) throws ForbiddenAccessException, ModbusException {
-		if (operation.mode != AccessMode.READ_WRITE) {
+		if (operation.getMode() != AccessMode.READ_WRITE) {
 			throw new ForbiddenAccessException(operation, device, AccessMode.READ_WRITE);
 		}
-		modbusMaster.writeSingleRegister(device.unitId, operation.address, new SimpleInputRegister(wert));
+		modbusMaster.writeSingleRegister(device.getUnitId(), operation.getAddress(), new SimpleInputRegister(wert));
 		return true;
 	}
 
