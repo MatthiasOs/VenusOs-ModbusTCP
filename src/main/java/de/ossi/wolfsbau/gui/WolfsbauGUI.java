@@ -1,11 +1,13 @@
 package de.ossi.wolfsbau.gui;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,6 +21,9 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -49,6 +54,7 @@ public class WolfsbauGUI extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final String SPALTEN = "3dlu,230dlu,8dlu,250dlu,8dlu,80dlu,1dlu";
 	private static final String ZEILEN = "4dlu,p,3dlu,p,3dlu,p,3dlu,p,8dlu,p,200dlu,3dlu,p,4dlu";
+	private static final String GITHUB_URL = "https://github.com/CommentSectionScientist/wolfsbau";
 	private ModbusTCPReader modbusReader;
 
 	private JTextField ipAddress;
@@ -72,6 +78,7 @@ public class WolfsbauGUI extends JFrame {
 	}
 
 	public WolfsbauGUI() {
+		this.setJMenuBar(createMenu());
 		this.add(createPanel());
 		setIcon();
 		setLookAndFeel();
@@ -80,6 +87,34 @@ public class WolfsbauGUI extends JFrame {
 		pack();
 		setResizable(false);
 		setVisible(true);
+	}
+
+	private JMenuBar createMenu() {
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menu = new JMenu("File");
+		JMenuItem menuItem = new JMenuItem("GitHub");
+		menuItem.addActionListener(new OpenGitHubAction());
+		menu.add(menuItem);
+		menuBar.add(menu);
+		return menuBar;
+	}
+
+	private class OpenGitHubAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			openWebpage(URI.create(GITHUB_URL));
+		}
+
+		public void openWebpage(URI uri) {
+			Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+			if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE)) {
+				try {
+					desktop.browse(uri);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	private void setLookAndFeel() {
@@ -225,7 +260,6 @@ public class WolfsbauGUI extends JFrame {
 				result.setErgebnis(readModbus(result.getOperation(), result.getModbusDevice()));
 				resultEventList.set(i, result);
 			}
-
 		}
 
 		private String readModbus(ModbusOperation modbusOperation, ModbusDevice modbusDevice) {
