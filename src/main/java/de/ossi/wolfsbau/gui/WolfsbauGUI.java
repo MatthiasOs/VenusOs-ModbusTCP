@@ -224,6 +224,15 @@ public class WolfsbauGUI extends JFrame {
 				result.setZeit(LocalDateTime.now());
 				result.setErgebnis(readModbus(result.getOperation(), result.getModbusDevice()));
 				resultEventList.set(i, result);
+				try {
+					/*
+					 * Bad Workaround: Modbus Devices sometimes have Problems answering too many
+					 * requests at once.
+					 */
+					Thread.sleep(100);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
 			}
 
 		}
