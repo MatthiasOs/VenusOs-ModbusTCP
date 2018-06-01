@@ -32,7 +32,7 @@ public class ModbusResultInt {
 		return ausgabe.toString();
 	}
 
-	private String ermittleWertMitEinheit() {
+	public String ermittleWertMitEinheit() {
 		DBusUnit einheit = operation.getDbusUnit();
 		if (einheit != null && einheit.hatSpezielleEinheit()) {
 			return einheit.getMesswertMitEinheit(wert);

@@ -51,7 +51,7 @@ public class WolfsbauGUI extends JFrame {
 	private static final String ZEILEN = "4dlu,p,3dlu,p,3dlu,p,3dlu,p,8dlu,p,200dlu,3dlu,p,4dlu";
 	private ModbusTCPReader modbusReader;
 
-	private JTextField ipAdress;
+	private JTextField ipAddress;
 	private JTextField port;
 	private JComboBox<ModbusOperation> operations;
 	private JComboBox<ModbusDevice> devices;
@@ -129,7 +129,7 @@ public class WolfsbauGUI extends JFrame {
 	}
 
 	private JComponent createIpAdressLabel() {
-		JLabel adressLabel = new JLabel("Ip-Adresse:");
+		JLabel adressLabel = new JLabel("IP-Address:");
 		return adressLabel;
 	}
 
@@ -144,8 +144,8 @@ public class WolfsbauGUI extends JFrame {
 	}
 
 	private JComponent createIpAdressField() {
-		ipAdress = new JTextField(IP_VICTRON);
-		return ipAdress;
+		ipAddress = new JTextField(IP_VICTRON);
+		return ipAddress;
 	}
 
 	private JComponent createPortField() {
@@ -170,23 +170,17 @@ public class WolfsbauGUI extends JFrame {
 	}
 
 	private JComponent createDevicesCombobox() {
-		devices = new JComboBox<>(unitIdSortedDevices());
+		devices = new JComboBox<>(allDevices());
 		return devices;
 	}
 
-	private ModbusDevice[] unitIdSortedDevices() {
+	private ModbusDevice[] allDevices() {
 		List<ModbusDevice> devices = ModbusDevice.allDevices();
-		Collections.sort(devices, new Comparator<ModbusDevice>() {
-			@Override
-			public int compare(ModbusDevice o1, ModbusDevice o2) {
-				return Integer.compare(o1.getUnitId(), o2.getUnitId());
-			}
-		});
 		return devices.toArray(new ModbusDevice[devices.size()]);
 	}
 
 	private JComponent createReadButton() {
-		JButton read = new JButton("ReadAll");
+		JButton read = new JButton("Read All");
 		read.addActionListener(new ReadAllAction());
 		return read;
 	}
@@ -210,21 +204,21 @@ public class WolfsbauGUI extends JFrame {
 		add.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				resultEventList.add(new DeviceOperationResultTO(getSelected(operations), getSelected(devices)));
+				resultEventList.add(new DeviceOperationResultTO(getSelectedItem(operations), getSelectedItem(devices)));
 				modbusOperationDeviceTable.clearSelection();
 			}
 		});
 		return add;
 	}
 
-	private <T> T getSelected(JComboBox<T> cb) {
+	private <T> T getSelectedItem(JComboBox<T> cb) {
 		return cb.getItemAt(cb.getSelectedIndex());
 	}
 
 	private final class ReadAllAction implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			modbusReader = readerFromTextfieldAdress();
+			modbusReader = readerFromAddressfield();
 			for (int i = 0; i < resultEventList.size(); i++) {
 				DeviceOperationResultTO result = resultEventList.get(i);
 				result.setZeit(LocalDateTime.now());
@@ -237,16 +231,16 @@ public class WolfsbauGUI extends JFrame {
 		private String readModbus(ModbusOperation modbusOperation, ModbusDevice modbusDevice) {
 			try {
 				ModbusResultInt modbusResult = modbusReader.readOperationFromDevice(modbusOperation, modbusDevice);
-				return String.valueOf(modbusResult.getWert());
+				return String.valueOf(modbusResult.ermittleWertMitEinheit());
 			} catch (ModbusSlaveException e1) {
-				return "Operation/Device";
+				return "Device doesn't support Operation";
 			} catch (ModbusException e1) {
 				return "ModbusException";
 			}
 		}
 
-		private ModbusTCPReader readerFromTextfieldAdress() {
-			return new ModbusTCPReader(ipAdress.getText().trim(), Integer.parseInt(port.getText().trim()));
+		private ModbusTCPReader readerFromAddressfield() {
+			return new ModbusTCPReader(ipAddress.getText().trim(), Integer.parseInt(port.getText().trim()));
 		}
 	}
 }
