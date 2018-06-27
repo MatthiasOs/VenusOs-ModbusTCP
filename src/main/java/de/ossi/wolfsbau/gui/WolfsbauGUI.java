@@ -126,7 +126,7 @@ public class WolfsbauGUI extends JFrame {
 	}
 
 	private void setIcon() {
-		Image img = new ImageIcon(this.getClass().getResource("/icon-solarpower.png")).getImage();
+		Image img = new ImageIcon(this.getClass().getResource("/SolarPanel.png")).getImage();
 		this.setIconImage(img);
 	}
 
