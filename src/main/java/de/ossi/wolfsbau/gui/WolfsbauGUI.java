@@ -147,7 +147,7 @@ public class WolfsbauGUI extends JFrame {
 		builder.add(createRemoveButton(), c.xy(6, 10));
 		builder.add(createReadButton(), c.xy(4, 13));
 		JPanel panel = builder.getPanel();
-		panel.setBackground(Color.ORANGE);
+		panel.setBackground(new Color(155,200,255));
 		return panel;
 	}
 
