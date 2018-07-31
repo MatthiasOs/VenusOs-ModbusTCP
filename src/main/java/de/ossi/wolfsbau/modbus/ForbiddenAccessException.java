@@ -13,8 +13,8 @@ public class ForbiddenAccessException extends Exception {
 	}
 
 	private static String createExceptionMessage(ModbusOperation operation, ModbusDevice device, AccessMode requiredMode) {
-		return new StringBuilder().append("Es wurde versucht die Operation ").append(operation.toString()).append(" am Device ").append(device.toString())
-				.append(" aufzurufen. Die Operation hat den AccessMode: ").append(operation.getMode()).append(". Es wird aber der AccessMode: ").append(requiredMode)
-				.append(" benötigt!").toString();
+		return new StringBuilder().append("Tried to query ").append(operation.toString()).append(" on device ").append(device.toString())
+				.append(".\n The operation has the AccessMode: ").append(operation.getMode()).append(". But AccessMode: ").append(requiredMode)
+				.append(" is required!").toString();
 	}
 }

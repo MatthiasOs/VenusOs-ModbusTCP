@@ -24,6 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -43,22 +44,26 @@ import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.swing.AdvancedTableModel;
 import ca.odell.glazedlists.swing.GlazedListsSwing;
 import de.ossi.wolfsbau.modbus.ModbusTCPReader;
+import de.ossi.wolfsbau.modbus.ModbusTCPWriter;
 import de.ossi.wolfsbau.modbus.data.ModbusDevice;
 import de.ossi.wolfsbau.modbus.data.ModbusResultInt;
 import de.ossi.wolfsbau.modbus.data.operation.ModbusOperation;
 
 public class WolfsbauGUI extends JFrame {
 
+	private static final Color LIGHT_BLUE = new Color(155, 200, 255);
 	private static final String IP_VICTRON = "192.168.0.81";
 	private static final int MODBUS_DEFAULT_PORT = 502;
 	private static final long serialVersionUID = 1L;
-	private static final String SPALTEN = "3dlu,230dlu,8dlu,250dlu,8dlu,80dlu,1dlu";
-	private static final String ZEILEN = "4dlu,p,3dlu,p,3dlu,p,3dlu,p,8dlu,p,200dlu,3dlu,p,4dlu";
+	private static final String SPALTEN = "3dlu,230dlu,8dlu,123dlu,3dlu,123dlu,1dlu";
+	private static final String ZEILEN = "4dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,200dlu,3dlu,p,4dlu";
 	private static final String GITHUB_URL = "https://github.com/CommentSectionScientist/wolfsbau";
 	private ModbusTCPReader modbusReader;
+	private ModbusTCPWriter modbusWriter;
 
 	private JTextField ipAddress;
 	private JTextField port;
+	private JTextField writeInput;
 	private JComboBox<ModbusOperation> operations;
 	private JComboBox<ModbusDevice> devices;
 	private EventList<DeviceOperationResultTO> resultEventList;
@@ -137,17 +142,20 @@ public class WolfsbauGUI extends JFrame {
 		builder.add(createIpAdressLabel(), c.xy(2, 2));
 		builder.add(createPortLabel(), c.xy(4, 2));
 		builder.add(createIpAdressField(), c.xy(2, 4));
-		builder.add(createPortField(), c.xy(4, 4));
+		builder.add(createPortField(), c.xyw(4, 4, 3));
 		builder.add(createOperationLabel(), c.xy(2, 6));
 		builder.add(createOperationsCombobox(), c.xy(2, 8));
 		builder.add(createDeviceLabel(), c.xy(4, 6));
-		builder.add(createDevicesCombobox(), c.xy(4, 8));
-		builder.add(createAddButton(), c.xy(6, 8));
-		builder.add(createTablePane(), c.xywh(2, 10, 3, 2));
-		builder.add(createRemoveButton(), c.xy(6, 10));
-		builder.add(createReadButton(), c.xy(4, 13));
+		builder.add(createDevicesCombobox(), c.xyw(4, 8, 3));
+		builder.add(createWriteInputLabel(), c.xy(4, 10));
+		builder.add(createAddButton(), c.xy(2, 12));
+		builder.add(createWriteInputField(), c.xy(4, 12));
+		builder.add(createWriteButton(), c.xy(6, 12));
+		builder.add(createTablePane(), c.xyw(2, 14, 5));
+		builder.add(createRemoveButton(), c.xy(2, 16));
+		builder.add(createReadButton(), c.xyw(4, 16, 3));
 		JPanel panel = builder.getPanel();
-		panel.setBackground(new Color(155,200,255));
+		panel.setBackground(LIGHT_BLUE);
 		return panel;
 	}
 
@@ -156,6 +164,11 @@ public class WolfsbauGUI extends JFrame {
 		modbusOperationDeviceTable = new JTable(tableModel);
 		modbusOperationDeviceTable.setColumnSelectionAllowed(false);
 		return new JScrollPane(modbusOperationDeviceTable);
+	}
+
+	private JComponent createWriteInputLabel() {
+		JLabel inputLabel = new JLabel("Input Value:");
+		return inputLabel;
 	}
 
 	private JComponent createOperationLabel() {
@@ -181,6 +194,11 @@ public class WolfsbauGUI extends JFrame {
 	private JComponent createIpAdressField() {
 		ipAddress = new JTextField(IP_VICTRON);
 		return ipAddress;
+	}
+
+	private JComponent createWriteInputField() {
+		writeInput = new JTextField();
+		return writeInput;
 	}
 
 	private JComponent createPortField() {
@@ -246,8 +264,43 @@ public class WolfsbauGUI extends JFrame {
 		return add;
 	}
 
+	private JComponent createWriteButton() {
+		JButton write = new JButton("Write");
+		write.addActionListener(new WriteAction());
+		return write;
+	}
+
 	private <T> T getSelectedItem(JComboBox<T> cb) {
 		return cb.getItemAt(cb.getSelectedIndex());
+	}
+
+	private final class WriteAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (writeInput.getText().isEmpty()) {
+				JOptionPane.showMessageDialog(WolfsbauGUI.this, "No input value specified!", "Write input field empty", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
+			modbusWriter = writerFromAdressfield();
+			try {
+				modbusWriter.writeOperationFromDevice(getSelectedItem(operations), getSelectedItem(devices), Integer.parseInt(writeInput.getText().trim()));
+				JOptionPane.showMessageDialog(WolfsbauGUI.this, "Write successful!");
+			} catch (ModbusSlaveException e1) {
+				showErrorDialog(e1, "The Device doesn't support this operation!\n" + e1.getMessage());
+			} catch (NumberFormatException e2) {
+				showErrorDialog(e2, "Only numbers are allowed!\n" + e2.getMessage());
+			} catch (Exception e3) {
+				showErrorDialog(e3, e3.getMessage());
+			}
+		}
+
+		private void showErrorDialog(Exception e, String msg) {
+			JOptionPane.showMessageDialog(WolfsbauGUI.this, msg, e.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
+		}
+
+		private ModbusTCPWriter writerFromAdressfield() {
+			return new ModbusTCPWriter(ipAddress.getText().trim(), Integer.parseInt(port.getText().trim()));
+		}
 	}
 
 	private final class ReadAllAction implements ActionListener {
@@ -285,5 +338,7 @@ public class WolfsbauGUI extends JFrame {
 		private ModbusTCPReader readerFromAddressfield() {
 			return new ModbusTCPReader(ipAddress.getText().trim(), Integer.parseInt(port.getText().trim()));
 		}
+
 	}
+
 }

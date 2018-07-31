@@ -22,9 +22,9 @@ class DeviceOperationResultTableFormat implements TableFormat<DeviceOperationRes
 		case 1:
 			return "Device";
 		case 2:
-			return "Zeit";
+			return "Time";
 		case 3:
-			return "Ergebnis";
+			return "Result";
 		default:
 			return "";
 		}
