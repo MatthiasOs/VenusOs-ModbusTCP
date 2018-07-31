@@ -83,7 +83,7 @@ public class ModbusDevice {
 
 	@Override
 	public String toString() {
-		return new StringBuilder().append(name).append(" mit UnitId: ").append(unitId).toString();
+		return new StringBuilder().append(name).append(" with UnitId: ").append(unitId).toString();
 	}
 
 	public static List<ModbusDevice> allDevices() {

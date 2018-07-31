@@ -224,7 +224,7 @@ public abstract class ModbusOperation {
 
 	@Override
 	public String toString() {
-		return new StringBuilder().append(category).append(": ").append(description).append(" an Register: ").append(address).toString();
+		return new StringBuilder().append(category).append(": ").append(description).append(" on register: ").append(address).toString();
 	}
 
 	public String getName() {
