@@ -1,5 +1,6 @@
 package de.ossi.wolfsbau.gui;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import de.ossi.wolfsbau.modbus.data.ModbusDevice;
@@ -19,7 +20,8 @@ import lombok.Setter;
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @Getter
-public class DeviceOperationResultTO {
+public class DeviceOperationResultTO implements Serializable{
+	private static final long serialVersionUID = 1L;
 	@NonNull
 	private final ModbusOperation operation;
 	@NonNull

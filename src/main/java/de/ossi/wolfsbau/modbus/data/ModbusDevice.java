@@ -1,5 +1,6 @@
 package de.ossi.wolfsbau.modbus.data;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,8 +19,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode
-public class ModbusDevice {
-
+public class ModbusDevice implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	public static final ModbusDevice CCGX_VE_BUS = new ModbusDevice("CCGX VE.Bus port (ttyO1)", 246, 257);
 	public static final ModbusDevice CCGX_VE_DIRECT_1 = new ModbusDevice("CCGX VE.Direct 1 port (ttyO0)", 247, 256);
 	public static final ModbusDevice CCGX_VE_DIRECT_2 = new ModbusDevice("CCGX VE.Direct 2 port, Venus GX VE.Direct 1 port (ttyO2)", 245, 258);

@@ -1,10 +1,12 @@
 package de.ossi.wolfsbau.modbus.data.unit;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DBusUnit {
+public class DBusUnit implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	public static final DBusUnit V = new DBusUnit("V");
 	public static final DBusUnit V_AC = new DBusUnit("V AC");
 	public static final DBusUnit V_DC = new DBusUnit("V DC");
