@@ -1,5 +1,6 @@
 package de.ossi.wolfsbau.modbus.data.operation;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,7 +23,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public abstract class ModbusOperation {
+public abstract class ModbusOperation implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 
 	public enum AccessMode {
 		READ_WRITE, READ_ONLY

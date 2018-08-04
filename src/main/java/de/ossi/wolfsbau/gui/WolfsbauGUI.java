@@ -6,9 +6,16 @@ import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -19,6 +26,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -51,13 +59,15 @@ import de.ossi.wolfsbau.modbus.data.operation.ModbusOperation;
 
 public class WolfsbauGUI extends JFrame {
 
+	private static final String FILE_ENDING = ".wolfsbau";
 	private static final Color LIGHT_BLUE = new Color(155, 200, 255);
 	private static final String IP_VICTRON = "192.168.0.81";
 	private static final int MODBUS_DEFAULT_PORT = 502;
 	private static final long serialVersionUID = 1L;
-	private static final String SPALTEN = "3dlu,230dlu,8dlu,123dlu,3dlu,123dlu,1dlu";
+	private static final String SPALTEN = "3dlu,123dlu,3dlu,123dlu,8dlu,123dlu,3dlu,123dlu,1dlu";
 	private static final String ZEILEN = "4dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,200dlu,3dlu,p,4dlu";
 	private static final String GITHUB_URL = "https://github.com/CommentSectionScientist/wolfsbau";
+	private static final DateTimeFormatter FILE_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss");
 	private ModbusTCPReader modbusReader;
 	private ModbusTCPWriter modbusWriter;
 
@@ -116,7 +126,7 @@ public class WolfsbauGUI extends JFrame {
 				try {
 					desktop.browse(uri);
 				} catch (Exception e) {
-					e.printStackTrace();
+					showErrorDialog(e, e.getMessage());
 				}
 			}
 		}
@@ -126,7 +136,7 @@ public class WolfsbauGUI extends JFrame {
 		try {
 			UIManager.setLookAndFeel("com.jgoodies.looks.windows.WindowsLookAndFeel");
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-			e.printStackTrace();
+			showErrorDialog(e, e.getMessage());
 		}
 	}
 
@@ -140,20 +150,22 @@ public class WolfsbauGUI extends JFrame {
 		PanelBuilder builder = new PanelBuilder(layout);
 		CellConstraints c = new CellConstraints();
 		builder.add(createIpAdressLabel(), c.xy(2, 2));
-		builder.add(createPortLabel(), c.xy(4, 2));
-		builder.add(createIpAdressField(), c.xy(2, 4));
-		builder.add(createPortField(), c.xyw(4, 4, 3));
-		builder.add(createOperationLabel(), c.xy(2, 6));
-		builder.add(createOperationsCombobox(), c.xy(2, 8));
-		builder.add(createDeviceLabel(), c.xy(4, 6));
-		builder.add(createDevicesCombobox(), c.xyw(4, 8, 3));
-		builder.add(createWriteInputLabel(), c.xy(4, 10));
+		builder.add(createPortLabel(), c.xy(6, 2));
+		builder.add(createIpAdressField(), c.xyw(2, 4, 3));
+		builder.add(createPortField(), c.xyw(6, 4, 3));
+		builder.add(createOperationLabel(), c.xyw(2, 6, 3));
+		builder.add(createOperationsCombobox(), c.xyw(2, 8, 3));
+		builder.add(createDeviceLabel(), c.xy(6, 6));
+		builder.add(createDevicesCombobox(), c.xyw(6, 8, 3));
+		builder.add(createWriteInputLabel(), c.xy(6, 10));
 		builder.add(createAddButton(), c.xy(2, 12));
-		builder.add(createWriteInputField(), c.xy(4, 12));
-		builder.add(createWriteButton(), c.xy(6, 12));
-		builder.add(createTablePane(), c.xyw(2, 14, 5));
-		builder.add(createRemoveButton(), c.xy(2, 16));
-		builder.add(createReadButton(), c.xyw(4, 16, 3));
+		builder.add(createLoadButton(), c.xy(4, 12));
+		builder.add(createWriteInputField(), c.xy(6, 12));
+		builder.add(createWriteButton(), c.xy(8, 12));
+		builder.add(createTablePane(), c.xyw(2, 14, 7));
+		builder.add(createSaveButton(), c.xy(4, 16));
+		builder.add(createRemoveButton(), c.xy(6, 16));
+		builder.add(createReadButton(), c.xy(8, 16));
 		JPanel panel = builder.getPanel();
 		panel.setBackground(LIGHT_BLUE);
 		return panel;
@@ -245,11 +257,70 @@ public class WolfsbauGUI extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				List<DeviceOperationResultTO> tosToRemove = Arrays.stream(modbusOperationDeviceTable.getSelectedRows()).boxed().map(id -> resultEventList.get(id))
 						.collect(Collectors.toList());
-				tosToRemove.stream().forEach((to) -> resultEventList.remove(to));
-				modbusOperationDeviceTable.clearSelection();
+				if (!tosToRemove.isEmpty()) {
+					tosToRemove.stream().forEach((to) -> resultEventList.remove(to));
+					modbusOperationDeviceTable.clearSelection();
+				}
 			}
+
 		});
 		return remove;
+	}
+
+	private JComponent createSaveButton() {
+		JButton save = new JButton("Save Selection");
+		save.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				List<DeviceOperationResultTO> tosToSave = resultEventList.stream().collect(Collectors.toList());
+				if (!tosToSave.isEmpty()) {
+					// Remove old Times/Results for TOs
+					tosToSave.stream().forEach(to -> to.setErgebnis(null));
+					tosToSave.stream().forEach(to -> to.setZeit(null));
+					serializeTOs(tosToSave);
+				}
+			}
+
+			private void serializeTOs(List<DeviceOperationResultTO> tosToSave) {
+				File f = new File(FILE_DATE_FORMATTER.format(LocalDateTime.now()) + FILE_ENDING);
+				try (FileOutputStream fos = new FileOutputStream(f); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+					oos.writeObject(tosToSave);
+					oos.flush();
+				} catch (IOException e) {
+					showErrorDialog(e, e.getMessage());
+				}
+				JOptionPane.showMessageDialog(WolfsbauGUI.this, "Selection saved as File:\n" + f.getAbsolutePath());
+			}
+		});
+		return save;
+	}
+
+	private JComponent createLoadButton() {
+		JButton load = new JButton("Load Selection");
+		load.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+				int response = chooser.showOpenDialog(null);
+				if (response == JFileChooser.APPROVE_OPTION) {
+					List<DeviceOperationResultTO> inputTOs = readTOs(new File(chooser.getSelectedFile().getAbsolutePath()));
+					resultEventList.clear();
+					inputTOs.forEach(resultEventList::add);
+				}
+			}
+
+			@SuppressWarnings("unchecked")
+			private List<DeviceOperationResultTO> readTOs(File file) {
+				List<DeviceOperationResultTO> inputTOs = new ArrayList<>();
+				try (FileInputStream fis = new FileInputStream(file); ObjectInputStream ois = new ObjectInputStream(fis)) {
+					inputTOs = (List<DeviceOperationResultTO>) ois.readObject();
+				} catch (IOException | ClassNotFoundException e1) {
+					showErrorDialog(e1, e1.getMessage());
+				}
+				return inputTOs;
+			}
+		});
+		return load;
 	}
 
 	private JComponent createAddButton() {
@@ -294,13 +365,13 @@ public class WolfsbauGUI extends JFrame {
 			}
 		}
 
-		private void showErrorDialog(Exception e, String msg) {
-			JOptionPane.showMessageDialog(WolfsbauGUI.this, msg, e.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
-		}
-
 		private ModbusTCPWriter writerFromAdressfield() {
 			return new ModbusTCPWriter(ipAddress.getText().trim(), Integer.parseInt(port.getText().trim()));
 		}
+	}
+
+	private void showErrorDialog(Exception e, String msg) {
+		JOptionPane.showMessageDialog(WolfsbauGUI.this, msg, e.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
 	}
 
 	private final class ReadAllAction implements ActionListener {
@@ -319,7 +390,7 @@ public class WolfsbauGUI extends JFrame {
 					 */
 					Thread.sleep(100);
 				} catch (InterruptedException e1) {
-					e1.printStackTrace();
+					showErrorDialog(e1, e1.getMessage());
 				}
 			}
 		}
