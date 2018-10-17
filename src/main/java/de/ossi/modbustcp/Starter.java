@@ -7,9 +7,9 @@ import javax.xml.bind.JAXBException;
 
 import com.ghgande.j2mod.modbus.ModbusException;
 
-import de.ossi.modbustcp.anfrager.WRAnfrager;
 import de.ossi.modbustcp.db.DBModel;
 import de.ossi.modbustcp.db.util.XMLtoDBConverter;
+import de.ossi.modbustcp.inverter.InverterRequester;
 import de.ossi.modbustcp.modbus.ForbiddenAccessException;
 import de.ossi.modbustcp.modbus.ModbusTCPReader;
 import de.ossi.modbustcp.modbus.ModbusTCPWriter;
@@ -28,7 +28,7 @@ public class Starter {
 	private static final String IP_VICTRON = "192.168.0.81";
 	private static final int MODBUS_DEFAULT_PORT = 502;
 
-	private final WRAnfrager anfrager = new WRAnfrager(IP_WECHSELRICHTER_WEST);
+	private final InverterRequester anfrager = new InverterRequester(IP_WECHSELRICHTER_WEST);
 	private final WRAntwortParser parser = new WRAntwortParser();
 	private final DBModel schreiber = new DBModel(JDBC_PATH);
 	private final ModbusTCPReader modbusReader = new ModbusTCPReader(IP_VICTRON, MODBUS_DEFAULT_PORT);

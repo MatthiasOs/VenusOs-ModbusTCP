@@ -57,16 +57,21 @@ import de.ossi.modbustcp.modbus.data.operation.ModbusOperation;
 import de.ossi.modbustcp.modbustcp.data.ModbusDevice;
 import de.ossi.modbustcp.modbustcp.data.ModbusResultInt;
 
-public class WolfsbauGUI extends JFrame {
+/**
+ * Example Programm with Swing GUI
+ * @author ossi
+ *
+ */
+public class ModbusTCPGUI extends JFrame {
 
-	private static final String FILE_ENDING = ".wolfsbau";
+	private static final String FILE_ENDING = ".modbustcp";
 	private static final Color LIGHT_BLUE = new Color(155, 200, 255);
 	private static final String IP_VICTRON = "192.168.0.81";
 	private static final int MODBUS_DEFAULT_PORT = 502;
 	private static final long serialVersionUID = 1L;
 	private static final String SPALTEN = "3dlu,123dlu,3dlu,123dlu,8dlu,123dlu,3dlu,123dlu,1dlu";
 	private static final String ZEILEN = "4dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,200dlu,3dlu,p,4dlu";
-	private static final String GITHUB_URL = "https://github.com/CommentSectionScientist/wolfsbau";
+	private static final String GITHUB_URL = "https://github.com/CommentSectionScientist/modbustcp";
 	private static final DateTimeFormatter FILE_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss");
 	private ModbusTCPReader modbusReader;
 	private ModbusTCPWriter modbusWriter;
@@ -87,17 +92,17 @@ public class WolfsbauGUI extends JFrame {
 	public static void main(String[] args) throws IOException, JAXBException {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				new WolfsbauGUI();
+				new ModbusTCPGUI();
 			}
 		});
 	}
 
-	public WolfsbauGUI() {
+	public ModbusTCPGUI() {
 		this.setJMenuBar(createMenu());
 		this.add(createPanel());
 		setIcon();
 		setLookAndFeel();
-		setTitle("WolfsbauGUI");
+		setTitle("ModbusTCP");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
 		setResizable(false);
@@ -289,7 +294,7 @@ public class WolfsbauGUI extends JFrame {
 				} catch (IOException e) {
 					showErrorDialog(e, e.getMessage());
 				}
-				JOptionPane.showMessageDialog(WolfsbauGUI.this, "Selection saved as File:\n" + f.getAbsolutePath());
+				JOptionPane.showMessageDialog(ModbusTCPGUI.this, "Selection saved as File:\n" + f.getAbsolutePath());
 			}
 		});
 		return save;
@@ -349,13 +354,13 @@ public class WolfsbauGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (writeInput.getText().isEmpty()) {
-				JOptionPane.showMessageDialog(WolfsbauGUI.this, "No input value specified!", "Write input field empty", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(ModbusTCPGUI.this, "No input value specified!", "Write input field empty", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			modbusWriter = writerFromAdressfield();
 			try {
 				modbusWriter.writeOperationFromDevice(getSelectedItem(operations), getSelectedItem(devices), Integer.parseInt(writeInput.getText().trim()));
-				JOptionPane.showMessageDialog(WolfsbauGUI.this, "Write successful!");
+				JOptionPane.showMessageDialog(ModbusTCPGUI.this, "Write successful!");
 			} catch (ModbusSlaveException e1) {
 				showErrorDialog(e1, "The Device doesn't support this operation!\n" + e1.getMessage());
 			} catch (NumberFormatException e2) {
@@ -371,7 +376,7 @@ public class WolfsbauGUI extends JFrame {
 	}
 
 	private void showErrorDialog(Exception e, String msg) {
-		JOptionPane.showMessageDialog(WolfsbauGUI.this, msg, e.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(ModbusTCPGUI.this, msg, e.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
 	}
 
 	private final class ReadAllAction implements ActionListener {

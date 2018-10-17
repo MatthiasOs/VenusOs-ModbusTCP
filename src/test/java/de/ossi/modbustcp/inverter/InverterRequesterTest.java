@@ -1,4 +1,4 @@
-package de.ossi.modbustcp.anfrager;
+package de.ossi.modbustcp.inverter;
 
 import static org.junit.Assert.assertThat;
 
@@ -7,11 +7,11 @@ import java.net.URL;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
-import de.ossi.modbustcp.anfrager.WRAnfrager;
+import de.ossi.modbustcp.inverter.InverterRequester;
 
-public class WRAnfragerTest {
+public class InverterRequesterTest {
 
-	private final WRAnfrager anfrager = new WRAnfrager("localhost");
+	private final InverterRequester anfrager = new InverterRequester("localhost");
 
 	@Test
 	public void urlWirdZusammengebaut() throws Exception {

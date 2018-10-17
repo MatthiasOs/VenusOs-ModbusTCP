@@ -1,4 +1,4 @@
-package de.ossi.modbustcp.anfrager;
+package de.ossi.modbustcp.inverter;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,14 +10,14 @@ import java.net.URL;
 /**
  * Klasse zum Anfragen der Daten am Wechselrichter. über Http Get
  */
-public class WRAnfrager {
+public class InverterRequester {
 
 	private final String ipAdress;
 	private static final String PROTOCOL = "http";
 	private static final String MEASUREMENTS = "measurements.xml";
 	private static final String USER_AGENT = "Mozilla/5.0";
 
-	public WRAnfrager(String ipAdress) {
+	public InverterRequester(String ipAdress) {
 		this.ipAdress = ipAdress;
 	}
 
