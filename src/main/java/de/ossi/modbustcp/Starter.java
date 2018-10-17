@@ -7,15 +7,15 @@ import javax.xml.bind.JAXBException;
 
 import com.ghgande.j2mod.modbus.ModbusException;
 
+import de.ossi.modbustcp.connection.ForbiddenAccessException;
+import de.ossi.modbustcp.connection.ModbusTCPReader;
+import de.ossi.modbustcp.connection.ModbusTCPWriter;
+import de.ossi.modbustcp.data.ModbusDevice;
+import de.ossi.modbustcp.data.ModbusResultInt;
+import de.ossi.modbustcp.data.operation.ModbusOperation;
 import de.ossi.modbustcp.db.DBModel;
 import de.ossi.modbustcp.db.util.XMLtoDBConverter;
 import de.ossi.modbustcp.inverter.InverterRequester;
-import de.ossi.modbustcp.modbus.ForbiddenAccessException;
-import de.ossi.modbustcp.modbus.ModbusTCPReader;
-import de.ossi.modbustcp.modbus.ModbusTCPWriter;
-import de.ossi.modbustcp.modbus.data.operation.ModbusOperation;
-import de.ossi.modbustcp.modbustcp.data.ModbusDevice;
-import de.ossi.modbustcp.modbustcp.data.ModbusResultInt;
 import de.ossi.modbustcp.parser.WRAntwortParser;
 import de.ossi.modbustcp.xml.XDevice;
 import de.ossi.modbustcp.xml.XRoot;

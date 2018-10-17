@@ -51,11 +51,11 @@ import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.swing.AdvancedTableModel;
 import ca.odell.glazedlists.swing.GlazedListsSwing;
-import de.ossi.modbustcp.modbus.ModbusTCPReader;
-import de.ossi.modbustcp.modbus.ModbusTCPWriter;
-import de.ossi.modbustcp.modbus.data.operation.ModbusOperation;
-import de.ossi.modbustcp.modbustcp.data.ModbusDevice;
-import de.ossi.modbustcp.modbustcp.data.ModbusResultInt;
+import de.ossi.modbustcp.connection.ModbusTCPReader;
+import de.ossi.modbustcp.connection.ModbusTCPWriter;
+import de.ossi.modbustcp.data.ModbusDevice;
+import de.ossi.modbustcp.data.ModbusResultInt;
+import de.ossi.modbustcp.data.operation.ModbusOperation;
 
 /**
  * Example Programm with Swing GUI
