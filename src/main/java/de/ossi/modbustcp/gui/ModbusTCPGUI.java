@@ -14,7 +14,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -40,7 +39,11 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.bind.JAXBException;
+
+import org.apache.commons.io.FilenameUtils;
 
 import com.ghgande.j2mod.modbus.ModbusException;
 import com.ghgande.j2mod.modbus.ModbusSlaveException;
@@ -67,13 +70,13 @@ import de.ossi.modbustcp.data.operation.ModbusOperation;
 public class ModbusTCPGUI extends JFrame {
 
 	private static final long serialVersionUID = 1L;
-	private static final String FILE_ENDING = ".modbustcp";
+	private static final String FILE_ENDING = "modbustcp";
+	private static final String FILE_ENDING_WITH_DOT = "." + FILE_ENDING;
 	private static final Color LIGHT_BLUE = new Color(155, 200, 255);
 	private static final String IP_VICTRON = "192.168.0.81";
 	private static final int MODBUS_DEFAULT_PORT = 502;
 
 	private static final String GITHUB_URL = "https://github.com/CommentSectionScientist/modbustcp";
-	private static final DateTimeFormatter FILE_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss");
 	private ModbusTCPReader modbusReader;
 	private ModbusTCPWriter modbusWriter;
 
@@ -108,6 +111,7 @@ public class ModbusTCPGUI extends JFrame {
 		pack();
 		setResizable(false);
 		setVisible(true);
+		UIManager.put("FileChooser.cancelButtonText", "Cancel");
 	}
 
 	private JMenuBar createMenu() {
@@ -316,14 +320,36 @@ public class ModbusTCPGUI extends JFrame {
 			}
 
 			private void serializeTOs(List<DeviceOperationResultTO> tosToSave) {
-				File f = new File(FILE_DATE_FORMATTER.format(LocalDateTime.now()) + FILE_ENDING);
-				try (FileOutputStream fos = new FileOutputStream(f); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-					oos.writeObject(tosToSave);
-					oos.flush();
-				} catch (IOException e) {
-					showErrorDialog(e, e.getMessage());
+				JFileChooser chooser = createSaveChooser();
+				int response = chooser.showOpenDialog(null);
+				if (response == JFileChooser.APPROVE_OPTION) {
+					File f = getFileWithEnding(chooser.getSelectedFile());
+					try (FileOutputStream fos = new FileOutputStream(f); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+						oos.writeObject(tosToSave);
+						oos.flush();
+					} catch (IOException e) {
+						showErrorDialog(e, e.getMessage());
+					}
 				}
-				JOptionPane.showMessageDialog(ModbusTCPGUI.this, "Selection saved as File:\n" + f.getAbsolutePath());
+			}
+
+			private File getFileWithEnding(File selectedFile) {
+				if (!FilenameUtils.getExtension(selectedFile.getName()).equalsIgnoreCase(FILE_ENDING)) {
+					return new File(selectedFile.toString() + FILE_ENDING_WITH_DOT);
+				}
+				return selectedFile;
+			}
+
+			private JFileChooser createSaveChooser() {
+				JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				chooser.setMultiSelectionEnabled(false);
+				FileFilter fileFilter = new FileNameExtensionFilter(FILE_ENDING_WITH_DOT, FILE_ENDING);
+				chooser.setApproveButtonText("Save");
+				chooser.setDialogTitle("Save");
+				chooser.setFileFilter(fileFilter);
+
+				return chooser;
 			}
 		});
 		return save;
@@ -334,13 +360,24 @@ public class ModbusTCPGUI extends JFrame {
 		load.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+				JFileChooser chooser = createLoadChooser();
 				int response = chooser.showOpenDialog(null);
 				if (response == JFileChooser.APPROVE_OPTION) {
 					List<DeviceOperationResultTO> inputTOs = readTOs(new File(chooser.getSelectedFile().getAbsolutePath()));
 					resultEventList.clear();
 					inputTOs.forEach(resultEventList::add);
 				}
+			}
+
+			private JFileChooser createLoadChooser() {
+				JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				chooser.setMultiSelectionEnabled(false);
+				FileFilter fileFilter = new FileNameExtensionFilter(FILE_ENDING_WITH_DOT, FILE_ENDING);
+				chooser.setFileFilter(fileFilter);
+				chooser.setApproveButtonText("Load");
+				chooser.setDialogTitle("Load");
+				return chooser;
 			}
 
 			@SuppressWarnings("unchecked")
