@@ -41,6 +41,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.PlainDocument;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.io.FilenameUtils;
@@ -248,11 +249,13 @@ public class ModbusTCPGUI extends JFrame {
 
 	private JComponent createWriteInputField() {
 		writeInput = new JTextField();
+		((PlainDocument) writeInput.getDocument()).setDocumentFilter(new DocumentFilterMode(DocumentFilterMode.IS_NUMBER));
 		return writeInput;
 	}
 
 	private JComponent createPortField() {
 		port = new JTextField(String.valueOf(MODBUS_DEFAULT_PORT));
+		((PlainDocument) port.getDocument()).setDocumentFilter(new DocumentFilterMode(DocumentFilterMode.IS_NUMBER));
 		return port;
 	}
 
