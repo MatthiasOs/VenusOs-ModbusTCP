@@ -218,7 +218,7 @@ public class ModbusTCPGUI extends JFrame {
 	}
 
 	private JComponent createWriteInputLabel() {
-		JLabel inputLabel = new JLabel("Input Value:");
+		JLabel inputLabel = new JLabel("Input Value (Number):");
 		return inputLabel;
 	}
 
