@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.junit.runners.Parameterized.Parameter;
 
 import de.ossi.modbustcp.data.ModbusResultInt;
-import de.ossi.modbustcp.data.operation.ModbusOperation;
 
 /**
  * Definiert die Tests für die ModbusOperationen. Die erbenden Tests müssen nur
@@ -37,7 +36,7 @@ public abstract class ModbusOperationTest {
 	@Test
 	public void pruefeDaten() throws Exception {
 		ModbusResultInt result = new ModbusResultInt(operation, registerwert);
-		assertThat(operation.getSkaliertenWertInWertebreich(result.getWert()), Matchers.is(valueOf(messwert)));
+		assertThat(operation.getScaledValueInRange(result.getValue()), Matchers.is(valueOf(messwert)));
 	}
 
 	protected static double d(Integer i) {

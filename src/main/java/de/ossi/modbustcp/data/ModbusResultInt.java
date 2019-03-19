@@ -3,6 +3,7 @@ package de.ossi.modbustcp.data;
 import java.time.LocalDateTime;
 
 import de.ossi.modbustcp.data.operation.ModbusOperation;
+import de.ossi.modbustcp.data.unit.DBusSpecialUnit;
 import de.ossi.modbustcp.data.unit.DBusUnit;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,13 +13,13 @@ import lombok.Getter;
 public class ModbusResultInt {
 
 	private final ModbusOperation operation;
-	private final Integer wert;
-	private final LocalDateTime zeitpunkt;
+	private final Integer value;
+	private final LocalDateTime timestamp;
 
-	public ModbusResultInt(ModbusOperation operation, Integer wert) {
+	public ModbusResultInt(ModbusOperation operation, Integer value) {
 		this.operation = operation;
-		this.wert = wert;
-		this.zeitpunkt = LocalDateTime.now();
+		this.value = value;
+		this.timestamp = LocalDateTime.now();
 	}
 
 	@Override
@@ -33,11 +34,12 @@ public class ModbusResultInt {
 	}
 
 	public String ermittleWertMitEinheit() {
-		DBusUnit einheit = operation.getDbusUnit();
-		if (einheit != null && einheit.hatSpezielleEinheit()) {
-			return einheit.getMesswertMitEinheit(wert);
+		DBusUnit dbusUnit = operation.getDbusUnit();
+		String unit = dbusUnit.getUnit(value);
+		if (dbusUnit instanceof DBusSpecialUnit) {
+			return unit;
 		} else {
-			return new StringBuilder().append(operation.getSkaliertenWertInWertebreich(wert)).append(" ").append(einheit != null ? einheit.toString() : "").toString();
+			return new StringBuilder().append(operation.getScaledValueInRange(value)).append(" ").append(unit).toString();
 		}
 	}
 }
