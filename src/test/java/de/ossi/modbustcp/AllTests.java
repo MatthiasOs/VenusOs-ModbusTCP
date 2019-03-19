@@ -4,7 +4,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import de.ossi.modbustcp.data.ModbusResultIntTest;
 import de.ossi.modbustcp.data.operation.ModbusOperationBatteryTest;
 import de.ossi.modbustcp.data.operation.ModbusOperationGridTest;
 import de.ossi.modbustcp.data.operation.ModbusOperationSolarTest;
@@ -19,8 +18,7 @@ import de.ossi.modbustcp.parser.WRAntwortParserTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({ WRAntwortParserTest.class, DBModelTest.class, InverterRequesterTest.class, EnumPairTest.class, XMLtoDBConverterTest.class, ModbusOperationSystemTest.class,
-		ModbusOperationGridTest.class, ModbusOperationVebusTest.class, ModbusOperationBatteryTest.class, ModbusOperationSolarTest.class, ModbusOperationTemperatureTest.class,
-		ModbusResultIntTest.class })
+		ModbusOperationGridTest.class, ModbusOperationVebusTest.class, ModbusOperationBatteryTest.class, ModbusOperationSolarTest.class, ModbusOperationTemperatureTest.class })
 public class AllTests {
 
 }
