@@ -219,10 +219,10 @@ public abstract class ModbusOperation implements Serializable{
 	/** writable Spalte im Excel */
 	private final AccessMode mode;
 
-	public abstract Double getSkaliertenWertInWertebreich(Integer registerWert);
+	public abstract Double getScaledValueInRange(Integer registerValue);
 
-	protected double skaliereWert(Double registerWert) {
-		return registerWert / this.scaleFactor;
+	protected double scaleValue(Double registerValue) {
+		return registerValue / this.scaleFactor;
 	}
 
 	@Override

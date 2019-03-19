@@ -36,7 +36,7 @@ public abstract class ModbusOperationTest {
 	@Test
 	public void pruefeDaten() throws Exception {
 		ModbusResultInt result = new ModbusResultInt(operation, registerwert);
-		assertThat(operation.getSkaliertenWertInWertebreich(result.getValue()), Matchers.is(valueOf(messwert)));
+		assertThat(operation.getScaledValueInRange(result.getValue()), Matchers.is(valueOf(messwert)));
 	}
 
 	protected static double d(Integer i) {

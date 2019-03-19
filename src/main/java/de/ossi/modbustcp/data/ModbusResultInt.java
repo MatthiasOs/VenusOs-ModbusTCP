@@ -39,7 +39,7 @@ public class ModbusResultInt {
 		if (dbusUnit instanceof DBusSpecialUnit) {
 			return unit;
 		} else {
-			return new StringBuilder().append(operation.getSkaliertenWertInWertebreich(value)).append(" ").append(unit).toString();
+			return new StringBuilder().append(operation.getScaledValueInRange(value)).append(" ").append(unit).toString();
 		}
 	}
 }

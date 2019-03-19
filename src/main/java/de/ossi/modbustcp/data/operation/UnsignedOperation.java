@@ -9,8 +9,8 @@ public class UnsignedOperation extends ModbusOperation {
 	}
 
 	@Override
-	public Double getSkaliertenWertInWertebreich(Integer registerWert) {
-		return skaliereWert(Double.valueOf(registerWert));
+	public Double getScaledValueInRange(Integer registerValue) {
+		return scaleValue(Double.valueOf(registerValue));
 	}
 
 }
