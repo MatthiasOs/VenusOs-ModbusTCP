@@ -1,5 +1,7 @@
 package de.ossi.modbustcp.gui;
 
+import java.time.format.DateTimeFormatter;
+
 import ca.odell.glazedlists.gui.TableFormat;
 
 /**
@@ -8,6 +10,8 @@ import ca.odell.glazedlists.gui.TableFormat;
  *
  */
 class DeviceOperationResultTableFormat implements TableFormat<DeviceOperationResultTO> {
+	
+	private static final DateTimeFormatter ISO_DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
 
 	@Override
 	public int getColumnCount() {
@@ -38,7 +42,7 @@ class DeviceOperationResultTableFormat implements TableFormat<DeviceOperationRes
 		case 1:
 			return baseObject.getModbusDevice().getName();
 		case 2:
-			return baseObject.getZeit();
+			return baseObject.getZeit() != null ? ISO_DATE.format(baseObject.getZeit()) : null;
 		case 3:
 			return baseObject.getErgebnis();
 		default:

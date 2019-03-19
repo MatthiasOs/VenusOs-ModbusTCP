@@ -76,6 +76,7 @@ public class ModbusTCPGUI extends JFrame {
 	private static final Color LIGHT_BLUE = new Color(155, 200, 255);
 	private static final String IP_VICTRON = "192.168.0.81";
 	private static final int MODBUS_DEFAULT_PORT = 502;
+	private static final CellConstraints CC = new CellConstraints();
 
 	private static final String GITHUB_URL = "https://github.com/CommentSectionScientist/modbustcp";
 	private ModbusTCPReader modbusReader;
@@ -110,7 +111,7 @@ public class ModbusTCPGUI extends JFrame {
 		setTitle("ModbusTCP");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		pack();
-		setResizable(false);
+		setMinimumSize(this.getPreferredSize());
 		setVisible(true);
 		UIManager.put("FileChooser.cancelButtonText", "Cancel");
 	}
@@ -157,18 +158,17 @@ public class ModbusTCPGUI extends JFrame {
 	}
 
 	private JPanel createTopPanel() {
-		FormLayout layout = new FormLayout("3dlu,250dlu,8dlu,250dlu", "3dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,p");
+		FormLayout layout = new FormLayout("3dlu,250dlu:g,8dlu,250dlu:g,3dlu", "3dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,p:g");
 		PanelBuilder builder = new PanelBuilder(layout);
-		CellConstraints c = new CellConstraints();
-		builder.add(createIpAdressLabel(), c.xy(2, 2));
-		builder.add(createPortLabel(), c.xy(4, 2));
-		builder.add(createIpAdressField(), c.xy(2, 4));
-		builder.add(createPortField(), c.xy(4, 4));
-		builder.add(createOperationLabel(), c.xy(2, 6));
-		builder.add(createOperationsCombobox(), c.xy(2, 8));
-		builder.add(createDeviceLabel(), c.xy(4, 6));
-		builder.add(createDevicesCombobox(), c.xy(4, 8));
-		builder.add(createTabbedPane(), c.xyw(2, 10, 3));
+		builder.add(createIpAdressLabel(), CC.xy(2, 2));
+		builder.add(createPortLabel(), CC.xy(4, 2));
+		builder.add(createIpAdressField(), CC.xy(2, 4));
+		builder.add(createPortField(), CC.xy(4, 4));
+		builder.add(createOperationLabel(), CC.xy(2, 6));
+		builder.add(createOperationsCombobox(), CC.xy(2, 8));
+		builder.add(createDeviceLabel(), CC.xy(4, 6));
+		builder.add(createDevicesCombobox(), CC.xy(4, 8));
+		builder.add(createTabbedPane(), CC.xyw(2, 10, 3));
 		return getBluePanel(builder);
 	}
 
@@ -180,27 +180,25 @@ public class ModbusTCPGUI extends JFrame {
 	}
 
 	private JPanel createReadPanel() {
-		FormLayout layout = new FormLayout("3dlu,122dlu,3dlu,122dlu,5dlu,122dlu,3dlu,122dlu", "3dlu,200dlu,3dlu,p,3dlu,p,3dlu");
+		FormLayout layout = new FormLayout("3dlu,122dlu:g,3dlu,122dlu:g,5dlu,122dlu:g,3dlu,122dlu:g", "3dlu,200dlu,3dlu,p,3dlu,p,3dlu");
 		PanelBuilder builder = new PanelBuilder(layout);
-		CellConstraints c = new CellConstraints();
-		builder.add(createTablePane(), c.xyw(2, 2, 7));
+		builder.add(createTablePane(), CC.xyw(2, 2, 7));
 
-		builder.add(createAddButton(), c.xy(2, 4));
-		builder.add(createRemoveButton(), c.xy(4, 4));
-		builder.add(createSaveButton(), c.xy(6, 4));
-		builder.add(createLoadButton(), c.xy(8, 4));
+		builder.add(createAddButton(), CC.xy(2, 4));
+		builder.add(createRemoveButton(), CC.xy(4, 4));
+		builder.add(createSaveButton(), CC.xy(6, 4));
+		builder.add(createLoadButton(), CC.xy(8, 4));
 
-		builder.add(createReadButton(), c.xyw(4, 6, 3));
+		builder.add(createReadButton(), CC.xyw(4, 6, 3));
 		return getBluePanel(builder);
 	}
 
 	private JPanel createWritePanel() {
 		FormLayout layout = new FormLayout("3dlu,122dlu,3dlu,122dlu", "3dlu,p,3dlu,p");
 		PanelBuilder builder = new PanelBuilder(layout);
-		CellConstraints c = new CellConstraints();
-		builder.add(createWriteInputLabel(), c.xy(2, 2));
-		builder.add(createWriteInputField(), c.xy(2, 4));
-		builder.add(createWriteButton(), c.xy(4, 4));
+		builder.add(createWriteInputLabel(), CC.xy(2, 2));
+		builder.add(createWriteInputField(), CC.xy(2, 4));
+		builder.add(createWriteButton(), CC.xy(4, 4));
 		return getBluePanel(builder);
 	}
 
@@ -474,9 +472,9 @@ public class ModbusTCPGUI extends JFrame {
 				ModbusResultInt modbusResult = modbusReader.readOperationFromDevice(modbusOperation, modbusDevice);
 				return String.valueOf(modbusResult.ermittleWertMitEinheit());
 			} catch (ModbusSlaveException e1) {
-				return "Device doesn't support Operation";
+				return new StringBuilder().append("Device doesn't support Operation: ").append(e1.getMessage()).toString();
 			} catch (ModbusException e1) {
-				return "ModbusException";
+				return new StringBuilder().append("ModbusException").append(e1.getMessage()).toString();
 			}
 		}
 
