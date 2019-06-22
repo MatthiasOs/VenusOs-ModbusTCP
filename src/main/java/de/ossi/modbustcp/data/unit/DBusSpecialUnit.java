@@ -17,7 +17,6 @@ public class DBusSpecialUnit extends DBusUnit {
 		return this;
 	}
 
-	@Override
 	public String getUnit(Integer value) {
 		return values.get(value);
 	}

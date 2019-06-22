@@ -1,12 +1,13 @@
 package de.ossi.modbustcp.data;
 
+import static de.ossi.modbustcp.data.ModbusDevice.CAN_BUS_BMS;
+import static de.ossi.modbustcp.data.operation.ModbusOperation.GRI_GRID_L1_VOLTAGE;
+import static de.ossi.modbustcp.data.operation.ModbusOperation.SET_ESS_BATTERY_LIFE_STATE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
-import de.ossi.modbustcp.data.operation.ModbusOperation;
 
 @DisplayName("When ModbusResultInt")
 public class ModbusResultIntTest {
@@ -19,8 +20,8 @@ public class ModbusResultIntTest {
 		@DisplayName("BATTERYLIFE_STATE")
 		@Test
 		void test1() throws Exception {
-			modbusResult = new ModbusResultInt(ModbusOperation.SET_ESS_BATTERY_LIFE_STATE, 1);
-			assertEquals("Restarting", modbusResult.ermittleWertMitEinheit());
+			modbusResult = new ModbusResultInt(SET_ESS_BATTERY_LIFE_STATE, CAN_BUS_BMS, 1);
+			assertEquals("Restarting", modbusResult.getValueOfOperation());
 		}
 	}
 
@@ -31,8 +32,8 @@ public class ModbusResultIntTest {
 		@DisplayName("V_AC")
 		@Test
 		void test1() throws Exception {
-			modbusResult = new ModbusResultInt(ModbusOperation.GRI_GRID_L1_VOLTAGE, 1);
-			assertEquals("0.1 V AC", modbusResult.ermittleWertMitEinheit());
+			modbusResult = new ModbusResultInt(GRI_GRID_L1_VOLTAGE, CAN_BUS_BMS, 1);
+			assertEquals("0.1 V AC", modbusResult.getValueOfOperationWithUnit());
 		}
 
 	}

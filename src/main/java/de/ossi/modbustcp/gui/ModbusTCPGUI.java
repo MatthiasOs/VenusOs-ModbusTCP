@@ -470,7 +470,7 @@ public class ModbusTCPGUI extends JFrame {
 		private String readModbus(ModbusOperation modbusOperation, ModbusDevice modbusDevice) {
 			try {
 				ModbusResultInt modbusResult = modbusReader.readOperationFromDevice(modbusOperation, modbusDevice);
-				return String.valueOf(modbusResult.ermittleWertMitEinheit());
+				return modbusResult.getValueOfOperationWithUnit();
 			} catch (ModbusSlaveException e1) {
 				return new StringBuilder().append("Device doesn't support Operation: ").append(e1.getMessage()).toString();
 			} catch (ModbusException e1) {

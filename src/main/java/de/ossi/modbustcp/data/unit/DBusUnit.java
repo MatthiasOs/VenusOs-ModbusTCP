@@ -2,6 +2,7 @@ package de.ossi.modbustcp.data.unit;
 
 import java.io.Serializable;
 
+import lombok.Getter;
 import lombok.ToString;
 
 @ToString(of = "name")
@@ -90,14 +91,9 @@ public class DBusUnit implements Serializable {
 			.withValue(3, "On")
 			.withValue(4, "Off");
 
-
+	@Getter
 	private final String name;
 	protected DBusUnit(String name) {
 		this.name = name;
 	}
-
-	public String getUnit(Integer value) {
-		return this.name;
-	}
-
 }
