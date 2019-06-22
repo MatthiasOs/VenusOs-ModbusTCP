@@ -15,7 +15,7 @@ public class ModbusTCPReader extends ModbusReaderConnectionHandler {
 	@Override
 	protected ModbusResultInt readInternal(ModbusOperation operation, ModbusDevice device) throws ModbusException {
 		int result = readOperationFromDeviceInternal(operation, device);
-		return new ModbusResultInt(operation, result);
+		return new ModbusResultInt(operation, device, result);
 	}
 
 	private int readOperationFromDeviceInternal(ModbusOperation operation, ModbusDevice device) throws ModbusException {

@@ -7,6 +7,7 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameter;
 
+import de.ossi.modbustcp.data.ModbusDevice;
 import de.ossi.modbustcp.data.ModbusResultInt;
 
 /**
@@ -35,7 +36,7 @@ public abstract class ModbusOperationTest {
 
 	@Test
 	public void pruefeDaten() throws Exception {
-		ModbusResultInt result = new ModbusResultInt(operation, registerwert);
+		ModbusResultInt result = new ModbusResultInt(operation, ModbusDevice.CAN_BUS_BMS, registerwert);
 		assertThat(operation.getScaledValueInRange(result.getValue()), Matchers.is(valueOf(messwert)));
 	}
 
