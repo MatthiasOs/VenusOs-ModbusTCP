@@ -2,7 +2,7 @@ package de.ossi.modbustcp;
 
 import org.junit.Test;
 
-import de.ossi.modbustcp.Starter;
+import de.ossi.modbustcp.GUIStart;
 
 /**
  * Der Test ist für den einfachen E2E Test gedacht. Es werden keine Asserts
@@ -13,9 +13,9 @@ import de.ossi.modbustcp.Starter;
  * @author ossi
  *
  */
-public class StarterTest {
+public class GUIStartTest {
 
-	private final Starter starter = new Starter();
+	private final GUIStart starter = new GUIStart();
 
 	@Test
 	public void mehrereAbfrageMit500msAbstand() throws Exception {
