@@ -36,7 +36,7 @@ public abstract class ModbusOperationTest {
 
 	@Test
 	public void pruefeDaten() throws Exception {
-		ModbusResultInt result = new ModbusResultInt(operation, ModbusDevice.CAN_BUS_BMS, registerwert);
+		ModbusResultInt result = ModbusResultInt.builder().operation(operation).device(ModbusDevice.CAN_BUS_BMS).value(registerwert).build();
 		assertThat(operation.getScaledValueInRange(result.getValue()), Matchers.is(valueOf(messwert)));
 	}
 

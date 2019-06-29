@@ -1,5 +1,7 @@
 package de.ossi.modbustcp.connection;
 
+import java.time.LocalDateTime;
+
 import com.ghgande.j2mod.modbus.ModbusException;
 
 import de.ossi.modbustcp.data.ModbusDevice;
@@ -15,7 +17,7 @@ public class ModbusTCPReader extends ModbusReaderConnectionHandler {
 	@Override
 	protected ModbusResultInt readInternal(ModbusOperation operation, ModbusDevice device) throws ModbusException {
 		int result = readOperationFromDeviceInternal(operation, device);
-		return new ModbusResultInt(operation, device, result);
+		return ModbusResultInt.builder().operation(operation).device(device).value(result).timestamp(LocalDateTime.now()).build();
 	}
 
 	private int readOperationFromDeviceInternal(ModbusOperation operation, ModbusDevice device) throws ModbusException {

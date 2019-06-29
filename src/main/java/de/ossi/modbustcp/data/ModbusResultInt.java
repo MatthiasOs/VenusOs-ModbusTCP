@@ -5,24 +5,19 @@ import java.time.LocalDateTime;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
 import de.ossi.modbustcp.data.unit.DBusSpecialUnit;
 import de.ossi.modbustcp.data.unit.DBusUnit;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode
+@Builder
 public class ModbusResultInt {
 
 	private final ModbusOperation operation;
 	private final ModbusDevice device;
 	private final Integer value;
 	private final LocalDateTime timestamp;
-
-	public ModbusResultInt(ModbusOperation operation, ModbusDevice device, Integer value) {
-		this.operation = operation;
-		this.value = value;
-		this.device = device;
-		this.timestamp = LocalDateTime.now();
-	}
 
 	@Override
 	public String toString() {

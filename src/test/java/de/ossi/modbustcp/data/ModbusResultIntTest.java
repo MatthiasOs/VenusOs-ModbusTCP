@@ -21,7 +21,7 @@ public class ModbusResultIntTest {
 		@DisplayName("BATTERYLIFE_STATE")
 		@Test
 		void test1() throws Exception {
-			modbusResult = new ModbusResultInt(SET_ESS_BATTERY_LIFE_STATE, CAN_BUS_BMS, 1);
+			modbusResult = ModbusResultInt.builder().operation(SET_ESS_BATTERY_LIFE_STATE).device(CAN_BUS_BMS).value(1).build();
 			assertEquals("Restarting", modbusResult.getValueOfOperation());
 		}
 	}
@@ -32,7 +32,7 @@ public class ModbusResultIntTest {
 		@DisplayName("V_AC")
 		@Test
 		void test1() throws Exception {
-			modbusResult = new ModbusResultInt(GRI_GRID_L1_VOLTAGE, CAN_BUS_BMS, 1);
+			modbusResult = ModbusResultInt.builder().operation(GRI_GRID_L1_VOLTAGE).device(CAN_BUS_BMS).value(1).build();
 			assertEquals("0.1 V AC", modbusResult.getValueOfOperationWithUnit());
 		}
 	}
@@ -43,7 +43,7 @@ public class ModbusResultIntTest {
 		@DisplayName("A_AC")
 		@Test
 		void test1() throws Exception {
-			modbusResult = new ModbusResultInt(GRI_GRID_L1_CURRENT, CAN_BUS_BMS, 1);
+			modbusResult = ModbusResultInt.builder().operation(GRI_GRID_L1_CURRENT).device(CAN_BUS_BMS).value(1).build();
 			assertEquals("0.1 A AC", modbusResult.getValueOfOperationWithUnit());
 		}
 	}
@@ -51,9 +51,10 @@ public class ModbusResultIntTest {
 	@DisplayName("Parsing without Unit")
 	@Nested
 	class ParsingWithoutUnit {
+		@DisplayName("NaN")
 		@Test
 		void test1() throws Exception {
-			modbusResult = new ModbusResultInt(GRI_GRID_L1_VOLTAGE, CAN_BUS_BMS, 1);
+			modbusResult = ModbusResultInt.builder().operation(GRI_GRID_L1_VOLTAGE).device(CAN_BUS_BMS).value(1).build();
 			assertEquals("0.1", modbusResult.getValueOfOperation());
 		}
 	}
