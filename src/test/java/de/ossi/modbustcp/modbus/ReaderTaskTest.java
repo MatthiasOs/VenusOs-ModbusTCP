@@ -33,12 +33,12 @@ public class ReaderTaskTest {
 	private static final ReadContainer CONT_1 = ReadContainer.builder().device(CCGX_VE_DIRECT_1).operation(GRI_GRID_L1_CURRENT).build();
 	private static final ReadContainer CONT_2 = ReadContainer.builder().device(CCGX_VE_DIRECT_2).operation(GRI_GRID_L2_CURRENT).build();
 	private static final ReadContainer CONT_3 = ReadContainer.builder().device(CAN_BUS_BMS).operation(HUB_ESS_CONTROL_LOOP_SETPOINT).build();
-	private static final ModbusResultInt RES_1 = ModbusResultInt.builder().operation(CONT_1.getOperation()).device(CONT_1.getDevice()).value(1).timestamp(NOW).build();
-	private static final ModbusResultInt RES_2 = ModbusResultInt.builder().operation(CONT_2.getOperation()).device(CONT_2.getDevice()).value(2).timestamp(NOW).build();
-	private static final ModbusResultInt RES_3 = ModbusResultInt.builder().operation(CONT_3.getOperation()).device(CONT_3.getDevice()).value(3).timestamp(NOW).build();
+	private static final ModbusResultInt RES_1 = ModbusResultInt.builder().operation(CONT_1.getOperation()).device(CONT_1.getDevice()).value(1).timestamp(NOW.plusSeconds(1)).build();
+	private static final ModbusResultInt RES_2 = ModbusResultInt.builder().operation(CONT_2.getOperation()).device(CONT_2.getDevice()).value(2).timestamp(NOW.plusSeconds(2)).build();
+	private static final ModbusResultInt RES_3 = ModbusResultInt.builder().operation(CONT_3.getOperation()).device(CONT_3.getDevice()).value(3).timestamp(NOW.plusSeconds(3)).build();
 	private ReaderTask task;
-	private final ModbusTCPReader modbusReader = mock(ModbusTCPReader.class);
-	private final InfluxDBModel model = mock(InfluxDBModel.class);
+	private final ModbusTCPReader modbusReaderMock = mock(ModbusTCPReader.class);
+	private final InfluxDBModel modelMock = mock(InfluxDBModel.class);
 	@Getter
 	private List<ReadContainer> container = new ArrayList<>();
 
@@ -47,10 +47,11 @@ public class ReaderTaskTest {
 		givenResultForContainer(CONT_1, RES_1);
 		givenResultForContainer(CONT_2, RES_2);
 		givenResultForContainer(CONT_3, RES_3);
+		task = new ReaderTask(modelMock, modbusReaderMock, this::getContainer);
 	}
 
 	private void givenResultForContainer(ReadContainer c, ModbusResultInt res) throws Exception {
-		when(modbusReader.readOperationFromDevice(c.getOperation(), c.getDevice())).thenReturn(res);
+		when(modbusReaderMock.readOperationFromDevice(c.getOperation(), c.getDevice())).thenReturn(res);
 	}
 
 	@Test
@@ -58,10 +59,9 @@ public class ReaderTaskTest {
 		// given
 		container.addAll(asList(CONT_1, CONT_2, CONT_3));
 		// when
-		task = new ReaderTask(model, modbusReader, this::getContainer);
 		task.run();
 		// then
-		verify(modbusReader, times(3)).readOperationFromDevice(any(ModbusOperation.class), any(ModbusDevice.class));
+		verify(modbusReaderMock, times(3)).readOperationFromDevice(any(ModbusOperation.class), any(ModbusDevice.class));
 	}
 
 	@Test
@@ -69,10 +69,9 @@ public class ReaderTaskTest {
 		// given
 		container.addAll(asList(CONT_1, CONT_2));
 		// when
-		task = new ReaderTask(model, modbusReader, this::getContainer);
 		task.run();
 		// then
-		verify(model, times(2)).addPoint(any(ModbusResultInt.class));
+		verify(modelMock, times(2)).addPoint(any(ModbusResultInt.class));
 	}
 
 	@Test
@@ -80,11 +79,10 @@ public class ReaderTaskTest {
 		// given
 		container.addAll(asList(CONT_1, CONT_2));
 		// when
-		task = new ReaderTask(model, modbusReader, this::getContainer);
 		task.run();
 		// then
-		verify(modbusReader).readOperationFromDevice(CONT_1.getOperation(), CONT_1.getDevice());
-		verify(modbusReader).readOperationFromDevice(CONT_2.getOperation(), CONT_2.getDevice());
+		verify(modbusReaderMock).readOperationFromDevice(CONT_1.getOperation(), CONT_1.getDevice());
+		verify(modbusReaderMock).readOperationFromDevice(CONT_2.getOperation(), CONT_2.getDevice());
 	}
 
 	@Test
@@ -92,11 +90,10 @@ public class ReaderTaskTest {
 		// given
 		container.addAll(asList(CONT_1, CONT_2));
 		// when
-		task = new ReaderTask(model, modbusReader, this::getContainer);
 		task.run();
 		// then
-		verify(model).addPoint(RES_1);
-		verify(model).addPoint(RES_2);
+		verify(modelMock).addPoint(RES_1);
+		verify(modelMock).addPoint(RES_2);
 	}
 
 }

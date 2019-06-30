@@ -4,6 +4,7 @@ import de.ossi.modbustcp.data.ModbusDevice;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * Container for a ModbusRead Operation which consits of an {@link ModbusDevice}
@@ -13,6 +14,7 @@ import lombok.Getter;
  *
  */
 @Builder
+@ToString
 public class ReadContainer {
 	@Getter
 	private final ModbusOperation operation;

@@ -24,10 +24,10 @@ public class ModbusResultInt {
 		StringBuilder ausgabe = new StringBuilder();
 		ausgabe.append(device.getName());
 		ausgabe.append(System.lineSeparator());
-		ausgabe.append(operation.toString());
+		ausgabe.append(operation);
 		ausgabe.append(System.lineSeparator());
-		ausgabe.append("Wert: ");
-		ausgabe.append(getValue());
+		ausgabe.append("ResultValue: ");
+		ausgabe.append(value);
 		ausgabe.append(" ");
 		ausgabe.append(operation.getDbusUnit().getName());
 		ausgabe.append(System.lineSeparator());

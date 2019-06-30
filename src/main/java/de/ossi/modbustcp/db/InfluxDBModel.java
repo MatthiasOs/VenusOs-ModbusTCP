@@ -13,11 +13,11 @@ import org.influxdb.dto.BatchPoints.Builder;
 import org.influxdb.dto.Point;
 import org.influxdb.dto.Query;
 import org.influxdb.dto.QueryResult;
+import org.influxdb.dto.QueryResult.Result;
 
 import de.ossi.modbustcp.data.ModbusResultInt;
 import lombok.Getter;
-//TODO close DB im Destructor?
-//TODO Deprecated entfernen
+
 @SuppressWarnings("deprecation")
 public class InfluxDBModel {
 
@@ -28,7 +28,7 @@ public class InfluxDBModel {
 	private static final String F_VALUE = "Value";
 	private static final String F_UNIT = "Unit";
 	private final String databaseName;
-	private final List<Point> points = new ArrayList<>();
+	private final List<Point> pointsToWrite = new ArrayList<>();
 
 	@Getter
 	private final InfluxDB influxDB;
@@ -36,11 +36,10 @@ public class InfluxDBModel {
 	public InfluxDBModel(String url, String databaseName, String userName, String password) {
 		this.databaseName = databaseName;
 		influxDB = InfluxDBFactory.connect(url, userName, password);
-		//TODO nur für Testzwecke!
-		influxDB.deleteDatabase(databaseName);
 		if (!existsDatabase(databaseName)) {
 			createDatabase(databaseName);
 			influxDB.enableBatch(BatchOptions.DEFAULTS);
+			influxDB.setLogLevel(InfluxDB.LogLevel.BASIC);
 		}
 	}
 
@@ -62,24 +61,34 @@ public class InfluxDBModel {
 		influxDB.deleteDatabase(dbName);
 	}
 
-	public void addPoint(ModbusResultInt result) {
-		Point.Builder builder = Point.measurement(MEASUREMENT).time(Timestamp.valueOf(result.getTimestamp()).getTime(), TimeUnit.MILLISECONDS)
-				// .tag("tagName", "value")
-				.addField(F_DEVICE, result.getDevice().getName())
-				.addField(F_OPERATION, result.getOperation().getName())
-				.addField(F_VALUE, result.getValueOfOperation())
-				.addField(F_UNIT, result.getOperation().getDbusUnit().getName());
-		points.add(builder.build());
+	public Point addPoint(ModbusResultInt result) {
+		Point point = createPoint(result);
+		pointsToWrite.add(point);
+		return point;
 	}
 
-	public void writePoints() {
-		Builder batchPoints = BatchPoints.database(databaseName).retentionPolicy(RP_ONE_YEAR).points(points);
+	public Point createPoint(ModbusResultInt result) {
+		return Point.measurement(MEASUREMENT).time(Timestamp.valueOf(result.getTimestamp()).getTime(), TimeUnit.MILLISECONDS)
+				// .tag("tagName", "value")
+				.addField(F_DEVICE, result.getDevice().getName()).addField(F_OPERATION, result.getOperation().getName()).addField(F_VALUE, result.getValueOfOperation())
+				.addField(F_UNIT, result.getOperation().getDbusUnit().getName()).build();
+	}
+
+	public void writeAllPoints() {
+		if (pointsToWrite.isEmpty()) {
+			return;
+		}
+		Builder batchPoints = BatchPoints.database(databaseName).retentionPolicy(RP_ONE_YEAR).points(pointsToWrite);
 		influxDB.write(batchPoints.build());
 	}
 
-	public void readAllMeasurements() {
+	public void writePoint(Point point) {
+		influxDB.write(point);
+	}
+
+	public List<Result> getAllMeasurements() {
 		Query query = new Query("SELECT * FROM " + MEASUREMENT, databaseName);
 		QueryResult queryResult = influxDB.query(query);
-		System.err.println(queryResult.getResults());
+		return queryResult.getResults();
 	}
 }
