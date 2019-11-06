@@ -11,10 +11,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Unterstuetzte Modbus Operationen nach dem Excel Sheet:
- * files/CCGX-Modbus-TCP-register-list-2.12.xlsx Die RangeFrom und RangeTo
- * braucht man nicht, da man sich die Range mittels der Un-/Signed Range und dem
- * Scalefactor ausrechnen kann.
+ * Supports Modbus Operations from Excel:
+ * files/CCGX-Modbus-TCP-register-list-2.12.xlsx RangeFrom and RangeTo is not
+ * requiered in this class, because we can calculate it with Un-/Signed Range
+ * and the Scalefactor
  * 
  * @author ossi
  *
@@ -23,7 +23,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public abstract class ModbusOperation implements Serializable{
+public abstract class ModbusOperation implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -37,17 +37,36 @@ public abstract class ModbusOperation implements Serializable{
 
 	// >>>VEB_ = com.victronenergy.vebus >>>
 	public static final ModbusOperation VEB_INPUT_VOLTAGE_PHASE_1 = new UnsignedOperation(Category.VEBUS, 3, "Input voltage phase 1", 10, DBusUnit.V_AC, AccessMode.READ_ONLY);
+	public static final ModbusOperation VEB_INPUT_VOLTAGE_PHASE_2 = new UnsignedOperation(Category.VEBUS, 4, "Input voltage phase 2", 10, DBusUnit.V_AC, AccessMode.READ_ONLY);
+	public static final ModbusOperation VEB_INPUT_VOLTAGE_PHASE_3 = new UnsignedOperation(Category.VEBUS, 5, "Input voltage phase 3", 10, DBusUnit.V_AC, AccessMode.READ_ONLY);
 	public static final ModbusOperation VEB_INPUT_CURRENT_PHASE_1 = new SignedOperation(Category.VEBUS, 6, "Input current phase 1", 10, DBusUnit.A_AC, AccessMode.READ_ONLY);
+	public static final ModbusOperation VEB_INPUT_CURRENT_PHASE_2 = new SignedOperation(Category.VEBUS, 7, "Input current phase 2", 10, DBusUnit.A_AC, AccessMode.READ_ONLY);
+	public static final ModbusOperation VEB_INPUT_CURRENT_PHASE_3 = new SignedOperation(Category.VEBUS, 8, "Input current phase 3", 10, DBusUnit.A_AC, AccessMode.READ_ONLY);
 	public static final ModbusOperation VEB_INPUT_FREQUENCY_1 = new SignedOperation(Category.VEBUS, 9, "Input frequency 1", 100, DBusUnit.HZ, AccessMode.READ_ONLY);
+	public static final ModbusOperation VEB_INPUT_FREQUENCY_2 = new SignedOperation(Category.VEBUS, 10, "Input frequency 2", 100, DBusUnit.HZ, AccessMode.READ_ONLY);
+	public static final ModbusOperation VEB_INPUT_FREQUENCY_3 = new SignedOperation(Category.VEBUS, 11, "Input frequency 3", 100, DBusUnit.HZ, AccessMode.READ_ONLY);
 	public static final ModbusOperation VEB_INPUT_POWER_1 = new SignedOperation(Category.VEBUS, 12, "Input power 1", 0.1, DBusUnit.VA, AccessMode.READ_ONLY);
+	public static final ModbusOperation VEB_INPUT_POWER_2 = new SignedOperation(Category.VEBUS, 13, "Input power 2", 0.1, DBusUnit.VA, AccessMode.READ_ONLY);
+	public static final ModbusOperation VEB_INPUT_POWER_3 = new SignedOperation(Category.VEBUS, 14, "Input power 3", 0.1, DBusUnit.VA, AccessMode.READ_ONLY);
+	public static final ModbusOperation VEB_OUTPUT_VOLTAGE_PHASE_1 = new UnsignedOperation(Category.VEBUS, 15, "Output voltage phase 1", 10, DBusUnit.V_AC, AccessMode.READ_ONLY);
+	public static final ModbusOperation VEB_OUTPUT_VOLTAGE_PHASE_2 = new UnsignedOperation(Category.VEBUS, 16, "Output voltage phase 2", 10, DBusUnit.V_AC, AccessMode.READ_ONLY);
+	public static final ModbusOperation VEB_OUTPUT_VOLTAGE_PHASE_3 = new UnsignedOperation(Category.VEBUS, 17, "Output voltage phase 3", 10, DBusUnit.V_AC, AccessMode.READ_ONLY);
+	public static final ModbusOperation VEB_OUTPUT_CURRENT_PHASE_1 = new SignedOperation(Category.VEBUS, 18, "Output current phase 1", 10, DBusUnit.A_AC, AccessMode.READ_ONLY);
+	public static final ModbusOperation VEB_OUTPUT_CURRENT_PHASE_2 = new SignedOperation(Category.VEBUS, 19, "Output current phase 2", 10, DBusUnit.A_AC, AccessMode.READ_ONLY);
+	public static final ModbusOperation VEB_OUTPUT_CURRENT_PHASE_3 = new SignedOperation(Category.VEBUS, 20, "Output current phase 3", 10, DBusUnit.A_AC, AccessMode.READ_ONLY);
 	public static final ModbusOperation VEB_OUTPUT_FREQUENCY = new SignedOperation(Category.VEBUS, 21, "Output frequency", 100, DBusUnit.HZ, AccessMode.READ_ONLY);
 	public static final ModbusOperation VEB_ACTIVE_INPUT_CURRENT_LIMIT = new SignedOperation(Category.VEBUS, 22, "Active input current limit", 10, DBusUnit.A,
 			AccessMode.READ_WRITE);
 	public static final ModbusOperation VEB_OUTPUT_POWER_1 = new SignedOperation(Category.VEBUS, 23, "Output power 1", 0.1, DBusUnit.VA, AccessMode.READ_ONLY);
+	public static final ModbusOperation VEB_OUTPUT_POWER_2 = new SignedOperation(Category.VEBUS, 24, "Output power 2", 0.1, DBusUnit.VA, AccessMode.READ_ONLY);
+	public static final ModbusOperation VEB_OUTPUT_POWER_3 = new SignedOperation(Category.VEBUS, 25, "Output power 3", 0.1, DBusUnit.VA, AccessMode.READ_ONLY);
 	public static final ModbusOperation VEB_BATTERY_VOLTAGE = new UnsignedOperation(Category.VEBUS, 26, "Battery voltage", 100, DBusUnit.V_DC, AccessMode.READ_ONLY);
 	public static final ModbusOperation VEB_BATTERY_CURRENT = new SignedOperation(Category.VEBUS, 27, "Battery current", 10, DBusUnit.A_DC, AccessMode.READ_ONLY);
+	public static final ModbusOperation VEB_PHASE_COUNT = new UnsignedOperation(Category.VEBUS, 28, "Phase count", 1, DBusUnit.COUNT, AccessMode.READ_ONLY);
 	public static final ModbusOperation VEB_ACTIVE_INPUT = new UnsignedOperation(Category.VEBUS, 29, "Active input", 1, DBusUnit.ACTIVE_INPUT, AccessMode.READ_ONLY);
 	public static final ModbusOperation VEB_VE_BUS_SOC = new UnsignedOperation(Category.VEBUS, 30, "VE.Bus state of charge", 10, DBusUnit.PERCENT, AccessMode.READ_WRITE);
+	public static final ModbusOperation VEB_VE_BUS_STATE = new UnsignedOperation(Category.VEBUS, 31, "VE.Bus state", 1, DBusUnit.STATE, AccessMode.READ_ONLY);
+	public static final ModbusOperation VEB_VE_BUS_ERROR = new UnsignedOperation(Category.VEBUS, 32, "VE.Bus Error", 1, DBusUnit.ERROR, AccessMode.READ_ONLY);
 	public static final ModbusOperation VEB_SWITCH_POSITION = new UnsignedOperation(Category.VEBUS, 33, "Switch Position", 1, DBusUnit.SWITCH_POSITION, AccessMode.READ_WRITE);
 	public static final ModbusOperation VEB_TEMPREATURE_ALARM = new UnsignedOperation(Category.VEBUS, 34, "Temperature alarm", 1, DBusUnit.ALARM, AccessMode.READ_ONLY);
 	public static final ModbusOperation VEB_LOW_BATTERY_ALARM = new UnsignedOperation(Category.VEBUS, 35, "Low battery alarm", 1, DBusUnit.ALARM, AccessMode.READ_ONLY);
@@ -74,9 +93,15 @@ public abstract class ModbusOperation implements Serializable{
 
 	// >>>BAT_ = com.victronenergy.battery >>>
 	public static final ModbusOperation BAT_BATTERY_VOLTAGE = new UnsignedOperation(Category.BATTERY, 259, "Battery voltage", 100, DBusUnit.V_DC, AccessMode.READ_ONLY);
+	public static final ModbusOperation BAT_STARTER_BATTERY_VOLTAGE = new UnsignedOperation(Category.BATTERY, 260, "Starter battery voltage", 100, DBusUnit.V_DC,
+			AccessMode.READ_ONLY);
 	public static final ModbusOperation BAT_CURRENT = new SignedOperation(Category.BATTERY, 261, "Current", 10, DBusUnit.A_DC, AccessMode.READ_ONLY);
 	public static final ModbusOperation BAT_BATTERY_TEMPERATURE = new SignedOperation(Category.BATTERY, 262, "Battery temperature", 10, DBusUnit.CELSIUS, AccessMode.READ_ONLY);
 	public static final ModbusOperation BAT_STATE_OF_CHARGE = new UnsignedOperation(Category.BATTERY, 266, "State of charge", 10, DBusUnit.PERCENT, AccessMode.READ_ONLY);
+	public static final ModbusOperation BAT_TOTA_AH_DRAWN = new UnsignedOperation(Category.BATTERY, 286, "Total Ah drawn", -10, DBusUnit.AH, AccessMode.READ_ONLY);
+	public static final ModbusOperation BAT_MAX_CHARGE_CURRENT = new UnsignedOperation(Category.BATTERY, 307, "Max charge current", 10, DBusUnit.A_DC, AccessMode.READ_ONLY);
+	public static final ModbusOperation BAT_MAX_DISCHARGE_CURRENT = new UnsignedOperation(Category.BATTERY, 308, "Max discharge current", 10, DBusUnit.A_DC, AccessMode.READ_ONLY);
+	public static final ModbusOperation BAT_CAPACITY = new UnsignedOperation(Category.BATTERY, 309, "Capacity", 10, DBusUnit.AH, AccessMode.READ_ONLY);
 	// <<<
 
 	// >>>SOL_ = com.victronenergy.solarcharger >>>
@@ -90,10 +115,6 @@ public abstract class ModbusOperation implements Serializable{
 	// <<<
 
 	// >>>SYS_ = com.victronenergy.system >>>
-	// FIXME returns String
-	// public static final ModbusOperation SYS_SERIAL_SYSTEM = new
-	// StringOperation(Category.SYSTEM, 800, "Serial (System)", 6,
-	// AccessMode.READ_ONLY);
 	public static final ModbusOperation SYS_CCGX_RELAY_1_STATE = new UnsignedOperation(Category.SYSTEM, 806, "CCGX Relay 1 state", 1, DBusUnit.RELAY_STATE, AccessMode.READ_WRITE);
 	public static final ModbusOperation SYS_CCGX_RELAY_2_STATE = new UnsignedOperation(Category.SYSTEM, 807, "CCGX Relay 2 state", 1, DBusUnit.RELAY_STATE, AccessMode.READ_WRITE);
 	public static final ModbusOperation SYS_PC_AC_COUPLED_OUTPUT_L1 = new UnsignedOperation(Category.SYSTEM, 808, "PV - AC-coupled on output L1", 1, DBusUnit.W,
@@ -107,6 +128,12 @@ public abstract class ModbusOperation implements Serializable{
 	public static final ModbusOperation SYS_PC_AC_COUPLED_INPUT_L2 = new UnsignedOperation(Category.SYSTEM, 812, "PV - AC-coupled on input L2", 1, DBusUnit.W,
 			AccessMode.READ_ONLY);
 	public static final ModbusOperation SYS_PC_AC_COUPLED_INPUT_L3 = new UnsignedOperation(Category.SYSTEM, 813, "PV - AC-coupled on input L3", 1, DBusUnit.W,
+			AccessMode.READ_ONLY);
+	public static final ModbusOperation SYS_PC_AC_COUPLED_GENERATOR_L1 = new UnsignedOperation(Category.SYSTEM, 814, "PV - AC-coupled on generator L1", 1, DBusUnit.W,
+			AccessMode.READ_ONLY);
+	public static final ModbusOperation SYS_PC_AC_COUPLED_GENERATOR_L2 = new UnsignedOperation(Category.SYSTEM, 815, "PV - AC-coupled on generator L2", 1, DBusUnit.W,
+			AccessMode.READ_ONLY);
+	public static final ModbusOperation SYS_PC_AC_COUPLED_GENERATOR_L3 = new UnsignedOperation(Category.SYSTEM, 816, "PV - AC-coupled on generator L3", 1, DBusUnit.W,
 			AccessMode.READ_ONLY);
 	public static final ModbusOperation SYS_AC_CONSUMPTION_L1 = new UnsignedOperation(Category.SYSTEM, 817, "AC Consumption L1", 1, DBusUnit.W, AccessMode.READ_ONLY);
 	public static final ModbusOperation SYS_AC_CONSUMPTION_L2 = new UnsignedOperation(Category.SYSTEM, 818, "AC Consumption L2", 1, DBusUnit.W, AccessMode.READ_ONLY);
@@ -235,13 +262,18 @@ public abstract class ModbusOperation implements Serializable{
 	}
 
 	public static List<ModbusOperation> allOperations() {
-		return Arrays.asList(VEB_INPUT_VOLTAGE_PHASE_1, VEB_INPUT_CURRENT_PHASE_1, VEB_INPUT_FREQUENCY_1, VEB_INPUT_POWER_1, VEB_OUTPUT_FREQUENCY, VEB_ACTIVE_INPUT_CURRENT_LIMIT,
-				VEB_OUTPUT_POWER_1, VEB_BATTERY_VOLTAGE, VEB_BATTERY_CURRENT, VEB_ACTIVE_INPUT, VEB_VE_BUS_SOC, VEB_SWITCH_POSITION, VEB_TEMPREATURE_ALARM, VEB_LOW_BATTERY_ALARM,
-				VEB_OVERLOAD_ALARM, VEB_ESS_POWER_SET_POINT_PHASE_1, VEB_ESS_DISABLE_CHARGE_FLAG_PHASE, VEB_ESS_DISABLE_FEEDBACK_FLAG_PHASE, VEB_ESS_POWER_SET_POINT_PHASE_2,
-				VEB_ESS_POWER_SET_POINT_PHASE_3, VEB_TEMPREATURE_SENSOR_ALARM, VEB_VOLTAGE_SENSOR_ALARM, VEB_TEMPREATURE_ALARM_L1, VEB_LOW_BATTERY_ALARM_L1, VEB_OVERLOAD_ALARM_L1,
-				VEB_RIPPLE_ALARM_L1, VEB_DISABLE_PV_INVERTER, BAT_BATTERY_VOLTAGE, BAT_CURRENT, BAT_BATTERY_TEMPERATURE, BAT_STATE_OF_CHARGE, SOL_CHARGER_ON_OFF, SOL_CHARGER_STATE,
-				SOL_PV_VOLTAGE, SOL_PV_CURRENT, SOL_YIELD_TODAY, SOL_PV_POWER, SOL_USER_YIELD, SYS_CCGX_RELAY_1_STATE, SYS_CCGX_RELAY_2_STATE, SYS_PC_AC_COUPLED_OUTPUT_L1,
-				SYS_PC_AC_COUPLED_OUTPUT_L2, SYS_PC_AC_COUPLED_OUTPUT_L3, SYS_PC_AC_COUPLED_INPUT_L1, SYS_PC_AC_COUPLED_INPUT_L2, SYS_PC_AC_COUPLED_INPUT_L3, SYS_AC_CONSUMPTION_L1,
+		return Arrays.asList(VEB_INPUT_VOLTAGE_PHASE_1, VEB_INPUT_VOLTAGE_PHASE_2, VEB_INPUT_VOLTAGE_PHASE_3, VEB_INPUT_CURRENT_PHASE_1, VEB_INPUT_CURRENT_PHASE_2,
+				VEB_INPUT_CURRENT_PHASE_3, VEB_INPUT_FREQUENCY_1, VEB_INPUT_FREQUENCY_2, VEB_INPUT_FREQUENCY_3, VEB_INPUT_POWER_1, VEB_INPUT_POWER_2, VEB_INPUT_POWER_3,
+				VEB_OUTPUT_VOLTAGE_PHASE_1, VEB_OUTPUT_VOLTAGE_PHASE_2, VEB_OUTPUT_VOLTAGE_PHASE_3, VEB_OUTPUT_CURRENT_PHASE_1, VEB_OUTPUT_CURRENT_PHASE_2,
+				VEB_OUTPUT_CURRENT_PHASE_3, VEB_OUTPUT_FREQUENCY, VEB_ACTIVE_INPUT_CURRENT_LIMIT, VEB_OUTPUT_POWER_1, VEB_OUTPUT_POWER_2, VEB_OUTPUT_POWER_3, VEB_BATTERY_VOLTAGE,
+				VEB_BATTERY_CURRENT, VEB_PHASE_COUNT, VEB_ACTIVE_INPUT, VEB_VE_BUS_SOC, VEB_VE_BUS_STATE, VEB_VE_BUS_ERROR, VEB_SWITCH_POSITION, VEB_TEMPREATURE_ALARM,
+				VEB_LOW_BATTERY_ALARM, VEB_OVERLOAD_ALARM, VEB_ESS_POWER_SET_POINT_PHASE_1, VEB_ESS_DISABLE_CHARGE_FLAG_PHASE, VEB_ESS_DISABLE_FEEDBACK_FLAG_PHASE,
+				VEB_ESS_POWER_SET_POINT_PHASE_2, VEB_ESS_POWER_SET_POINT_PHASE_3, VEB_TEMPREATURE_SENSOR_ALARM, VEB_VOLTAGE_SENSOR_ALARM, VEB_TEMPREATURE_ALARM_L1,
+				VEB_LOW_BATTERY_ALARM_L1, VEB_OVERLOAD_ALARM_L1, VEB_RIPPLE_ALARM_L1, VEB_DISABLE_PV_INVERTER, BAT_BATTERY_VOLTAGE, BAT_STARTER_BATTERY_VOLTAGE, BAT_CURRENT,
+				BAT_BATTERY_TEMPERATURE, BAT_STATE_OF_CHARGE, BAT_TOTA_AH_DRAWN, BAT_MAX_CHARGE_CURRENT, BAT_MAX_DISCHARGE_CURRENT, BAT_CAPACITY, SOL_CHARGER_ON_OFF,
+				SOL_CHARGER_STATE, SOL_PV_VOLTAGE, SOL_PV_CURRENT, SOL_YIELD_TODAY, SOL_PV_POWER, SOL_USER_YIELD, SYS_CCGX_RELAY_1_STATE, SYS_CCGX_RELAY_2_STATE,
+				SYS_PC_AC_COUPLED_OUTPUT_L1, SYS_PC_AC_COUPLED_OUTPUT_L2, SYS_PC_AC_COUPLED_OUTPUT_L3, SYS_PC_AC_COUPLED_INPUT_L1, SYS_PC_AC_COUPLED_INPUT_L2,
+				SYS_PC_AC_COUPLED_INPUT_L3, SYS_PC_AC_COUPLED_GENERATOR_L1, SYS_PC_AC_COUPLED_GENERATOR_L2, SYS_PC_AC_COUPLED_GENERATOR_L3, SYS_AC_CONSUMPTION_L1,
 				SYS_AC_CONSUMPTION_L2, SYS_AC_CONSUMPTION_L3, SYS_GRID_L1, SYS_GRID_L2, SYS_GRID_L3, SYS_ACTIVE_INPUT_SOURCE, SYS_BATTERY_VOLTAGE_SYSTEM,
 				SYS_BATTERY_CURRENT_SYSTEM, SYS_BATTERY_POWER_SYSTEM, SYS_BATTERY_SOC_SYSTEM, SYS_BATTERY_STATE_SYSTEM, SYS_BATTERY_CONSUMED_SYSTEM, SYS_BATTERY_TIME_TO_GO_SYSTEM,
 				SYS_PV_DC_COUPLED_POWER, SYS_PC_DC_COUPLED_CURRENT, SYS_CHARGE_POWER, SYS_DC_SYSTEM_POWER, SYS_VE_BUS_CHARGE_POWER, PVI_POSITION, PVI_L1_VOLTAGE, PVI_L1_CURRENT,

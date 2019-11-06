@@ -264,12 +264,7 @@ public class ModbusTCPGUI extends JFrame {
 
 	private ModbusOperation[] registerSortedOperations() {
 		List<ModbusOperation> operations = ModbusOperation.allOperations();
-		Collections.sort(operations, new Comparator<ModbusOperation>() {
-			@Override
-			public int compare(ModbusOperation o1, ModbusOperation o2) {
-				return Integer.compare(o1.getAddress(), o2.getAddress());
-			}
-		});
+		Collections.sort(operations, Comparator.comparing(ModbusOperation::getAddress));
 		return operations.toArray(new ModbusOperation[operations.size()]);
 	}
 
@@ -291,17 +286,21 @@ public class ModbusTCPGUI extends JFrame {
 
 	private JComponent createRemoveButton() {
 		JButton remove = new JButton("Remove Selected");
-		remove.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				List<DeviceOperationResultTO> tosToRemove = Arrays.stream(modbusOperationDeviceTable.getSelectedRows()).boxed().map(id -> resultEventList.get(id))
-						.collect(Collectors.toList());
-				if (!tosToRemove.isEmpty()) {
-					tosToRemove.stream().forEach((to) -> resultEventList.remove(to));
-					modbusOperationDeviceTable.clearSelection();
-				}
+		remove.addActionListener(l -> {
+			List<DeviceOperationResultTO> tosToRemove = Arrays.stream(modbusOperationDeviceTable.getSelectedRows()).boxed().map(id -> resultEventList.get(id))
+					.collect(Collectors.toList());
+			if (!tosToRemove.isEmpty()) {
+				tosToRemove.stream().forEach((to) -> resultEventList.remove(to));
+				modbusOperationDeviceTable.clearSelection();
 			}
-
+		});
+		remove.addActionListener(l -> {
+			List<DeviceOperationResultTO> tosToRemove = Arrays.stream(modbusOperationDeviceTable.getSelectedRows()).boxed().map(id -> resultEventList.get(id))
+					.collect(Collectors.toList());
+			if (!tosToRemove.isEmpty()) {
+				tosToRemove.stream().forEach((to) -> resultEventList.remove(to));
+				modbusOperationDeviceTable.clearSelection();
+			}
 		});
 		return remove;
 	}
@@ -397,12 +396,9 @@ public class ModbusTCPGUI extends JFrame {
 
 	private JComponent createAddButton() {
 		JButton add = new JButton("Add Selected");
-		add.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				resultEventList.add(new DeviceOperationResultTO(getSelectedItem(operations), getSelectedItem(devices)));
-				modbusOperationDeviceTable.clearSelection();
-			}
+		add.addActionListener(l -> {
+			resultEventList.add(new DeviceOperationResultTO(getSelectedItem(operations), getSelectedItem(devices)));
+			modbusOperationDeviceTable.clearSelection();
 		});
 		return add;
 	}
