@@ -1,6 +1,5 @@
 package de.ossi.modbustcp.gui;
 
-import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.EventQueue;
 import java.awt.Image;
@@ -38,7 +37,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.PlainDocument;
@@ -48,6 +46,8 @@ import org.apache.commons.io.FilenameUtils;
 
 import com.ghgande.j2mod.modbus.ModbusException;
 import com.ghgande.j2mod.modbus.ModbusSlaveException;
+import com.github.weisj.darklaf.LafManager;
+import com.github.weisj.darklaf.theme.SolarizedDarkTheme;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -68,17 +68,16 @@ import de.ossi.modbustcp.data.operation.ModbusOperation;
  * @author ossi
  *
  */
-public class ModbusTCPGUI extends JFrame {
+public class ModbusTCPGUI {
 
-	private static final long serialVersionUID = 1L;
 	private static final String FILE_ENDING = "modbustcp";
 	private static final String FILE_ENDING_WITH_DOT = "." + FILE_ENDING;
-	private static final Color LIGHT_BLUE = new Color(155, 200, 255);
 	private static final String IP_VICTRON = "192.168.0.81";
 	private static final int MODBUS_DEFAULT_PORT = 502;
 	private static final CellConstraints CC = new CellConstraints();
 
 	private static final String GITHUB_URL = "https://github.com/CommentSectionScientist/modbustcp";
+	private final JFrame frame;
 	private ModbusTCPReader modbusReader;
 	private ModbusTCPWriter modbusWriter;
 
@@ -104,15 +103,16 @@ public class ModbusTCPGUI extends JFrame {
 	}
 
 	public ModbusTCPGUI() {
-		this.setJMenuBar(createMenu());
-		this.add(createTopPanel());
-		setIcon();
+		// Laf has to be set first
 		setLookAndFeel();
-		setTitle("ModbusTCP");
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		pack();
-		setMinimumSize(this.getPreferredSize());
-		setVisible(true);
+		frame = new JFrame("ModbusTCP");
+		frame.setJMenuBar(createMenu());
+		frame.setIconImage(getIcon());
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setContentPane(createTopPanel());
+		frame.setMinimumSize(frame.getPreferredSize());
+		frame.pack();
+		frame.setVisible(true);
 		UIManager.put("FileChooser.cancelButtonText", "Cancel");
 	}
 
@@ -145,16 +145,11 @@ public class ModbusTCPGUI extends JFrame {
 	}
 
 	private void setLookAndFeel() {
-		try {
-			UIManager.setLookAndFeel("com.jgoodies.looks.windows.WindowsLookAndFeel");
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-			showErrorDialog(e, e.getMessage());
-		}
+		LafManager.install(new SolarizedDarkTheme());
 	}
 
-	private void setIcon() {
-		Image img = new ImageIcon(this.getClass().getResource("/SolarPanel.png")).getImage();
-		this.setIconImage(img);
+	private Image getIcon() {
+		return new ImageIcon(frame.getClass().getResource("/SolarPanel.png")).getImage();
 	}
 
 	private JPanel createTopPanel() {
@@ -169,7 +164,7 @@ public class ModbusTCPGUI extends JFrame {
 		builder.add(createDeviceLabel(), CC.xy(4, 6));
 		builder.add(createDevicesCombobox(), CC.xy(4, 8));
 		builder.add(createTabbedPane(), CC.xyw(2, 10, 3));
-		return getBluePanel(builder);
+		return builder.getPanel();
 	}
 
 	private JTabbedPane createTabbedPane() {
@@ -190,7 +185,7 @@ public class ModbusTCPGUI extends JFrame {
 		builder.add(createLoadButton(), CC.xy(8, 4));
 
 		builder.add(createReadButton(), CC.xyw(4, 6, 3));
-		return getBluePanel(builder);
+		return builder.getPanel();
 	}
 
 	private JPanel createWritePanel() {
@@ -199,13 +194,7 @@ public class ModbusTCPGUI extends JFrame {
 		builder.add(createWriteInputLabel(), CC.xy(2, 2));
 		builder.add(createWriteInputField(), CC.xy(2, 4));
 		builder.add(createWriteButton(), CC.xy(4, 4));
-		return getBluePanel(builder);
-	}
-
-	private JPanel getBluePanel(PanelBuilder builder) {
-		JPanel panel = builder.getPanel();
-		panel.setBackground(LIGHT_BLUE);
-		return panel;
+		return builder.getPanel();
 	}
 
 	private JComponent createTablePane() {
@@ -417,13 +406,13 @@ public class ModbusTCPGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (writeInput.getText().isEmpty()) {
-				JOptionPane.showMessageDialog(ModbusTCPGUI.this, "No input value specified!", "Write input field empty", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(frame, "No input value specified!", "Write input field empty", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 			modbusWriter = writerFromAdressfield();
 			try {
 				modbusWriter.writeOperationFromDevice(getSelectedItem(operations), getSelectedItem(devices), Integer.parseInt(writeInput.getText().trim()));
-				JOptionPane.showMessageDialog(ModbusTCPGUI.this, "Write successful!");
+				JOptionPane.showMessageDialog(frame, "Write successful!");
 			} catch (ModbusSlaveException e1) {
 				showErrorDialog(e1, "The Device doesn't support this operation!\n" + e1.getMessage());
 			} catch (NumberFormatException e2) {
@@ -439,7 +428,7 @@ public class ModbusTCPGUI extends JFrame {
 	}
 
 	private void showErrorDialog(Exception e, String msg) {
-		JOptionPane.showMessageDialog(ModbusTCPGUI.this, msg, e.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(frame, msg, e.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
 	}
 
 	private final class ReadAllAction implements ActionListener {
