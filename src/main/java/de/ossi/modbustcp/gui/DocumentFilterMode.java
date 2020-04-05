@@ -7,16 +7,25 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
 
-import org.apache.commons.lang3.math.NumberUtils;
-
 class DocumentFilterMode extends DocumentFilter {
-
-	public static final Function<String, Boolean> IS_NUMBER = sb -> NumberUtils.isDigits(sb);
 
 	private final Function<String, Boolean> filter;
 
 	public DocumentFilterMode(Function<String, Boolean> filter) {
 		this.filter = filter;
+	}
+
+	public static boolean isNumeric(final CharSequence cs) {
+		if (cs == null || cs.length() == 0) {
+			return false;
+		}
+		final int sz = cs.length();
+		for (int i = 0; i < sz; i++) {
+			if (!Character.isDigit(cs.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
