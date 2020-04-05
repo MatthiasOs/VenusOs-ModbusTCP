@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
@@ -42,8 +43,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.PlainDocument;
 import javax.xml.bind.JAXBException;
-
-import org.apache.commons.io.FilenameUtils;
 
 import com.ghgande.j2mod.modbus.ModbusException;
 import com.ghgande.j2mod.modbus.ModbusSlaveException;
@@ -242,13 +241,13 @@ public class ModbusTCPGUI {
 
 	private JComponent createWriteInputField() {
 		writeInput = new JTextField();
-		((PlainDocument) writeInput.getDocument()).setDocumentFilter(new DocumentFilterMode(DocumentFilterMode.IS_NUMBER));
+		((PlainDocument) writeInput.getDocument()).setDocumentFilter(new DocumentFilterMode(DocumentFilterMode::isNumeric));
 		return writeInput;
 	}
 
 	private JComponent createPortField() {
 		port = new JTextField(String.valueOf(MODBUS_DEFAULT_PORT));
-		((PlainDocument) port.getDocument()).setDocumentFilter(new DocumentFilterMode(DocumentFilterMode.IS_NUMBER));
+		((PlainDocument) port.getDocument()).setDocumentFilter(new DocumentFilterMode(DocumentFilterMode::isNumeric));
 		return port;
 	}
 
@@ -329,10 +328,15 @@ public class ModbusTCPGUI {
 			}
 
 			private File getFileWithEnding(File selectedFile) {
-				if (!FilenameUtils.getExtension(selectedFile.getName()).equalsIgnoreCase(FILE_ENDING)) {
+				Optional<String> extension = getExtensionByStringHandling(selectedFile.getName());
+				if (!extension.isPresent() || !extension.get().equalsIgnoreCase(FILE_ENDING)) {
 					return new File(selectedFile.toString() + FILE_ENDING_WITH_DOT);
 				}
 				return selectedFile;
+			}
+
+			private Optional<String> getExtensionByStringHandling(String filename) {
+				return Optional.ofNullable(filename).filter(f -> f.contains(".")).map(f -> f.substring(filename.lastIndexOf(".") + 1));
 			}
 
 			private JFileChooser createSaveChooser() {
