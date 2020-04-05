@@ -39,6 +39,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.TableColumnModel;
 import javax.swing.text.PlainDocument;
 import javax.xml.bind.JAXBException;
 
@@ -153,7 +154,7 @@ public class ModbusTCPGUI {
 	}
 
 	private JPanel createTopPanel() {
-		FormLayout layout = new FormLayout("3dlu,250dlu:g,8dlu,250dlu:g,3dlu", "3dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,p:g");
+		FormLayout layout = new FormLayout("3dlu,300dlu:g,8dlu,300dlu:g,3dlu", "3dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,p:g");
 		PanelBuilder builder = new PanelBuilder(layout);
 		builder.add(createIpAdressLabel(), CC.xy(2, 2));
 		builder.add(createPortLabel(), CC.xy(4, 2));
@@ -200,6 +201,11 @@ public class ModbusTCPGUI {
 	private JComponent createTablePane() {
 		AdvancedTableModel<DeviceOperationResultTO> tableModel = createModel();
 		modbusOperationDeviceTable = new JTable(tableModel);
+		TableColumnModel columnModel = modbusOperationDeviceTable.getColumnModel();
+		columnModel.getColumn(0).setPreferredWidth(235);
+		columnModel.getColumn(1).setPreferredWidth(235);
+		columnModel.getColumn(2).setPreferredWidth(90);
+		columnModel.getColumn(3).setPreferredWidth(340);
 		modbusOperationDeviceTable.setColumnSelectionAllowed(false);
 		return new JScrollPane(modbusOperationDeviceTable);
 	}
