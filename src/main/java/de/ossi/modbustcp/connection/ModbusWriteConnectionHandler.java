@@ -11,12 +11,12 @@ public abstract class ModbusWriteConnectionHandler extends ModbusConnectionHandl
 		super(ip, port);
 	}
 
-	protected abstract boolean writeInternal(ModbusOperation operation, ModbusDevice device, int wert) throws ForbiddenAccessException, ModbusException;
+	protected abstract boolean writeInternal(ModbusOperation operation, ModbusDevice device, int value) throws ForbiddenAccessException, ModbusException;
 
-	public boolean writeOperationFromDevice(ModbusOperation operation, ModbusDevice device, int wert) throws ForbiddenAccessException, ModbusException {
+	public boolean writeOperationFromDevice(ModbusOperation operation, ModbusDevice device, int value) throws ForbiddenAccessException, ModbusException {
 		connect();
 		try {
-			return writeInternal(operation, device, wert);
+			return writeInternal(operation, device, value);
 		} finally {
 			disconnect();
 		}

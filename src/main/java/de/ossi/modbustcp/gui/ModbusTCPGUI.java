@@ -42,7 +42,6 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.PlainDocument;
-import javax.xml.bind.JAXBException;
 
 import com.ghgande.j2mod.modbus.ModbusException;
 import com.ghgande.j2mod.modbus.ModbusSlaveException;
@@ -94,12 +93,8 @@ public class ModbusTCPGUI {
 		return GlazedListsSwing.eventTableModel(resultEventList, new DeviceOperationResultTableFormat());
 	}
 
-	public static void main(String[] args) throws IOException, JAXBException {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				new ModbusTCPGUI();
-			}
-		});
+	public static void main(String[] args) {
+		EventQueue.invokeLater(ModbusTCPGUI::new);
 	}
 
 	public ModbusTCPGUI() {
@@ -210,28 +205,23 @@ public class ModbusTCPGUI {
 	}
 
 	private JComponent createWriteInputLabel() {
-		JLabel inputLabel = new JLabel("Input Value (Number):");
-		return inputLabel;
+		return new JLabel("Input Value (Number):");
 	}
 
 	private JComponent createOperationLabel() {
-		JLabel operationLabel = new JLabel("Operation:");
-		return operationLabel;
+		return new JLabel("Operation:");
 	}
 
 	private JComponent createIpAdressLabel() {
-		JLabel adressLabel = new JLabel("IP-Address:");
-		return adressLabel;
+		return new JLabel("IP-Address:");
 	}
 
 	private JComponent createPortLabel() {
-		JLabel portLabel = new JLabel("Port:");
-		return portLabel;
+		return new JLabel("Port:");
 	}
 
 	private JComponent createDeviceLabel() {
-		JLabel deviceLabel = new JLabel("Device:");
-		return deviceLabel;
+		return new JLabel("Device:");
 	}
 
 	private JComponent createIpAdressField() {
@@ -241,13 +231,13 @@ public class ModbusTCPGUI {
 
 	private JComponent createWriteInputField() {
 		writeInput = new JTextField();
-		((PlainDocument) writeInput.getDocument()).setDocumentFilter(new DocumentFilterMode(DocumentFilterMode::isNumeric));
+		((PlainDocument) writeInput.getDocument()).setDocumentFilter(new SignedNumberFilterMode());
 		return writeInput;
 	}
 
 	private JComponent createPortField() {
 		port = new JTextField(String.valueOf(MODBUS_DEFAULT_PORT));
-		((PlainDocument) port.getDocument()).setDocumentFilter(new DocumentFilterMode(DocumentFilterMode::isNumeric));
+		((PlainDocument) port.getDocument()).setDocumentFilter(new SignedNumberFilterMode());
 		return port;
 	}
 
@@ -257,9 +247,9 @@ public class ModbusTCPGUI {
 	}
 
 	private ModbusOperation[] registerSortedOperations() {
-		List<ModbusOperation> operations = ModbusOperation.allOperations();
-		Collections.sort(operations, Comparator.comparing(ModbusOperation::getAddress));
-		return operations.toArray(new ModbusOperation[operations.size()]);
+		List<ModbusOperation> allOperations = ModbusOperation.allOperations();
+		Collections.sort(allOperations, Comparator.comparing(ModbusOperation::getAddress));
+		return allOperations.toArray(new ModbusOperation[allOperations.size()]);
 	}
 
 	private JComponent createDevicesCombobox() {
@@ -268,8 +258,8 @@ public class ModbusTCPGUI {
 	}
 
 	private ModbusDevice[] allDevices() {
-		List<ModbusDevice> devices = ModbusDevice.allDevices();
-		return devices.toArray(new ModbusDevice[devices.size()]);
+		List<ModbusDevice> allDevices = ModbusDevice.allDevices();
+		return allDevices.toArray(new ModbusDevice[allDevices.size()]);
 	}
 
 	private JComponent createReadButton() {
@@ -284,7 +274,7 @@ public class ModbusTCPGUI {
 			List<DeviceOperationResultTO> tosToRemove = Arrays.stream(modbusOperationDeviceTable.getSelectedRows()).boxed().map(id -> resultEventList.get(id))
 					.collect(Collectors.toList());
 			if (!tosToRemove.isEmpty()) {
-				tosToRemove.stream().forEach((to) -> resultEventList.remove(to));
+				tosToRemove.stream().forEach(to -> resultEventList.remove(to));
 				modbusOperationDeviceTable.clearSelection();
 			}
 		});
@@ -292,7 +282,7 @@ public class ModbusTCPGUI {
 			List<DeviceOperationResultTO> tosToRemove = Arrays.stream(modbusOperationDeviceTable.getSelectedRows()).boxed().map(id -> resultEventList.get(id))
 					.collect(Collectors.toList());
 			if (!tosToRemove.isEmpty()) {
-				tosToRemove.stream().forEach((to) -> resultEventList.remove(to));
+				tosToRemove.stream().forEach(to -> resultEventList.remove(to));
 				modbusOperationDeviceTable.clearSelection();
 			}
 		});
@@ -336,7 +326,7 @@ public class ModbusTCPGUI {
 			}
 
 			private Optional<String> getExtensionByStringHandling(String filename) {
-				return Optional.ofNullable(filename).filter(f -> f.contains(".")).map(f -> f.substring(filename.lastIndexOf(".") + 1));
+				return Optional.ofNullable(filename).filter(f -> f.contains(".")).map(f -> f.substring(filename.lastIndexOf('.') + 1));
 			}
 
 			private JFileChooser createSaveChooser() {
