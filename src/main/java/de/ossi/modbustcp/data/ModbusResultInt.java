@@ -51,8 +51,25 @@ public class ModbusResultInt {
 		if (dbusUnit.isSpecialUnit()) {
 			return DBusSpecialUnitParser.parse(dbusUnit, value);
 		} else {
-			return String.valueOf(operation.getValueInRange(value));
+			return String.valueOf(getValueInRange(operation, value));
 		}
+	}
+
+	// TODO remove Constants, can the Range be used instead?
+	private static final double MAX_SIGNED = 32767D;
+	private static final double MAX_REGISTER = 65535D;
+
+	public Double getValueInRange(ModbusOperation operation, Integer registerValue) {
+		if (operation.getType().isUnsigned()) {
+			return scaleValue(operation, Double.valueOf(registerValue));
+		} else {
+			double valueInRange = registerValue > MAX_SIGNED ? registerValue - MAX_REGISTER - 1 : registerValue;
+			return scaleValue(operation, valueInRange);
+		}
+	}
+
+	private double scaleValue(ModbusOperation operation, Double registerValue) {
+		return registerValue / operation.getScaleFactor();
 	}
 
 	public String getValueOfOperationWithUnit() {

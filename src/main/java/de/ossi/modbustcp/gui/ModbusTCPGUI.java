@@ -58,7 +58,7 @@ import ca.odell.glazedlists.swing.GlazedListsSwing;
 import de.ossi.modbustcp.connection.ModbusTCPReader;
 import de.ossi.modbustcp.connection.ModbusTCPWriter;
 import de.ossi.modbustcp.data.ModbusResultInt;
-import de.ossi.modbustcp.data.OperationDevicesReader;
+import de.ossi.modbustcp.data.ExcelListReader;
 import de.ossi.modbustcp.data.operation.ModbusDevice;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
 
@@ -102,7 +102,7 @@ public class ModbusTCPGUI {
 
 	public ModbusTCPGUI() {
 		// Laf has to be set first
-		OperationDevicesReader operationDevicesReader = new OperationDevicesReader();
+		ExcelListReader operationDevicesReader = new ExcelListReader();
 		deviceList = operationDevicesReader.readDevices();
 		operationList = operationDevicesReader.readOperations();
 		setLookAndFeel();

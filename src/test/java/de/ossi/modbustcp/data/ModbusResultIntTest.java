@@ -46,7 +46,5 @@ public class ModbusResultIntTest {
 			modbusResult = new ModbusResultInt(GRI_GRID_L1_VOLTAGE, CAN_BUS_BMS, 1);
 			assertEquals("0.1 V AC", modbusResult.getValueOfOperationWithUnit());
 		}
-
 	}
-
 }

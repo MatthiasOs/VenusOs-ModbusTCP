@@ -11,9 +11,9 @@ import org.junit.Test;
 import de.ossi.modbustcp.data.operation.ModbusDevice;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
 
-public class OperationDevicesReaderTest {
+public class ExcelListReaderTest {
 
-	private final OperationDevicesReader reader = new OperationDevicesReader();
+	private final ExcelListReader reader = new ExcelListReader();
 
 	@Test
 	public void operationsShouldBeRead() throws Exception {

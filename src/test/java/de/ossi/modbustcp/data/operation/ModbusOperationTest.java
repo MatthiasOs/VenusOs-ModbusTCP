@@ -1,6 +1,5 @@
 package de.ossi.modbustcp.data.operation;
 
-import static java.lang.Double.valueOf;
 import static org.junit.Assert.assertThat;
 
 import org.hamcrest.Matchers;
@@ -69,7 +68,7 @@ public abstract class ModbusOperationTest {
 	@Test
 	public void pruefeDaten() throws Exception {
 		ModbusResultInt result = new ModbusResultInt(operation, CAN_BUS_BMS, registerwert);
-		assertThat(operation.getValueInRange(result.getValue()), Matchers.is(valueOf(messwert)));
+		assertThat(result.getValueInRange(operation, registerwert), Matchers.is(messwert));
 	}
 
 	protected static double d(Integer i) {

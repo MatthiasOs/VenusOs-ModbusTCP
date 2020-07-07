@@ -36,13 +36,13 @@ public class ModbusOperation {
 	private String description;
 
 	@Column(index = 2, name = "Address")
-	private int address;
+	private Integer address;
 
 	@Column(index = 3, name = "Type", convertorClass = TypeConverter.class)
 	private Type type;
 
 	@Column(index = 4, name = "Scalefactor", convertorClass = DoubleConverter.class)
-	private double scaleFactor;
+	private Double scaleFactor;
 
 	@Column(index = 5, name = "Range")
 	private String range;
@@ -58,23 +58,6 @@ public class ModbusOperation {
 
 	@Column(index = 9, name = "Remarks")
 	private String remarks;
-
-	// TODO entfernen
-	private double scaleValue(Double registerValue) {
-		return registerValue / this.scaleFactor;
-	}
-
-	private static final double MAX_SIGNED = 32767D;
-	private static final double MAX_REGISTER = 65535D;
-
-	public Double getValueInRange(Integer registerValue) {
-		if (type.isUnsigned()) {
-			return scaleValue(Double.valueOf(registerValue));
-		} else {
-			double valueInRange = registerValue > MAX_SIGNED ? registerValue - MAX_REGISTER - 1 : registerValue;
-			return scaleValue(valueInRange);
-		}
-	}
 
 	@Override
 	public String toString() {
