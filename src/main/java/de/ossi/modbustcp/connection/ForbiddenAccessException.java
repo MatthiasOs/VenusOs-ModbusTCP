@@ -1,8 +1,8 @@
 package de.ossi.modbustcp.connection;
 
-import de.ossi.modbustcp.data.ModbusDevice;
+import de.ossi.modbustcp.data.operation.ModbusDevice;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
-import de.ossi.modbustcp.data.operation.ModbusOperation.AccessMode;
+import de.ossi.modbustcp.data.unit.AccessMode;
 
 public class ForbiddenAccessException extends Exception {
 

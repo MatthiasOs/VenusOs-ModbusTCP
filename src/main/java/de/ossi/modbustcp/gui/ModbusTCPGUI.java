@@ -57,8 +57,9 @@ import ca.odell.glazedlists.swing.AdvancedTableModel;
 import ca.odell.glazedlists.swing.GlazedListsSwing;
 import de.ossi.modbustcp.connection.ModbusTCPReader;
 import de.ossi.modbustcp.connection.ModbusTCPWriter;
-import de.ossi.modbustcp.data.ModbusDevice;
 import de.ossi.modbustcp.data.ModbusResultInt;
+import de.ossi.modbustcp.data.OperationDevicesReader;
+import de.ossi.modbustcp.data.operation.ModbusDevice;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
 
 /**
@@ -87,6 +88,8 @@ public class ModbusTCPGUI {
 	private JComboBox<ModbusDevice> devices;
 	private EventList<DeviceOperationResultTO> resultEventList;
 	private JTable modbusOperationDeviceTable;
+	private List<ModbusDevice> deviceList;
+	private List<ModbusOperation> operationList;
 
 	private AdvancedTableModel<DeviceOperationResultTO> createModel() {
 		resultEventList = new BasicEventList<>();
@@ -99,6 +102,9 @@ public class ModbusTCPGUI {
 
 	public ModbusTCPGUI() {
 		// Laf has to be set first
+		OperationDevicesReader operationDevicesReader = new OperationDevicesReader();
+		deviceList = operationDevicesReader.readDevices();
+		operationList = operationDevicesReader.readOperations();
 		setLookAndFeel();
 		frame = new JFrame("ModbusTCP");
 		frame.setJMenuBar(createMenu());
@@ -242,12 +248,12 @@ public class ModbusTCPGUI {
 	}
 
 	private JComponent createOperationsCombobox() {
-		operations = new JComboBox<>(registerSortedOperations());
+		operations = new JComboBox<>(allOperations());
 		return operations;
 	}
 
-	private ModbusOperation[] registerSortedOperations() {
-		List<ModbusOperation> allOperations = ModbusOperation.allOperations();
+	private ModbusOperation[] allOperations() {
+		List<ModbusOperation> allOperations = operationList;
 		Collections.sort(allOperations, Comparator.comparing(ModbusOperation::getAddress));
 		return allOperations.toArray(new ModbusOperation[allOperations.size()]);
 	}
@@ -258,7 +264,7 @@ public class ModbusTCPGUI {
 	}
 
 	private ModbusDevice[] allDevices() {
-		List<ModbusDevice> allDevices = ModbusDevice.allDevices();
+		List<ModbusDevice> allDevices = deviceList;
 		return allDevices.toArray(new ModbusDevice[allDevices.size()]);
 	}
 
@@ -459,7 +465,7 @@ public class ModbusTCPGUI {
 			} catch (ModbusSlaveException e1) {
 				return new StringBuilder().append("Device doesn't support Operation: ").append(e1.getMessage()).toString();
 			} catch (ModbusException e1) {
-				return new StringBuilder().append("ModbusException").append(e1.getMessage()).toString();
+				return new StringBuilder().append("ModbusException: ").append(e1.getMessage()).toString();
 			}
 		}
 

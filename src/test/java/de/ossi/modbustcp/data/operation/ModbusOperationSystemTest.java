@@ -1,8 +1,5 @@
 package de.ossi.modbustcp.data.operation;
 
-import static de.ossi.modbustcp.data.operation.ModbusOperation.SYS_AC_CONSUMPTION_L1;
-import static de.ossi.modbustcp.data.operation.ModbusOperation.SYS_BATTERY_CURRENT_SYSTEM;
-
 import java.util.Arrays;
 import java.util.Collection;
 

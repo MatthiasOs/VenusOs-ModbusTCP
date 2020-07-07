@@ -1,8 +1,5 @@
 package de.ossi.modbustcp.data.operation;
 
-import static de.ossi.modbustcp.data.operation.ModbusOperation.BAT_BATTERY_TEMPERATURE;
-import static de.ossi.modbustcp.data.operation.ModbusOperation.BAT_BATTERY_VOLTAGE;
-
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -12,7 +9,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 @RunWith(Parameterized.class)
 public class ModbusOperationBatteryTest extends ModbusOperationTest {
-
+	
 	@Parameters(name = "{index}: Operation {0}; Registerwert={1}; Erwarteter Messwert={2}")
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] { 

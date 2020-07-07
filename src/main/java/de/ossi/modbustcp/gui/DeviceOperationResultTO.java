@@ -3,7 +3,7 @@ package de.ossi.modbustcp.gui;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import de.ossi.modbustcp.data.ModbusDevice;
+import de.ossi.modbustcp.data.operation.ModbusDevice;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

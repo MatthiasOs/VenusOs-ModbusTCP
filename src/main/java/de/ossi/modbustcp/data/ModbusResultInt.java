@@ -2,8 +2,9 @@ package de.ossi.modbustcp.data;
 
 import java.time.LocalDateTime;
 
+import de.ossi.modbustcp.data.operation.ModbusDevice;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
-import de.ossi.modbustcp.data.unit.DBusSpecialUnit;
+import de.ossi.modbustcp.data.unit.DBusSpecialUnitParser;
 import de.ossi.modbustcp.data.unit.DBusUnit;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,7 +35,7 @@ public class ModbusResultInt {
 		ausgabe.append("Wert: ");
 		ausgabe.append(getValue());
 		ausgabe.append(" ");
-		ausgabe.append(operation.getDbusUnit().getName());
+		ausgabe.append(operation.getDbusUnit().getValue());
 		ausgabe.append(System.lineSeparator());
 		return ausgabe.toString();
 	}
@@ -47,14 +48,14 @@ public class ModbusResultInt {
 	 */
 	public String getValueOfOperation() {
 		DBusUnit dbusUnit = operation.getDbusUnit();
-		if (dbusUnit instanceof DBusSpecialUnit) {
-			return String.valueOf(((DBusSpecialUnit) dbusUnit).getUnit(value));
+		if (dbusUnit.isSpecialUnit()) {
+			return DBusSpecialUnitParser.parse(dbusUnit, value);
 		} else {
-			return String.valueOf(operation.getScaledValueInRange(value));
+			return String.valueOf(operation.getValueInRange(value));
 		}
 	}
-	
+
 	public String getValueOfOperationWithUnit() {
-		return new StringBuilder(getValueOfOperation()).append(" ").append(operation.getDbusUnit().getName()).toString();
+		return new StringBuilder(getValueOfOperation()).append(" ").append(operation.getDbusUnit().getValue()).toString();
 	}
 }

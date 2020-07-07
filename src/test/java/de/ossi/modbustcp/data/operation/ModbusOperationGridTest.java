@@ -1,8 +1,5 @@
 package de.ossi.modbustcp.data.operation;
 
-import static de.ossi.modbustcp.data.operation.ModbusOperation.GRI_GRID_L1_ENERGY_TO_NET;
-import static de.ossi.modbustcp.data.operation.ModbusOperation.GRI_GRID_L1_POWER;
-
 import java.util.Arrays;
 import java.util.Collection;
 
