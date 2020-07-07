@@ -57,8 +57,8 @@ import ca.odell.glazedlists.swing.AdvancedTableModel;
 import ca.odell.glazedlists.swing.GlazedListsSwing;
 import de.ossi.modbustcp.connection.ModbusTCPReader;
 import de.ossi.modbustcp.connection.ModbusTCPWriter;
-import de.ossi.modbustcp.data.ModbusResultInt;
 import de.ossi.modbustcp.data.ExcelListReader;
+import de.ossi.modbustcp.data.ModbusResultInt;
 import de.ossi.modbustcp.data.operation.ModbusDevice;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
 
@@ -76,6 +76,7 @@ public class ModbusTCPGUI {
 	private static final int MODBUS_DEFAULT_PORT = 502;
 	private static final CellConstraints CC = new CellConstraints();
 
+	private static final String OPERATIONS_DEVICES_FILENAME = "CCGX-Modbus-TCP-register-list-2.53.xlsx";
 	private static final String GITHUB_URL = "https://github.com/CommentSectionScientist/modbustcp";
 	private final JFrame frame;
 	private ModbusTCPReader modbusReader;
@@ -97,15 +98,16 @@ public class ModbusTCPGUI {
 	}
 
 	public static void main(String[] args) {
-		EventQueue.invokeLater(ModbusTCPGUI::new);
+		String fileName = args.length != 0 ? args[0] : OPERATIONS_DEVICES_FILENAME;
+		EventQueue.invokeLater(() -> new ModbusTCPGUI(fileName));
 	}
 
-	public ModbusTCPGUI() {
+	public ModbusTCPGUI(String fileName) {
 		// Laf has to be set first
-		ExcelListReader operationDevicesReader = new ExcelListReader();
+		setLookAndFeel();
+		ExcelListReader operationDevicesReader = new ExcelListReader(fileName);
 		deviceList = operationDevicesReader.readDevices();
 		operationList = operationDevicesReader.readOperations();
-		setLookAndFeel();
 		frame = new JFrame("ModbusTCP");
 		frame.setJMenuBar(createMenu());
 		frame.setIconImage(getIcon());

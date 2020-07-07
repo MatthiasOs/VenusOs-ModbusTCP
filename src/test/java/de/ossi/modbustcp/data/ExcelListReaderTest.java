@@ -12,8 +12,8 @@ import de.ossi.modbustcp.data.operation.ModbusDevice;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
 
 public class ExcelListReaderTest {
-
-	private final ExcelListReader reader = new ExcelListReader();
+	private static final String OPERATIONS_DEVICES_FILENAME = "CCGX-Modbus-TCP-register-list-2.53.xlsx";
+	private final ExcelListReader reader = new ExcelListReader(getClass().getClassLoader().getResource(OPERATIONS_DEVICES_FILENAME).getFile());
 
 	@Test
 	public void operationsShouldBeRead() throws Exception {
