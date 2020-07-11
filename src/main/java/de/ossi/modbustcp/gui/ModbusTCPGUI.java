@@ -49,6 +49,7 @@ import com.ghgande.j2mod.modbus.ModbusSlaveException;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.SolarizedDarkTheme;
 import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -152,7 +153,7 @@ public class ModbusTCPGUI {
 
 	private JPanel createTopPanel() {
 		FormLayout layout = new FormLayout("3dlu,300dlu:g,8dlu,300dlu:g,3dlu,p,3dlu", "3dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,p,p:g");
-		PanelBuilder builder = new PanelBuilder(layout);
+		PanelBuilder builder = new PanelBuilder(layout, new FormDebugPanel());
 		builder.add(createIpAdressLabel(), CC.xy(2, 2));
 		builder.add(createPortLabel(), CC.xy(4, 2));
 		builder.add(createIpAdressField(), CC.xy(2, 4));
@@ -161,6 +162,7 @@ public class ModbusTCPGUI {
 		builder.add(createOperationsCombobox(), CC.xy(2, 8));
 		builder.add(createDeviceLabel(), CC.xy(4, 6));
 		builder.add(createDevicesCombobox(), CC.xy(4, 8));
+		builder.add(createAddButton(), CC.xy(6, 8));
 		builder.add(createTabbedPane(), CC.xywh(2, 10, 3, 4));
 		builder.add(createMoveUpButton(), CC.xy(6, 10));
 		builder.add(createMoveDownButton(), CC.xy(6, 12));
@@ -179,7 +181,7 @@ public class ModbusTCPGUI {
 		PanelBuilder builder = new PanelBuilder(layout);
 		builder.add(createTablePane(), CC.xyw(2, 2, 7));
 
-		builder.add(createAddButton(), CC.xy(2, 4));
+		// builder.add(createAddButton(), CC.xy(2, 4));
 		builder.add(createRemoveButton(), CC.xy(4, 4));
 		builder.add(createSaveButton(), CC.xy(6, 4));
 		builder.add(createLoadButton(), CC.xy(8, 4));
@@ -436,7 +438,7 @@ public class ModbusTCPGUI {
 	}
 
 	private JComponent createAddButton() {
-		JButton add = new JButton("Add Selected");
+		JButton add = new JButton("+");
 		add.addActionListener(l -> {
 			DeviceOperationResultTO newItem = new DeviceOperationResultTO(getSelectedItem(operations), getSelectedItem(devices));
 			resultEventList.add(newItem);
