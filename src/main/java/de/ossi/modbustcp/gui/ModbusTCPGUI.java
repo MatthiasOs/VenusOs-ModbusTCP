@@ -1,5 +1,6 @@
 package de.ossi.modbustcp.gui;
 
+import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.EventQueue;
 import java.awt.Image;
@@ -14,13 +15,14 @@ import java.io.ObjectOutputStream;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.swing.AbstractCellEditor;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -37,10 +39,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.plaf.basic.BasicArrowButton;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.PlainDocument;
 
@@ -49,7 +53,6 @@ import com.ghgande.j2mod.modbus.ModbusSlaveException;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.SolarizedDarkTheme;
 import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 
@@ -63,6 +66,7 @@ import de.ossi.modbustcp.connection.ModbusTCPWriter;
 import de.ossi.modbustcp.data.ModbusDevice;
 import de.ossi.modbustcp.data.ModbusResultInt;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Example Programm with Swing GUI
@@ -90,7 +94,6 @@ public class ModbusTCPGUI {
 	private JComboBox<ModbusDevice> devices;
 	private EventList<DeviceOperationResultTO> resultEventList;
 	private DefaultEventSelectionModel<DeviceOperationResultTO> selectionModel;
-	private JTable modbusOperationDeviceTable;
 
 	private AdvancedTableModel<DeviceOperationResultTO> createModel() {
 		resultEventList = new BasicEventList<>();
@@ -152,8 +155,8 @@ public class ModbusTCPGUI {
 	}
 
 	private JPanel createTopPanel() {
-		FormLayout layout = new FormLayout("3dlu,300dlu:g,8dlu,300dlu:g,3dlu,p,3dlu", "3dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,p,p:g");
-		PanelBuilder builder = new PanelBuilder(layout, new FormDebugPanel());
+		FormLayout layout = new FormLayout("3dlu,300dlu:g,8dlu,300dlu:g,3dlu,p,3dlu", "3dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,p:g");
+		PanelBuilder builder = new PanelBuilder(layout);
 		builder.add(createIpAdressLabel(), CC.xy(2, 2));
 		builder.add(createPortLabel(), CC.xy(4, 2));
 		builder.add(createIpAdressField(), CC.xy(2, 4));
@@ -163,9 +166,7 @@ public class ModbusTCPGUI {
 		builder.add(createDeviceLabel(), CC.xy(4, 6));
 		builder.add(createDevicesCombobox(), CC.xy(4, 8));
 		builder.add(createAddButton(), CC.xy(6, 8));
-		builder.add(createTabbedPane(), CC.xywh(2, 10, 3, 4));
-		builder.add(createMoveUpButton(), CC.xy(6, 10));
-		builder.add(createMoveDownButton(), CC.xy(6, 12));
+		builder.add(createTabbedPane(), CC.xyw(2, 10, 5));
 		return builder.getPanel();
 	}
 
@@ -177,16 +178,16 @@ public class ModbusTCPGUI {
 	}
 
 	private JPanel createReadPanel() {
-		FormLayout layout = new FormLayout("3dlu,122dlu:g,3dlu,122dlu:g,5dlu,122dlu:g,3dlu,122dlu:g", "3dlu,200dlu,3dlu,p,3dlu,p,3dlu");
+		FormLayout layout = new FormLayout("3dlu,122dlu:g,3dlu,122dlu:g,5dlu,224dlu:g,3dlu,20dlu", "3dlu,15dlu,20dlu,1dlu,20dlu,170dlu,3dlu,p,3dlu");
 		PanelBuilder builder = new PanelBuilder(layout);
-		builder.add(createTablePane(), CC.xyw(2, 2, 7));
+		builder.add(createTablePane(), CC.xywh(2, 2, 5, 5));
 
-		// builder.add(createAddButton(), CC.xy(2, 4));
-		builder.add(createRemoveButton(), CC.xy(4, 4));
-		builder.add(createSaveButton(), CC.xy(6, 4));
-		builder.add(createLoadButton(), CC.xy(8, 4));
+		builder.add(createMoveUpButton(), CC.xy(8, 3));
+		builder.add(createMoveDownButton(), CC.xy(8, 5));
 
-		builder.add(createReadButton(), CC.xyw(4, 6, 3));
+		builder.add(createSaveButton(), CC.xy(2, 8));
+		builder.add(createLoadButton(), CC.xy(4, 8));
+		builder.add(createReadButton(), CC.xy(6, 8));
 		return builder.getPanel();
 	}
 
@@ -201,17 +202,40 @@ public class ModbusTCPGUI {
 
 	private JComponent createTablePane() {
 		AdvancedTableModel<DeviceOperationResultTO> tableModel = createModel();
-		modbusOperationDeviceTable = new JTable(tableModel);
+		JTable modbusOperationDeviceTable = new JTable(tableModel);
+		modbusOperationDeviceTable.getColumn(modbusOperationDeviceTable.getColumnName(4)).setCellRenderer(new JButtonRenderer());
+		modbusOperationDeviceTable.getColumn(modbusOperationDeviceTable.getColumnName(4)).setCellEditor(new JButtonCellEditor());
 		TableColumnModel columnModel = modbusOperationDeviceTable.getColumnModel();
 		columnModel.getColumn(0).setPreferredWidth(235);
-		columnModel.getColumn(1).setPreferredWidth(235);
-		columnModel.getColumn(2).setPreferredWidth(90);
-		columnModel.getColumn(3).setPreferredWidth(340);
+		columnModel.getColumn(1).setPreferredWidth(260);
+		columnModel.getColumn(2).setPreferredWidth(115);
+		columnModel.getColumn(3).setPreferredWidth(360);
+		columnModel.getColumn(4).setPreferredWidth(20);
 		modbusOperationDeviceTable.setColumnSelectionAllowed(false);
 		selectionModel = new DefaultEventSelectionModel<>(resultEventList);
-		selectionModel.setSelectionMode(DefaultEventSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		selectionModel.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		modbusOperationDeviceTable.setSelectionModel(selectionModel);
 		return new JScrollPane(modbusOperationDeviceTable);
+	}
+
+	private class JButtonCellEditor extends AbstractCellEditor implements TableCellEditor {
+
+		private static final long serialVersionUID = 1L;
+
+		public Object getCellEditorValue() {
+			return null;
+		}
+
+		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+			return resultEventList.get(row).getRemoveButton();
+		}
+	}
+
+	private class JButtonRenderer implements TableCellRenderer {
+
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+			return resultEventList.get(row).getRemoveButton();
+		}
 	}
 
 	private JComponent createWriteInputLabel() {
@@ -278,69 +302,65 @@ public class ModbusTCPGUI {
 		return read;
 	}
 
-	private JComponent createRemoveButton() {
-		JButton remove = new JButton("Remove Selected");
-		remove.addActionListener(l -> {
-			List<DeviceOperationResultTO> tosToRemove = Arrays.stream(modbusOperationDeviceTable.getSelectedRows()).boxed().map(id -> resultEventList.get(id))
-					.collect(Collectors.toList());
-			tosToRemove.stream().forEach(resultEventList::remove);
-			if (!resultEventList.isEmpty()) {
-				selectionModel.setSelectionInterval(0, 0);
+	@RequiredArgsConstructor
+	private abstract class MoveItemAction implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			EventList<DeviceOperationResultTO> selectedItems = selectionModel.getSelected();
+			if (selectedItems.isEmpty()) {
+				return;
 			}
-		});
-		return remove;
+			move(selectedItems.get(0));
+		}
+
+		protected abstract void move(DeviceOperationResultTO item);
 	}
 
-	private JComponent createMoveDownButton() {
-		JButton moveUp = new BasicArrowButton(BasicArrowButton.SOUTH);
-		moveUp.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				EventList<DeviceOperationResultTO> selectedItems = selectionModel.getSelected();
-				if (selectedItems.isEmpty()) {
-					return;
-				}
-				moveItemUp(selectedItems.get(0));
+	private class MoveUpAction extends MoveItemAction {
+		@Override
+		protected void move(DeviceOperationResultTO item) {
+			// Only one item is selected when move is triggered
+			int indexOld = selectionModel.getLeadSelectionIndex();
+			if (indexOld == 0) {
+				return;
 			}
+			resultEventList.remove(indexOld);
+			int indexNew = indexOld - 1;
+			resultEventList.add(indexNew, item);
+			selectionModel.setSelectionInterval(indexNew, indexNew);
+		}
+	}
 
-			private void moveItemUp(DeviceOperationResultTO item) {
-				int indexOld = resultEventList.indexOf(item);
-				if (indexOld == resultEventList.size() - 1) {
-					return;
-				}
-				resultEventList.remove(indexOld);
-				int indexNew = indexOld + 1;
-				resultEventList.add(indexNew, item);
-				selectionModel.setSelectionInterval(indexNew, indexNew);
+	private class MoveDownAction extends MoveItemAction {
+		@Override
+		protected void move(DeviceOperationResultTO item) {
+			// Only one item is selected when move is triggered
+			int indexOld = selectionModel.getLeadSelectionIndex();
+			if (indexOld == resultEventList.size() - 1) {
+				return;
 			}
-		});
-		return moveUp;
+			resultEventList.remove(indexOld);
+			int indexNew = indexOld + 1;
+			resultEventList.add(indexNew, item);
+			selectionModel.setSelectionInterval(indexNew, indexNew);
+		}
 	}
 
 	private JComponent createMoveUpButton() {
-		JButton moveUp = new BasicArrowButton(BasicArrowButton.NORTH);
-		moveUp.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				EventList<DeviceOperationResultTO> selectedItems = selectionModel.getSelected();
-				if (selectedItems.isEmpty()) {
-					return;
-				}
-				moveItemUp(selectedItems.get(0));
-			}
-
-			private void moveItemUp(DeviceOperationResultTO item) {
-				int indexOld = resultEventList.indexOf(item);
-				if (indexOld == 0) {
-					return;
-				}
-				resultEventList.remove(indexOld);
-				int indexNew = indexOld - 1;
-				resultEventList.add(indexNew, item);
-				selectionModel.setSelectionInterval(indexNew, indexNew);
-			}
-		});
+		Icon icon = UIManager.getIcon("ArrowButton.up.icon");
+		JButton moveUp = new JButton();
+		moveUp.setIcon(icon);
+		moveUp.addActionListener(new MoveUpAction());
 		return moveUp;
+	}
+
+	private JComponent createMoveDownButton() {
+		Icon icon = UIManager.getIcon("ArrowButton.down.icon");
+		JButton moveDown = new JButton();
+		moveDown.setIcon(icon);
+		moveDown.addActionListener(new MoveDownAction());
+		return moveDown;
 	}
 
 	private JComponent createSaveButton() {
@@ -351,10 +371,15 @@ public class ModbusTCPGUI {
 				List<DeviceOperationResultTO> tosToSave = resultEventList.stream().collect(Collectors.toList());
 				if (!tosToSave.isEmpty()) {
 					// Remove old Times/Results for TOs
-					tosToSave.stream().forEach(to -> to.setErgebnis(null));
-					tosToSave.stream().forEach(to -> to.setZeit(null));
+					removeIrrelevantValues(tosToSave);
 					serializeTOs(tosToSave);
 				}
+			}
+
+			private void removeIrrelevantValues(List<DeviceOperationResultTO> tosToSave) {
+				tosToSave.stream().forEach(to -> to.setErgebnis(null));
+				tosToSave.stream().forEach(to -> to.setZeit(null));
+				tosToSave.stream().forEach(to -> to.setRemoveButton(null));
 			}
 
 			private void serializeTOs(List<DeviceOperationResultTO> tosToSave) {
@@ -407,7 +432,9 @@ public class ModbusTCPGUI {
 				int response = chooser.showOpenDialog(null);
 				if (response == JFileChooser.APPROVE_OPTION) {
 					List<DeviceOperationResultTO> inputTOs = readTOs(new File(chooser.getSelectedFile().getAbsolutePath()));
+					inputTOs.forEach(to -> to.setRemoveButton(createRemoveButton()));
 					resultEventList.clear();
+					selectionModel.clearSelection();
 					inputTOs.forEach(resultEventList::add);
 				}
 			}
@@ -440,12 +467,23 @@ public class ModbusTCPGUI {
 	private JComponent createAddButton() {
 		JButton add = new JButton("+");
 		add.addActionListener(l -> {
-			DeviceOperationResultTO newItem = new DeviceOperationResultTO(getSelectedItem(operations), getSelectedItem(devices));
+			DeviceOperationResultTO newItem = new DeviceOperationResultTO(getSelectedItem(operations), getSelectedItem(devices), createRemoveButton());
 			resultEventList.add(newItem);
 			int newIndex = resultEventList.indexOf(newItem);
 			selectionModel.setSelectionInterval(newIndex, newIndex);
 		});
 		return add;
+	}
+
+	private JButton createRemoveButton() {
+		JButton remove = new JButton("-");
+		remove.addActionListener(l -> {
+			resultEventList.remove(selectionModel.getSelected().get(0));
+			if (!resultEventList.isEmpty()) {
+				selectionModel.setSelectionInterval(0, 0);
+			}
+		});
+		return remove;
 	}
 
 	private JComponent createWriteButton() {

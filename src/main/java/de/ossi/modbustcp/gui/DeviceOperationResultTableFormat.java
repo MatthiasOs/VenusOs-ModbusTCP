@@ -2,20 +2,22 @@ package de.ossi.modbustcp.gui;
 
 import java.time.format.DateTimeFormatter;
 
-import ca.odell.glazedlists.gui.TableFormat;
+import ca.odell.glazedlists.gui.WritableTableFormat;
 
 /**
- * Tableformat welches angibt, wie die Tabelle aussieht, also Spalten Anzahl und Bezeichnung.
+ * Tableformat welches angibt, wie die Tabelle aussieht, also Spalten Anzahl und
+ * Bezeichnung.
+ * 
  * @author ossi
  *
  */
-class DeviceOperationResultTableFormat implements TableFormat<DeviceOperationResultTO> {
-	
+class DeviceOperationResultTableFormat implements WritableTableFormat<DeviceOperationResultTO> {
+
 	private static final DateTimeFormatter ISO_DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
 
 	@Override
 	public int getColumnCount() {
-		return 4;
+		return 5;
 	}
 
 	@Override
@@ -45,9 +47,20 @@ class DeviceOperationResultTableFormat implements TableFormat<DeviceOperationRes
 			return baseObject.getZeit() != null ? ISO_DATE.format(baseObject.getZeit()) : null;
 		case 3:
 			return baseObject.getErgebnis();
+		case 4:
+			return "-";
 		default:
 			return null;
 		}
 	}
 
+	@Override
+	public boolean isEditable(DeviceOperationResultTO baseObject, int column) {
+		return column == 4;
+	}
+
+	@Override
+	public DeviceOperationResultTO setColumnValue(DeviceOperationResultTO baseObject, Object editedValue, int column) {
+		return null;
+	}
 }
