@@ -40,6 +40,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.plaf.basic.BasicArrowButton;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.PlainDocument;
 
@@ -54,6 +55,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import ca.odell.glazedlists.BasicEventList;
 import ca.odell.glazedlists.EventList;
 import ca.odell.glazedlists.swing.AdvancedTableModel;
+import ca.odell.glazedlists.swing.DefaultEventSelectionModel;
 import ca.odell.glazedlists.swing.GlazedListsSwing;
 import de.ossi.modbustcp.connection.ModbusTCPReader;
 import de.ossi.modbustcp.connection.ModbusTCPWriter;
@@ -86,6 +88,7 @@ public class ModbusTCPGUI {
 	private JComboBox<ModbusOperation> operations;
 	private JComboBox<ModbusDevice> devices;
 	private EventList<DeviceOperationResultTO> resultEventList;
+	private DefaultEventSelectionModel<DeviceOperationResultTO> selectionModel;
 	private JTable modbusOperationDeviceTable;
 
 	private AdvancedTableModel<DeviceOperationResultTO> createModel() {
@@ -148,7 +151,7 @@ public class ModbusTCPGUI {
 	}
 
 	private JPanel createTopPanel() {
-		FormLayout layout = new FormLayout("3dlu,300dlu:g,8dlu,300dlu:g,3dlu", "3dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,p:g");
+		FormLayout layout = new FormLayout("3dlu,300dlu:g,8dlu,300dlu:g,3dlu,p,3dlu", "3dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,p,3dlu,p,p:g");
 		PanelBuilder builder = new PanelBuilder(layout);
 		builder.add(createIpAdressLabel(), CC.xy(2, 2));
 		builder.add(createPortLabel(), CC.xy(4, 2));
@@ -158,7 +161,9 @@ public class ModbusTCPGUI {
 		builder.add(createOperationsCombobox(), CC.xy(2, 8));
 		builder.add(createDeviceLabel(), CC.xy(4, 6));
 		builder.add(createDevicesCombobox(), CC.xy(4, 8));
-		builder.add(createTabbedPane(), CC.xyw(2, 10, 3));
+		builder.add(createTabbedPane(), CC.xywh(2, 10, 3, 4));
+		builder.add(createMoveUpButton(), CC.xy(6, 10));
+		builder.add(createMoveDownButton(), CC.xy(6, 12));
 		return builder.getPanel();
 	}
 
@@ -201,6 +206,9 @@ public class ModbusTCPGUI {
 		columnModel.getColumn(2).setPreferredWidth(90);
 		columnModel.getColumn(3).setPreferredWidth(340);
 		modbusOperationDeviceTable.setColumnSelectionAllowed(false);
+		selectionModel = new DefaultEventSelectionModel<>(resultEventList);
+		selectionModel.setSelectionMode(DefaultEventSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		modbusOperationDeviceTable.setSelectionModel(selectionModel);
 		return new JScrollPane(modbusOperationDeviceTable);
 	}
 
@@ -273,20 +281,64 @@ public class ModbusTCPGUI {
 		remove.addActionListener(l -> {
 			List<DeviceOperationResultTO> tosToRemove = Arrays.stream(modbusOperationDeviceTable.getSelectedRows()).boxed().map(id -> resultEventList.get(id))
 					.collect(Collectors.toList());
-			if (!tosToRemove.isEmpty()) {
-				tosToRemove.stream().forEach(to -> resultEventList.remove(to));
-				modbusOperationDeviceTable.clearSelection();
-			}
-		});
-		remove.addActionListener(l -> {
-			List<DeviceOperationResultTO> tosToRemove = Arrays.stream(modbusOperationDeviceTable.getSelectedRows()).boxed().map(id -> resultEventList.get(id))
-					.collect(Collectors.toList());
-			if (!tosToRemove.isEmpty()) {
-				tosToRemove.stream().forEach(to -> resultEventList.remove(to));
-				modbusOperationDeviceTable.clearSelection();
+			tosToRemove.stream().forEach(resultEventList::remove);
+			if (!resultEventList.isEmpty()) {
+				selectionModel.setSelectionInterval(0, 0);
 			}
 		});
 		return remove;
+	}
+
+	private JComponent createMoveDownButton() {
+		JButton moveUp = new BasicArrowButton(BasicArrowButton.SOUTH);
+		moveUp.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				EventList<DeviceOperationResultTO> selectedItems = selectionModel.getSelected();
+				if (selectedItems.isEmpty()) {
+					return;
+				}
+				moveItemUp(selectedItems.get(0));
+			}
+
+			private void moveItemUp(DeviceOperationResultTO item) {
+				int indexOld = resultEventList.indexOf(item);
+				if (indexOld == resultEventList.size() - 1) {
+					return;
+				}
+				resultEventList.remove(indexOld);
+				int indexNew = indexOld + 1;
+				resultEventList.add(indexNew, item);
+				selectionModel.setSelectionInterval(indexNew, indexNew);
+			}
+		});
+		return moveUp;
+	}
+
+	private JComponent createMoveUpButton() {
+		JButton moveUp = new BasicArrowButton(BasicArrowButton.NORTH);
+		moveUp.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				EventList<DeviceOperationResultTO> selectedItems = selectionModel.getSelected();
+				if (selectedItems.isEmpty()) {
+					return;
+				}
+				moveItemUp(selectedItems.get(0));
+			}
+
+			private void moveItemUp(DeviceOperationResultTO item) {
+				int indexOld = resultEventList.indexOf(item);
+				if (indexOld == 0) {
+					return;
+				}
+				resultEventList.remove(indexOld);
+				int indexNew = indexOld - 1;
+				resultEventList.add(indexNew, item);
+				selectionModel.setSelectionInterval(indexNew, indexNew);
+			}
+		});
+		return moveUp;
 	}
 
 	private JComponent createSaveButton() {
@@ -386,8 +438,10 @@ public class ModbusTCPGUI {
 	private JComponent createAddButton() {
 		JButton add = new JButton("Add Selected");
 		add.addActionListener(l -> {
-			resultEventList.add(new DeviceOperationResultTO(getSelectedItem(operations), getSelectedItem(devices)));
-			modbusOperationDeviceTable.clearSelection();
+			DeviceOperationResultTO newItem = new DeviceOperationResultTO(getSelectedItem(operations), getSelectedItem(devices));
+			resultEventList.add(newItem);
+			int newIndex = resultEventList.indexOf(newItem);
+			selectionModel.setSelectionInterval(newIndex, newIndex);
 		});
 		return add;
 	}
@@ -466,7 +520,5 @@ public class ModbusTCPGUI {
 		private ModbusTCPReader readerFromAddressfield() {
 			return new ModbusTCPReader(ipAddress.getText().trim(), Integer.parseInt(port.getText().trim()));
 		}
-
 	}
-
 }
