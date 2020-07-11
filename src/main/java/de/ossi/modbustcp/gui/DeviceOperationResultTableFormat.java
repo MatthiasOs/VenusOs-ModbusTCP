@@ -56,6 +56,7 @@ class DeviceOperationResultTableFormat implements WritableTableFormat<DeviceOper
 
 	@Override
 	public boolean isEditable(DeviceOperationResultTO baseObject, int column) {
+		// for the buttons in the column to be clickable the column has to be editable
 		return column == 4;
 	}
 

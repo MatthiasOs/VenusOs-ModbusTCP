@@ -66,7 +66,6 @@ import de.ossi.modbustcp.connection.ModbusTCPWriter;
 import de.ossi.modbustcp.data.ModbusDevice;
 import de.ossi.modbustcp.data.ModbusResultInt;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
-import lombok.RequiredArgsConstructor;
 
 /**
  * Example Programm with Swing GUI
@@ -302,7 +301,6 @@ public class ModbusTCPGUI {
 		return read;
 	}
 
-	@RequiredArgsConstructor
 	private abstract class MoveItemAction implements ActionListener {
 
 		@Override
@@ -377,9 +375,11 @@ public class ModbusTCPGUI {
 			}
 
 			private void removeIrrelevantValues(List<DeviceOperationResultTO> tosToSave) {
-				tosToSave.stream().forEach(to -> to.setErgebnis(null));
-				tosToSave.stream().forEach(to -> to.setZeit(null));
-				tosToSave.stream().forEach(to -> to.setRemoveButton(null));
+				tosToSave.stream().forEach(to -> {
+					to.setErgebnis(null);
+					to.setZeit(null);
+					to.setRemoveButton(null);
+				});
 			}
 
 			private void serializeTOs(List<DeviceOperationResultTO> tosToSave) {
