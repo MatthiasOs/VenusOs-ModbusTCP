@@ -212,7 +212,7 @@ public class ModbusTCPGUI {
 		columnModel.getColumn(4).setPreferredWidth(20);
 		modbusOperationDeviceTable.setColumnSelectionAllowed(false);
 		selectionModel = new DefaultEventSelectionModel<>(resultEventList);
-		selectionModel.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		modbusOperationDeviceTable.setSelectionModel(selectionModel);
 		return new JScrollPane(modbusOperationDeviceTable);
 	}
