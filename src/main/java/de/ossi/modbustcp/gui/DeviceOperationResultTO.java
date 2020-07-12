@@ -3,12 +3,13 @@ package de.ossi.modbustcp.gui;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import de.ossi.modbustcp.data.operation.ModbusDevice;
+import javax.swing.JButton;
+
+import de.ossi.modbustcp.data.ModbusDevice;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 /**
@@ -17,10 +18,9 @@ import lombok.Setter;
  * @author ossi
  *
  */
-@EqualsAndHashCode
-@RequiredArgsConstructor
+@EqualsAndHashCode(exclude = "removeButton")
 @Getter
-public class DeviceOperationResultTO implements Serializable{
+public class DeviceOperationResultTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@NonNull
 	private final ModbusOperation operation;
@@ -30,4 +30,12 @@ public class DeviceOperationResultTO implements Serializable{
 	private LocalDateTime zeit;
 	@Setter
 	private String ergebnis;
+	@Setter
+	private JButton removeButton;
+
+	public DeviceOperationResultTO(ModbusOperation operation, ModbusDevice modbusDevice, JButton removeButton) {
+		this.operation = operation;
+		this.modbusDevice = modbusDevice;
+		this.removeButton = removeButton;
+	}
 }
