@@ -1,6 +1,8 @@
 package de.ossi.modbustcp.data;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.Assert.assertThat;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -32,7 +34,7 @@ public class ModbusResultIntTest {
 		@Test
 		void test1() throws Exception {
 			modbusResult = new ModbusResultInt(SET_ESS_BATTERY_LIFE_STATE, CAN_BUS_BMS, 1);
-			assertEquals("Restarting", modbusResult.getValueOfOperation());
+			assertThat(modbusResult.getValueOfOperationWithUnit(), startsWith("Restarting"));
 		}
 	}
 
@@ -44,7 +46,7 @@ public class ModbusResultIntTest {
 		@Test
 		void test1() throws Exception {
 			modbusResult = new ModbusResultInt(GRI_GRID_L1_VOLTAGE, CAN_BUS_BMS, 1);
-			assertEquals("0.1 V AC", modbusResult.getValueOfOperationWithUnit());
+			assertThat(modbusResult.getValueOfOperationWithUnit(), is("0.1 V AC"));
 		}
 	}
 }
