@@ -1,8 +1,8 @@
 package de.ossi.modbustcp.data.operation;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameter;
 
@@ -60,15 +60,15 @@ public abstract class ModbusOperationTest {
 	public ModbusOperation operation;
 
 	@Parameter(1)
-	public Integer registerwert;
+	public Integer registerValue;
 
 	@Parameter(2)
-	public Double messwert;
+	public Double value;
 
 	@Test
-	public void pruefeDaten() throws Exception {
-		ModbusResultInt result = new ModbusResultInt(operation, CAN_BUS_BMS, registerwert);
-		assertThat(result.getValueInRange(operation, registerwert), Matchers.is(messwert));
+	public void checkValue() throws Exception {
+		ModbusResultInt result = new ModbusResultInt(operation, CAN_BUS_BMS, registerValue);
+		assertThat(result.getValueOfOperationWithUnit(), is(value + " " + result.getOperation().getDbusUnit().getValue()));
 	}
 
 	protected static double d(Integer i) {

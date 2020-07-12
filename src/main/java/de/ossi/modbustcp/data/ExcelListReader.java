@@ -10,9 +10,7 @@ import de.ossi.modbustcp.data.operation.ModbusDevice;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
 
 /**
- * Reads in the Data from the Excel Sheet CCGX-Modbus-TCP-register-list TODO it
- * shouldnt be needed to filter leading and trailing rows which cant be parsed
- * correctly
+ * Reads in the Data from the Excel Sheet CCGX-Modbus-TCP-register-list
  * 
  * @author ossi
  *
@@ -21,9 +19,6 @@ public class ExcelListReader {
 
 	private File file;
 
-	// TODO Remove Filename and search for file in resource folder with regex
-	// TODO The leading and trailing rows with no parsable Data have to be removed
-	// from the Excel file!!!
 	private static final String OPERATIONS_SHEET_NAME = "Field list";
 	private static final String DEVICES_SHEET_NAME = "Unit ID mapping";
 

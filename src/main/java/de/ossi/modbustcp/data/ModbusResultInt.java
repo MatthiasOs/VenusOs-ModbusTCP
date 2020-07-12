@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import de.ossi.modbustcp.data.operation.ModbusDevice;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
 import de.ossi.modbustcp.data.unit.DBusSpecialUnitParser;
-import de.ossi.modbustcp.data.unit.DBusUnit;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
@@ -40,39 +39,34 @@ public class ModbusResultInt {
 		return ausgabe.toString();
 	}
 
-	/**
-	 * Returns the Value scaled in the range of the operation or if the result has a
-	 * SpecialUnit, the text of the special unit
-	 * 
-	 * @return
-	 */
-	public String getValueOfOperation() {
-		DBusUnit dbusUnit = operation.getDbusUnit();
-		if (dbusUnit.isSpecialUnit()) {
-			return DBusSpecialUnitParser.parse(dbusUnit, value);
-		} else {
-			return String.valueOf(getValueInRange(operation, value));
-		}
-	}
-
 	// TODO remove Constants, can the Range be used instead?
 	private static final double MAX_SIGNED = 32767D;
 	private static final double MAX_REGISTER = 65535D;
 
-	public Double getValueInRange(ModbusOperation operation, Integer registerValue) {
+	private Double getValueInRange() {
 		if (operation.getType().isUnsigned()) {
-			return scaleValue(operation, Double.valueOf(registerValue));
+			return scaleValue(operation, Double.valueOf(value));
 		} else {
-			double valueInRange = registerValue > MAX_SIGNED ? registerValue - MAX_REGISTER - 1 : registerValue;
+			double valueInRange = value > MAX_SIGNED ? value - MAX_REGISTER - 1 : value;
 			return scaleValue(operation, valueInRange);
 		}
 	}
 
-	private double scaleValue(ModbusOperation operation, Double registerValue) {
-		return registerValue / operation.getScaleFactor();
+	public String getValueOfOperationWithUnit() {
+		if (operation.getDbusUnit().isSpecialUnit()) {
+			return new StringBuilder(DBusSpecialUnitParser.parse(operation.getDbusUnit(), value))
+					.append(" [")
+					.append(operation.getDbusUnit().getValue())
+					.append("]")
+					.toString();
+		}
+		return new StringBuilder(String.valueOf(getValueInRange()))
+				.append(" ")
+				.append(operation.getDbusUnit().getValue())
+				.toString();
 	}
 
-	public String getValueOfOperationWithUnit() {
-		return new StringBuilder(getValueOfOperation()).append(" ").append(operation.getDbusUnit().getValue()).toString();
+	private double scaleValue(ModbusOperation operation, Double registerValue) {
+		return registerValue / operation.getScaleFactor();
 	}
 }
