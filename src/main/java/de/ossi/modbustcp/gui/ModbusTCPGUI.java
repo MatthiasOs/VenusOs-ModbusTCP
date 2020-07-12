@@ -94,7 +94,6 @@ public class ModbusTCPGUI {
 	private JComboBox<ModbusOperation> operations;
 	private JComboBox<ModbusDevice> devices;
 	private EventList<DeviceOperationResultTO> resultEventList;
-	private JTable modbusOperationDeviceTable;
 	private List<ModbusDevice> deviceList;
 	private List<ModbusOperation> operationList;
 	private DefaultEventSelectionModel<DeviceOperationResultTO> selectionModel;
@@ -218,7 +217,7 @@ public class ModbusTCPGUI {
 		columnModel.getColumn(1).setPreferredWidth(260);
 		columnModel.getColumn(2).setPreferredWidth(115);
 		columnModel.getColumn(3).setPreferredWidth(360);
-		columnModel.getColumn(4).setPreferredWidth(20);
+		columnModel.getColumn(4).setPreferredWidth(25);
 		modbusOperationDeviceTable.setColumnSelectionAllowed(false);
 		selectionModel = new DefaultEventSelectionModel<>(resultEventList);
 		selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -301,6 +300,7 @@ public class ModbusTCPGUI {
 
 	private ModbusDevice[] allDevices() {
 		List<ModbusDevice> allDevices = deviceList;
+		Collections.sort(allDevices, Comparator.comparing(ModbusDevice::getUnitId));
 		return allDevices.toArray(new ModbusDevice[allDevices.size()]);
 	}
 
