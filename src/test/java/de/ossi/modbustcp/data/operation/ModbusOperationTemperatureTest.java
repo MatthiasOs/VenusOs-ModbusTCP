@@ -1,7 +1,5 @@
 package de.ossi.modbustcp.data.operation;
 
-import static de.ossi.modbustcp.data.operation.ModbusOperation.TEM_TEMPERATURE;
-
 import java.util.Arrays;
 import java.util.Collection;
 

@@ -1,8 +1,5 @@
 package de.ossi.modbustcp.data.operation;
 
-import static de.ossi.modbustcp.data.operation.ModbusOperation.SOL_PV_CURRENT;
-import static de.ossi.modbustcp.data.operation.ModbusOperation.SOL_YIELD_TODAY;
-
 import java.util.Arrays;
 import java.util.Collection;
 

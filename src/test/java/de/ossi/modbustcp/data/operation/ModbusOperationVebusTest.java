@@ -1,8 +1,5 @@
 package de.ossi.modbustcp.data.operation;
 
-import static de.ossi.modbustcp.data.operation.ModbusOperation.VEB_BATTERY_VOLTAGE;
-import static de.ossi.modbustcp.data.operation.ModbusOperation.VEB_INPUT_POWER_1;
-
 import java.util.Arrays;
 import java.util.Collection;
 

@@ -2,7 +2,7 @@ package de.ossi.modbustcp.connection;
 
 import com.ghgande.j2mod.modbus.ModbusException;
 
-import de.ossi.modbustcp.data.ModbusDevice;
+import de.ossi.modbustcp.data.operation.ModbusDevice;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
 
 public abstract class ModbusWriteConnectionHandler extends ModbusConnectionHandler {

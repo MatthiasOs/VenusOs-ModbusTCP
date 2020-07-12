@@ -3,9 +3,9 @@ package de.ossi.modbustcp.connection;
 import com.ghgande.j2mod.modbus.ModbusException;
 import com.ghgande.j2mod.modbus.procimg.SimpleInputRegister;
 
-import de.ossi.modbustcp.data.ModbusDevice;
+import de.ossi.modbustcp.data.operation.ModbusDevice;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
-import de.ossi.modbustcp.data.operation.ModbusOperation.AccessMode;
+import de.ossi.modbustcp.data.unit.AccessMode;
 
 public class ModbusTCPWriter extends ModbusWriteConnectionHandler {
 

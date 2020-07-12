@@ -1,17 +1,28 @@
 package de.ossi.modbustcp.data;
 
-import static de.ossi.modbustcp.data.ModbusDevice.CAN_BUS_BMS;
-import static de.ossi.modbustcp.data.operation.ModbusOperation.GRI_GRID_L1_VOLTAGE;
-import static de.ossi.modbustcp.data.operation.ModbusOperation.SET_ESS_BATTERY_LIFE_STATE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import de.ossi.modbustcp.data.operation.ModbusDevice;
+import de.ossi.modbustcp.data.operation.ModbusOperation;
+import de.ossi.modbustcp.data.unit.AccessMode;
+import de.ossi.modbustcp.data.unit.Category;
+import de.ossi.modbustcp.data.unit.DBusUnit;
+import de.ossi.modbustcp.data.unit.Type;
+
 @DisplayName("When ModbusResultInt")
 public class ModbusResultIntTest {
 
+	private static final DBusUnit V_AC = new DBusUnit("V AC");
+	private static final DBusUnit BATTERYLIFE_STATE = new DBusUnit("0=Unused, BL disabled;1=Restarting;2=Self-consumption;3=Self-consumption;4=Self-consumption;5=Discharge");
+	private static final ModbusDevice CAN_BUS_BMS = new ModbusDevice(225, 512, "CAN-bus BMS");
+	private static final ModbusOperation SET_ESS_BATTERY_LIFE_STATE = new ModbusOperation(Category.SETTINGS, "ESS BatteryLife state", 2900, Type.UINT16, 1D, "",
+			"/Settings/CGwacs/BatteryLife/State", AccessMode.READ_WRITE, BATTERYLIFE_STATE, "");
+	private static final ModbusOperation GRI_GRID_L1_VOLTAGE = new ModbusOperation(Category.GRID, "Grid L1 – Voltage", 2616, Type.UINT32, 10D, "", "/Ac/L1/Voltage",
+			AccessMode.READ_ONLY, V_AC, "");
 	private ModbusResultInt modbusResult;
 
 	@DisplayName("Parsing Special Unit")
@@ -35,7 +46,5 @@ public class ModbusResultIntTest {
 			modbusResult = new ModbusResultInt(GRI_GRID_L1_VOLTAGE, CAN_BUS_BMS, 1);
 			assertEquals("0.1 V AC", modbusResult.getValueOfOperationWithUnit());
 		}
-
 	}
-
 }

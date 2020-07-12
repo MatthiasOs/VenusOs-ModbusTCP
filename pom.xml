@@ -18,6 +18,21 @@
 	</properties>
 
 	<dependencies>
+
+		<dependency>
+			<groupId>com.creditdatamw.labs</groupId>
+			<artifactId>zerocell-processor</artifactId>
+			<version>0.3.2</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.creditdatamw.labs</groupId>
+			<artifactId>zerocell-processor</artifactId>
+			<version>0.3.2</version>
+			<scope>provided</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
