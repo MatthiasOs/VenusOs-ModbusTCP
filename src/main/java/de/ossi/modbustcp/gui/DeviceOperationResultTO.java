@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 import javax.swing.JButton;
 
-import de.ossi.modbustcp.data.ModbusDevice;
+import de.ossi.modbustcp.data.operation.ModbusDevice;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
