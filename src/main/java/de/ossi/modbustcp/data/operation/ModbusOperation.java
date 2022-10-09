@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class ModbusOperation {
 
-	@Column(index = 0, name = "dbus-service-name", convertorClass = CategoryConverter.class)
+	@Column(index = 0, name = "dbus-service-name", converterClass = CategoryConverter.class)
 	private Category category;
 
 	@Column(index = 1, name = "description")
@@ -38,10 +38,10 @@ public class ModbusOperation {
 	@Column(index = 2, name = "Address")
 	private Integer address;
 
-	@Column(index = 3, name = "Type", convertorClass = TypeConverter.class)
+	@Column(index = 3, name = "Type", converterClass = TypeConverter.class)
 	private Type type;
 
-	@Column(index = 4, name = "Scalefactor", convertorClass = DoubleConverter.class)
+	@Column(index = 4, name = "Scalefactor", converterClass = DoubleConverter.class)
 	private Double scaleFactor;
 
 	@Column(index = 5, name = "Range")
@@ -50,10 +50,10 @@ public class ModbusOperation {
 	@Column(index = 6, name = "dbus-obj-path")
 	private String dbusObjPath;
 
-	@Column(index = 7, name = "writable", convertorClass = AccessModeConverter.class)
+	@Column(index = 7, name = "writable", converterClass = AccessModeConverter.class)
 	private AccessMode mode;
 
-	@Column(index = 8, name = "dbus-unit", convertorClass = DBusUnitConverter.class)
+	@Column(index = 8, name = "dbus-unit", converterClass = DBusUnitConverter.class)
 	private DBusUnit dbusUnit;
 
 	@Column(index = 9, name = "Remarks")

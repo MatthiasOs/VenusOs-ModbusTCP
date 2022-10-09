@@ -33,6 +33,6 @@ public class ModbusDevice implements Serializable {
 
 	@Override
 	public String toString() {
-		return new StringBuilder().append(name).append(" with UnitId: ").append(unitId).toString();
+		return name + " with UnitId: " + unitId;
 	}
 }

@@ -22,21 +22,13 @@
 		<dependency>
 			<groupId>com.creditdatamw.labs</groupId>
 			<artifactId>zerocell-processor</artifactId>
-			<version>0.3.2</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.creditdatamw.labs</groupId>
-			<artifactId>zerocell-processor</artifactId>
-			<version>0.3.2</version>
-			<scope>provided</scope>
+			<version>0.5.1</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.16.22</version>
+			<version>1.18.24</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

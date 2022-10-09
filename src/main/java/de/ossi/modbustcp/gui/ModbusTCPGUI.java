@@ -1,53 +1,10 @@
 package de.ossi.modbustcp.gui;
 
-import java.awt.Component;
-import java.awt.Desktop;
-import java.awt.EventQueue;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.URI;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.swing.AbstractCellEditor;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.UIManager;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
-import javax.swing.text.PlainDocument;
-
+import ca.odell.glazedlists.BasicEventList;
+import ca.odell.glazedlists.EventList;
+import ca.odell.glazedlists.swing.AdvancedTableModel;
+import ca.odell.glazedlists.swing.DefaultEventSelectionModel;
+import ca.odell.glazedlists.swing.GlazedListsSwing;
 import com.ghgande.j2mod.modbus.ModbusException;
 import com.ghgande.j2mod.modbus.ModbusSlaveException;
 import com.github.weisj.darklaf.LafManager;
@@ -55,18 +12,33 @@ import com.github.weisj.darklaf.theme.SolarizedDarkTheme;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
-
-import ca.odell.glazedlists.BasicEventList;
-import ca.odell.glazedlists.EventList;
-import ca.odell.glazedlists.swing.AdvancedTableModel;
-import ca.odell.glazedlists.swing.DefaultEventSelectionModel;
-import ca.odell.glazedlists.swing.GlazedListsSwing;
 import de.ossi.modbustcp.connection.ModbusTCPReader;
 import de.ossi.modbustcp.connection.ModbusTCPWriter;
 import de.ossi.modbustcp.data.ExcelListReader;
 import de.ossi.modbustcp.data.ModbusResultInt;
 import de.ossi.modbustcp.data.operation.ModbusDevice;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
+import lombok.extern.java.Log;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
+import javax.swing.text.PlainDocument;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
+import java.net.URI;
+import java.net.URL;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.logging.Level;
 
 /**
  * Example Programm with Swing GUI
@@ -74,6 +46,7 @@ import de.ossi.modbustcp.data.operation.ModbusOperation;
  * @author ossi
  *
  */
+@Log
 public class ModbusTCPGUI {
 
 	private static final String FILE_ENDING = "modbustcp";
@@ -86,7 +59,6 @@ public class ModbusTCPGUI {
 	private static final String GITHUB_URL = "https://github.com/CommentSectionScientist/modbustcp";
 	private final JFrame frame;
 	private ModbusTCPReader modbusReader;
-	private ModbusTCPWriter modbusWriter;
 
 	private JTextField ipAddress;
 	private JTextField port;
@@ -94,8 +66,8 @@ public class ModbusTCPGUI {
 	private JComboBox<ModbusOperation> operations;
 	private JComboBox<ModbusDevice> devices;
 	private EventList<DeviceOperationResultTO> resultEventList;
-	private List<ModbusDevice> deviceList;
-	private List<ModbusOperation> operationList;
+	private final List<ModbusDevice> deviceList;
+	private final List<ModbusOperation> operationList;
 	private DefaultEventSelectionModel<DeviceOperationResultTO> selectionModel;
 
 	private AdvancedTableModel<DeviceOperationResultTO> createModel() {
@@ -158,7 +130,13 @@ public class ModbusTCPGUI {
 	}
 
 	private Image getIcon() {
-		return new ImageIcon(frame.getClass().getResource("/SolarPanel.png")).getImage();
+		URL resource = frame.getClass().getResource("/SolarPanel.png");
+		if(resource !=null){
+			return new ImageIcon(resource).getImage();
+		}else{
+			log.log(Level.SEVERE, "Icon nicht gefunden");
+			return null;
+		}
 	}
 
 	private JPanel createTopPanel() {
@@ -289,8 +267,8 @@ public class ModbusTCPGUI {
 
 	private ModbusOperation[] allOperations() {
 		List<ModbusOperation> allOperations = operationList;
-		Collections.sort(allOperations, Comparator.comparing(ModbusOperation::getAddress));
-		return allOperations.toArray(new ModbusOperation[allOperations.size()]);
+		allOperations.sort(Comparator.comparing(ModbusOperation::getAddress));
+		return allOperations.toArray(new ModbusOperation[0]);
 	}
 
 	private JComponent createDevicesCombobox() {
@@ -300,8 +278,8 @@ public class ModbusTCPGUI {
 
 	private ModbusDevice[] allDevices() {
 		List<ModbusDevice> allDevices = deviceList;
-		Collections.sort(allDevices, Comparator.comparing(ModbusDevice::getUnitId));
-		return allDevices.toArray(new ModbusDevice[allDevices.size()]);
+		allDevices.sort(Comparator.comparing(ModbusDevice::getUnitId));
+		return allDevices.toArray(new ModbusDevice[0]);
 	}
 
 	private JComponent createReadButton() {
@@ -375,7 +353,7 @@ public class ModbusTCPGUI {
 		save.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				List<DeviceOperationResultTO> tosToSave = resultEventList.stream().collect(Collectors.toList());
+				List<DeviceOperationResultTO> tosToSave = new ArrayList<>(resultEventList);
 				if (!tosToSave.isEmpty()) {
 					// Remove old Times/Results for TOs
 					removeIrrelevantValues(tosToSave);
@@ -384,7 +362,7 @@ public class ModbusTCPGUI {
 			}
 
 			private void removeIrrelevantValues(List<DeviceOperationResultTO> tosToSave) {
-				tosToSave.stream().forEach(to -> {
+				tosToSave.forEach(to -> {
 					to.setErgebnis(null);
 					to.setZeit(null);
 					to.setRemoveButton(null);
@@ -408,7 +386,7 @@ public class ModbusTCPGUI {
 			private File getFileWithEnding(File selectedFile) {
 				Optional<String> extension = getExtensionByStringHandling(selectedFile.getName());
 				if (!extension.isPresent() || !extension.get().equalsIgnoreCase(FILE_ENDING)) {
-					return new File(selectedFile.toString() + FILE_ENDING_WITH_DOT);
+					return new File(selectedFile + FILE_ENDING_WITH_DOT);
 				}
 				return selectedFile;
 			}
@@ -444,7 +422,7 @@ public class ModbusTCPGUI {
 					inputTOs.forEach(to -> to.setRemoveButton(createRemoveButton()));
 					resultEventList.clear();
 					selectionModel.clearSelection();
-					inputTOs.forEach(resultEventList::add);
+					resultEventList.addAll(inputTOs);
 				}
 			}
 
@@ -512,7 +490,7 @@ public class ModbusTCPGUI {
 				JOptionPane.showMessageDialog(frame, "No input value specified!", "Write input field empty", JOptionPane.ERROR_MESSAGE);
 				return;
 			}
-			modbusWriter = writerFromAdressfield();
+			ModbusTCPWriter modbusWriter = writerFromAdressfield();
 			try {
 				modbusWriter.writeOperationFromDevice(getSelectedItem(operations), getSelectedItem(devices), Integer.parseInt(writeInput.getText().trim()));
 				JOptionPane.showMessageDialog(frame, "Write successful!");
@@ -560,9 +538,9 @@ public class ModbusTCPGUI {
 				ModbusResultInt modbusResult = modbusReader.readOperationFromDevice(modbusOperation, modbusDevice);
 				return modbusResult.getValueOfOperationWithUnit();
 			} catch (ModbusSlaveException e1) {
-				return new StringBuilder().append("Device doesn't support Operation: ").append(e1.getMessage()).toString();
+				return "Device doesn't support Operation: " + e1.getMessage();
 			} catch (ModbusException e1) {
-				return new StringBuilder().append("ModbusException: ").append(e1.getMessage()).toString();
+				return "ModbusException: " + e1.getMessage();
 			}
 		}
 

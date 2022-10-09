@@ -1,6 +1,8 @@
 package de.ossi.modbustcp.data;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,7 +26,11 @@ public class ExcelListReader {
 
 	public ExcelListReader(String fileName) {
 		if (fileName != null) {
-			file = new File(fileName);
+			URL resource = ExcelListReader.class.getClassLoader().getResource(fileName);
+			if(resource==null){
+				throw new IllegalArgumentException("Datei nicht gefunden: "+fileName);
+			}
+			file = new File(resource.getFile());
 		}
 	}
 
