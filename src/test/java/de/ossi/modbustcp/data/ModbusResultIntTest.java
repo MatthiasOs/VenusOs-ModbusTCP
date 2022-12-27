@@ -1,9 +1,6 @@
 package de.ossi.modbustcp.data;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.startsWith;
-import static org.junit.Assert.assertThat;
-
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -14,6 +11,8 @@ import de.ossi.modbustcp.data.unit.AccessMode;
 import de.ossi.modbustcp.data.unit.Category;
 import de.ossi.modbustcp.data.unit.DBusUnit;
 import de.ossi.modbustcp.data.unit.Type;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("When ModbusResultInt")
 public class ModbusResultIntTest {
@@ -34,7 +33,7 @@ public class ModbusResultIntTest {
 		@Test
 		void test1() throws Exception {
 			modbusResult = new ModbusResultInt(SET_ESS_BATTERY_LIFE_STATE, CAN_BUS_BMS, 1);
-			assertThat(modbusResult.getValueOfOperationWithUnit(), startsWith("Restarting"));
+			assertThat(modbusResult.getValueOfOperationWithUnit()).isEqualTo("Restarting");
 		}
 	}
 
@@ -46,7 +45,7 @@ public class ModbusResultIntTest {
 		@Test
 		void test1() throws Exception {
 			modbusResult = new ModbusResultInt(GRI_GRID_L1_VOLTAGE, CAN_BUS_BMS, 1);
-			assertThat(modbusResult.getValueOfOperationWithUnit(), is("0.1 V AC"));
+			assertThat(modbusResult.getValueOfOperationWithUnit()).isEqualTo("0.1 V AC");
 		}
 	}
 }

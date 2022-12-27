@@ -1,10 +1,12 @@
 package de.ossi.modbustcp.data.operation;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static java.util.stream.Stream.of;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-import org.junit.Test;
-import org.junit.runners.Parameterized.Parameter;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import de.ossi.modbustcp.data.ModbusResultInt;
 import de.ossi.modbustcp.data.unit.AccessMode;
@@ -12,15 +14,9 @@ import de.ossi.modbustcp.data.unit.Category;
 import de.ossi.modbustcp.data.unit.DBusUnit;
 import de.ossi.modbustcp.data.unit.Type;
 
-/**
- * Definiert die Tests für die ModbusOperationen. Die erbenden Tests müssen nur
- * die public static data Methode implementieren mit den Daten zum Testen. Man
- * kann sie die statische Methode nicht abstrakt machen.
- * 
- * @author ossi
- *
- */
-public abstract class ModbusOperationTest {
+import java.util.stream.Stream;
+
+public class ModbusOperationTest {
 
 	protected static final int MAX_SIGNED = 32767;
 	protected static final int MIN_SIGNED = -32768;
@@ -56,19 +52,96 @@ public abstract class ModbusOperationTest {
 	protected static final ModbusOperation TEM_TEMPERATURE = new ModbusOperation(Category.TEMPERATURE, "Temperature", 3304, Type.INT16, 100D, "", "/Temperature",
 			AccessMode.READ_ONLY, CELSIUS, "");
 
-	@Parameter(0)
-	public ModbusOperation operation;
-
-	@Parameter(1)
-	public Integer registerValue;
-
-	@Parameter(2)
-	public Double value;
-
-	@Test
-	public void checkValue() throws Exception {
+	@ParameterizedTest
+	@MethodSource({"battery", "grid","solar", "system", "temp", "veBus"})
+	public void checkValue(ModbusOperation operation, Integer registerValue, Double value) throws Exception {
 		ModbusResultInt result = new ModbusResultInt(operation, CAN_BUS_BMS, registerValue);
-		assertThat(result.getValueOfOperationWithUnit(), is(value + " " + result.getOperation().getDbusUnit().getValue()));
+		assertThat(result.getValueOfOperationWithUnit()).isEqualTo(value + " " + result.getOperation().getDbusUnit().getValue());
+	}
+
+	public static Stream<Arguments> battery() {
+		return of(
+				/*BAT_BATTERY_TEMPERATURE: Signed; Scalefactor=10*/
+				arguments(BAT_BATTERY_TEMPERATURE, MAX_SIGNED + 1, -3276.8D ),
+				arguments(BAT_BATTERY_TEMPERATURE, 0, 0D ),
+				arguments(BAT_BATTERY_TEMPERATURE, MAX_SIGNED, 3276.7D ),
+				arguments(BAT_BATTERY_TEMPERATURE, MAX_UNSIGNED, -0.1D ),
+				/*BAT_BATTERY_VOLTAGE: Unsigned; Scalefactor=100*/
+				arguments(BAT_BATTERY_VOLTAGE, MAX_SIGNED + 1, 327.68 ),
+				arguments(BAT_BATTERY_VOLTAGE, 0, 0D ),
+				arguments(BAT_BATTERY_VOLTAGE, MAX_SIGNED, 327.67D ),
+				arguments(BAT_BATTERY_VOLTAGE, MAX_UNSIGNED, 655.35 )
+		);
+	}
+
+	public static Stream<Arguments> grid() {
+		return of(
+				/*GRI_GRID_L1_POWER: Signed, Scalefactor=1*/
+				arguments(GRI_GRID_L1_POWER, MIN_UNSIGNED, d(MIN_UNSIGNED) ),
+				arguments(GRI_GRID_L1_POWER, MAX_SIGNED, d(MAX_SIGNED) ),
+				arguments(GRI_GRID_L1_POWER, MAX_SIGNED + 1, d(MIN_SIGNED) ),
+				arguments(GRI_GRID_L1_POWER, MAX_UNSIGNED, -1D ),
+				/*GRI_GRID_L1_ENERGY_TO_NET: Unsigned, Scalefactor=100*/
+				arguments(GRI_GRID_L1_ENERGY_TO_NET, MIN_UNSIGNED, d(MIN_UNSIGNED) ),
+				arguments(GRI_GRID_L1_ENERGY_TO_NET, MAX_SIGNED, 327.67 ),
+				arguments(GRI_GRID_L1_ENERGY_TO_NET, MAX_SIGNED + 1, 327.68D ),
+				arguments(GRI_GRID_L1_ENERGY_TO_NET, MAX_UNSIGNED, 655.35 )
+		);
+	}
+
+	public static Stream<Arguments> solar() {
+		return of(
+				/*SOL_PV_CURRENT: Signed, Scalefactor=10*/
+				arguments(SOL_PV_CURRENT, MIN_UNSIGNED, 0D ),
+				arguments(SOL_PV_CURRENT, MAX_SIGNED, 3276.7D ),
+				arguments(SOL_PV_CURRENT, MAX_SIGNED + 1, -3276.8D ),
+				arguments(SOL_PV_CURRENT, MAX_UNSIGNED, -0.1D ),
+				/*SOL_YIELD_TODAY: Unsigned, Scalefactor=10*/
+				arguments(SOL_YIELD_TODAY, MIN_UNSIGNED, d(MIN_UNSIGNED) ),
+				arguments(SOL_YIELD_TODAY, MAX_SIGNED, 3276.7 ),
+				arguments(SOL_YIELD_TODAY, MAX_SIGNED + 1, 3276.8D ),
+				arguments(SOL_YIELD_TODAY, MAX_UNSIGNED, 6553.5 )
+		);
+	}
+
+	public static Stream<Arguments> system() {
+		return of(
+				/*SYS_BATTERY_CURRENT_SYSTEM: Signed, Scalefactor=10*/
+				arguments(SYS_BATTERY_CURRENT_SYSTEM, MIN_UNSIGNED, 0D ),
+				arguments(SYS_BATTERY_CURRENT_SYSTEM, MAX_SIGNED, 3276.7D ),
+				arguments(SYS_BATTERY_CURRENT_SYSTEM, MAX_SIGNED + 1, -3276.8D ),
+				arguments(SYS_BATTERY_CURRENT_SYSTEM, MAX_UNSIGNED, -0.1D ),
+				/*SYS_AC_CONSUMPTION_L1: Unsigned, Scalefactor=1*/
+				arguments(SYS_AC_CONSUMPTION_L1, MIN_UNSIGNED, d(MIN_UNSIGNED) ),
+				arguments(SYS_AC_CONSUMPTION_L1, MAX_SIGNED, d(MAX_SIGNED) ),
+				arguments(SYS_AC_CONSUMPTION_L1, MAX_SIGNED + 1, d(MAX_SIGNED+1) ),
+				arguments(SYS_AC_CONSUMPTION_L1, MAX_UNSIGNED, d(MAX_UNSIGNED))
+		);
+	}
+
+	public static Stream<Arguments> temp() {
+		return of(
+				/*TEM_TEMPERATURE: Signed, Scalefactor=100*/
+				arguments(TEM_TEMPERATURE, MAX_SIGNED + 1, -327.68D ),
+				arguments(TEM_TEMPERATURE, 0, 0D ),
+				arguments(TEM_TEMPERATURE, MAX_SIGNED, 327.67D ),
+				arguments(TEM_TEMPERATURE, MAX_UNSIGNED, -0.01D )
+		);
+	}
+
+	public static Stream<Arguments> veBus() {
+		return of(
+				/*VEB_INPUT_POWER_1: Signed, Scalefactor=0.1*/
+				arguments(VEB_INPUT_POWER_1, MIN_UNSIGNED, 0D ),
+				arguments(VEB_INPUT_POWER_1, MAX_SIGNED, 327670D ),
+				arguments(VEB_INPUT_POWER_1, MAX_SIGNED + 1, -327680D ),
+				arguments(VEB_INPUT_POWER_1, MAX_UNSIGNED, -10D ),
+				/*VEB_BATTERY_VOLTAGE: Unsigned, Scalefactor=100*/
+				arguments(VEB_BATTERY_VOLTAGE, MIN_UNSIGNED, 0D ),
+				arguments(VEB_BATTERY_VOLTAGE, MAX_SIGNED, 327.67D ),
+				arguments(VEB_BATTERY_VOLTAGE, MAX_SIGNED + 1, 327.68D ),
+				arguments(VEB_BATTERY_VOLTAGE, MAX_UNSIGNED, 655.35D)
+		);
 	}
 
 	protected static double d(Integer i) {
