@@ -1,10 +1,8 @@
 package de.ossi.modbustcp.data.unit;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DBusSpecialUnitParserTest {
 	private final DBusUnit dbusUnit = new DBusUnit("W");
@@ -15,37 +13,37 @@ public class DBusSpecialUnitParserTest {
 	@Test
 	public void parseSpecialUnit0() throws Exception {
 		String str = DBusSpecialUnitParser.parse(dbusSpecialUnit, 0);
-		assertThat(str, is("No alarm"));
+		assertThat(str).isEqualTo("No alarm");
 	}
 
 	@Test
 	public void parseSpecialUnit1() throws Exception {
 		String str = DBusSpecialUnitParser.parse(dbusSpecialUnit, 2);
-		assertThat(str, is("Alarm"));
+		assertThat(str).isEqualTo("Alarm");
 	}
 
 	@Test
 	public void parseSpecialUnit2() throws Exception {
 		String str = DBusSpecialUnitParser.parse(dbusSpecialUnit, 99);
-		assertThat(str, is(nullValue()));
+		assertThat(str).isNull();
 	}
 
 	@Test
 	public void parseInvalidUnitWithSeperator() throws Exception {
 		String str = DBusSpecialUnitParser.parse(invalidUnitWithSeperator, 0);
-		assertThat(str, is(nullValue()));
+		assertThat(str).isNull();
 	}
 
 	@Test
 	public void parseInvalidUnit() throws Exception {
 		String str = DBusSpecialUnitParser.parse(invalidUnit, 0);
-		assertThat(str, is(nullValue()));
+		assertThat(str).isNull();
 	}
 
 	@Test
 	public void parseUnit() throws Exception {
 		String str = DBusSpecialUnitParser.parse(dbusUnit, 0);
-		assertThat(str, is(nullValue()));
+		assertThat(str).isNull();
 	}
 
 }
