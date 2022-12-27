@@ -1,5 +1,4 @@
-.dbeaver-data-sources.xml
 /Scripts
 /target
 .settings
-*.sqlite
+/.idea/
