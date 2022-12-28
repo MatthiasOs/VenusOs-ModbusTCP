@@ -2,3 +2,5 @@
 /target
 .settings
 /.idea/
+/out/
+/src/main/resources/META-INF/MANIFEST.MF
