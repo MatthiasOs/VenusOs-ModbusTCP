@@ -520,15 +520,6 @@ public class ModbusTCPGUI {
                 result.setZeit(LocalDateTime.now());
                 result.setErgebnis(readModbus(result.getOperation(), result.getModbusDevice()));
                 resultEventList.set(i, result);
-                try {
-                    /*
-                     * Bad Workaround: Modbus Devices sometimes have Problems answering too many
-                     * requests at once.
-                     */
-                    Thread.sleep(100);
-                } catch (InterruptedException e1) {
-                    showErrorDialog(e1, e1.getMessage());
-                }
             }
         }
 
