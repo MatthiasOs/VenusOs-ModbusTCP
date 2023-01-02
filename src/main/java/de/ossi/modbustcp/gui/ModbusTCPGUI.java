@@ -362,8 +362,8 @@ public class ModbusTCPGUI {
 
             private void removeIrrelevantValues(List<DeviceOperationResultTO> tosToSave) {
                 tosToSave.forEach(to -> {
-                    to.setErgebnis(null);
-                    to.setZeit(null);
+                    to.setMeasurement(null);
+                    to.setTimeOfMeasurement(null);
                     to.setRemoveButton(null);
                 });
             }
@@ -517,8 +517,8 @@ public class ModbusTCPGUI {
             modbusReader = readerFromAddressfield();
             for (int i = 0; i < resultEventList.size(); i++) {
                 DeviceOperationResultTO result = resultEventList.get(i);
-                result.setZeit(LocalDateTime.now());
-                result.setErgebnis(readModbus(result.getOperation(), result.getModbusDevice()));
+                result.setTimeOfMeasurement(LocalDateTime.now());
+                result.setMeasurement(readModbus(result.getOperation(), result.getModbusDevice()));
                 resultEventList.set(i, result);
             }
         }
