@@ -354,21 +354,21 @@ public class ModbusTCPGUI {
             public void actionPerformed(ActionEvent e) {
                 List<DeviceOperationResultTO> tosToSave = new ArrayList<>(resultEventList);
                 if (!tosToSave.isEmpty()) {
-                    serializeTOs(tosToSave);
+                    JFileChooser chooser = createSaveChooser();
+                    int response = chooser.showOpenDialog(null);
+                    if (response == JFileChooser.APPROVE_OPTION) {
+                        File f = getFileWithEnding(chooser.getSelectedFile());
+                        serializeTOs(f, tosToSave);
+                    }
                 }
             }
 
-            private void serializeTOs(List<DeviceOperationResultTO> tosToSave) {
-                JFileChooser chooser = createSaveChooser();
-                int response = chooser.showOpenDialog(null);
-                if (response == JFileChooser.APPROVE_OPTION) {
-                    File f = getFileWithEnding(chooser.getSelectedFile());
-                    try (FileOutputStream fos = new FileOutputStream(f); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-                        oos.writeObject(tosToSave);
-                        oos.flush();
-                    } catch (IOException e) {
-                        showErrorDialog(e, e.getMessage());
-                    }
+            private void serializeTOs(File f, List<DeviceOperationResultTO> tosToSave) {
+                try (FileOutputStream fos = new FileOutputStream(f); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
+                    oos.writeObject(tosToSave);
+                    oos.flush();
+                } catch (IOException e) {
+                    showErrorDialog(e, e.getMessage());
                 }
             }
 

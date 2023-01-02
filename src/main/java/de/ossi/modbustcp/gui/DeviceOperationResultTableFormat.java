@@ -30,8 +30,10 @@ class DeviceOperationResultTableFormat implements WritableTableFormat<DeviceOper
                 return "Time";
             case 3:
                 return "Result";
+            case 4:
+                return "-";
             default:
-                return "";
+                return null;
         }
     }
 
