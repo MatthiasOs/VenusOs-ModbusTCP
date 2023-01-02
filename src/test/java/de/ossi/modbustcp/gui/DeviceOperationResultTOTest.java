@@ -9,21 +9,21 @@ import de.ossi.modbustcp.data.unit.Type;
 import org.assertj.core.util.Files;
 import org.junit.jupiter.api.Test;
 
+import javax.swing.*;
 import java.io.*;
-import java.util.Arrays;
+import java.time.LocalDateTime;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 
 
 class DeviceOperationResultTOTest {
 
     private static final DBusUnit CELSIUS = new DBusUnit("Degrees celsius");
-    private static final DBusUnit KWH = new DBusUnit("kWh");
     protected static final ModbusOperation BAT_BATTERY_TEMPERATURE = new ModbusOperation(Category.BATTERY, "Battery temperature", 262, Type.INT16, 10D, "", "/Dc/0/Temperature",
             AccessMode.READ_ONLY, CELSIUS, "");
-    private static final ModbusOperation GRI_GRID_L1_ENERGY_TO_NET = new ModbusOperation(Category.GRID, "Grid L1 - Energy to net", 2606, Type.UINT16, 100D, "",
-            "/Ac/L1/Energy/Reverse", AccessMode.READ_ONLY, KWH, "");
     private static final ModbusDevice CAN_BUS_BMS = new ModbusDevice(225, 512, "CAN-bus BMS");
 
     @SuppressWarnings("unchecked")
@@ -31,11 +31,13 @@ class DeviceOperationResultTOTest {
     void shouldBeSerializable() throws Exception {
         //given
         File tmp = Files.newTemporaryFile();
-        DeviceOperationResultTO to1 = new DeviceOperationResultTO(BAT_BATTERY_TEMPERATURE, CAN_BUS_BMS, null);
-        DeviceOperationResultTO to2 = new DeviceOperationResultTO(GRI_GRID_L1_ENERGY_TO_NET, CAN_BUS_BMS, null);
+        DeviceOperationResultTO to = new DeviceOperationResultTO(BAT_BATTERY_TEMPERATURE, CAN_BUS_BMS, null);
+        to.setMeasurement("asd");
+        to.setTimeOfMeasurement(LocalDateTime.now());
+        to.setRemoveButton(new JButton("asd"));
         //when
         try (FileOutputStream fos = new FileOutputStream(tmp); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-            oos.writeObject(Arrays.asList(to1, to2));
+            oos.writeObject(singletonList(to));
             oos.flush();
         }
 
@@ -44,6 +46,9 @@ class DeviceOperationResultTOTest {
             tos = (List<DeviceOperationResultTO>) ois.readObject();
         }
         //then
-        assertThat(tos).containsExactlyInAnyOrder(to1, to2);
+        assertThat(tos)
+                .extracting(DeviceOperationResultTO::getOperation, DeviceOperationResultTO::getModbusDevice, DeviceOperationResultTO::getMeasurement, DeviceOperationResultTO::getTimeOfMeasurement, DeviceOperationResultTO::getRemoveButton)
+                .containsExactly(tuple(BAT_BATTERY_TEMPERATURE, CAN_BUS_BMS, null, null, null));
     }
+
 }

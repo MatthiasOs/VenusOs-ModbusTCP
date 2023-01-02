@@ -25,11 +25,11 @@ public class DeviceOperationResultTO implements Serializable {
     @NonNull
     private final ModbusDevice modbusDevice;
     @Setter
-    private LocalDateTime timeOfMeasurement;
+    private transient LocalDateTime timeOfMeasurement;
     @Setter
-    private String measurement;
+    private transient String measurement;
     @Setter
-    private JButton removeButton;
+    private transient JButton removeButton;
 
     public DeviceOperationResultTO(ModbusOperation operation, ModbusDevice modbusDevice, JButton removeButton) {
         this.operation = operation;
