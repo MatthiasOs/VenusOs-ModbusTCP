@@ -8,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Reads in the Data from the Excel Sheet CCGX-Modbus-TCP-register-list
@@ -27,7 +28,7 @@ public class ExcelListReader {
         try (InputStream inputStream = getInputStream()) {
             List<ModbusOperation> operations = Reader.of(ModbusOperation.class).from(inputStream).sheet(OPERATIONS_SHEET_NAME).list();
             // Filter not parseable rows
-            return operations.stream().filter(o -> o.getAddress() != null).collect(Collectors.toList());
+            return operations.stream().filter(o -> o.getAddress() != null).collect(toList());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -37,7 +38,7 @@ public class ExcelListReader {
         try (InputStream inputStream = getInputStream()) {
             List<ModbusDevice> devices = Reader.of(ModbusDevice.class).from(inputStream).sheet(DEVICES_SHEET_NAME).list();
             // Filter not parseable rows
-            return devices.stream().filter(d -> d.getUnitId() != null).collect(Collectors.toList());
+            return devices.stream().filter(d -> d.getUnitId() != null).collect(toList());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
