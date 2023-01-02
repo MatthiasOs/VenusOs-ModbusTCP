@@ -354,18 +354,8 @@ public class ModbusTCPGUI {
             public void actionPerformed(ActionEvent e) {
                 List<DeviceOperationResultTO> tosToSave = new ArrayList<>(resultEventList);
                 if (!tosToSave.isEmpty()) {
-                    // Remove old Times/Results for TOs
-                    removeIrrelevantValues(tosToSave);
                     serializeTOs(tosToSave);
                 }
-            }
-
-            private void removeIrrelevantValues(List<DeviceOperationResultTO> tosToSave) {
-                tosToSave.forEach(to -> {
-                    to.setMeasurement(null);
-                    to.setTimeOfMeasurement(null);
-                    to.setRemoveButton(null);
-                });
             }
 
             private void serializeTOs(List<DeviceOperationResultTO> tosToSave) {
