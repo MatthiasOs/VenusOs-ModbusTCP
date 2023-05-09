@@ -9,6 +9,8 @@ import com.ghgande.j2mod.modbus.ModbusException;
 import com.ghgande.j2mod.modbus.ModbusSlaveException;
 import com.github.weisj.darklaf.LafManager;
 import com.github.weisj.darklaf.theme.SolarizedDarkTheme;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -23,16 +25,18 @@ import lombok.extern.java.Log;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.net.URI;
 import java.net.URL;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -41,21 +45,21 @@ import java.util.Optional;
 import java.util.logging.Level;
 
 /**
- * Example Programm with Swing GUI
- *
  * @author ossi
+ * @see <a href="https://github.com/CommentSectionScientist/VenusOs-ModbusTCP">VenusOs-ModbusTCP</a>
  */
 @Log
 public class ModbusTCPGUI {
 
-    private static final String FILE_ENDING = "modbustcp";
+    private static final String FILE_ENDING = "json";
     private static final String FILE_ENDING_WITH_DOT = "." + FILE_ENDING;
     private static final String IP_VICTRON = "192.168.0.81";
     private static final int MODBUS_DEFAULT_PORT = 502;
     private static final CellConstraints CC = new CellConstraints();
 
     private static final String OPERATIONS_DEVICES_FILENAME = "CCGX-Modbus-TCP-register-list-2.53.xlsx";
-    private static final String GITHUB_URL = "https://github.com/CommentSectionScientist/modbustcp";
+    private static final String GITHUB_URL = "https://github.com/CommentSectionScientist/VenusOs-ModbusTCP";
+    private final Gson gson = new Gson();
     private final JFrame frame;
     private ModbusTCPReader modbusReader;
 
@@ -80,12 +84,11 @@ public class ModbusTCPGUI {
     }
 
     public ModbusTCPGUI(String fileName) {
-        // Laf has to be set first
         setLookAndFeel();
         ExcelListReader operationDevicesReader = new ExcelListReader(fileName);
         deviceList = operationDevicesReader.readDevices();
         operationList = operationDevicesReader.readOperations();
-        frame = new JFrame("ModbusTCP");
+        frame = new JFrame("VenusOS ModbusTCP");
         frame.setJMenuBar(createMenu());
         frame.setIconImage(getIcon());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -129,7 +132,8 @@ public class ModbusTCPGUI {
     }
 
     private Image getIcon() {
-        URL resource = getClass().getClassLoader().getResource("SolarPanel.png");
+        URL resource = getClass().getClassLoader()
+                                 .getResource("SolarPanel.png");
         if (resource != null) {
             return new ImageIcon(resource).getImage();
         } else {
@@ -162,16 +166,19 @@ public class ModbusTCPGUI {
     }
 
     private JPanel createReadPanel() {
-        FormLayout layout = new FormLayout("3dlu,122dlu:g,3dlu,122dlu:g,5dlu,224dlu:g,3dlu,20dlu", "3dlu,15dlu,20dlu,1dlu,20dlu,170dlu,3dlu,p,3dlu");
+        FormLayout layout = new FormLayout("3dlu,122dlu:g,3dlu,122dlu:g,3dlu,122dlu:g,3dlu,122dlu:g,3dlu,20dlu", "3dlu,p,3dlu,15dlu,20dlu,1dlu,20dlu,170dlu,3dlu,p,3dlu");
         PanelBuilder builder = new PanelBuilder(layout);
-        builder.add(createTablePane(), CC.xywh(2, 2, 5, 5));
+        builder.add(createTablePane(), CC.xywh(2, 4, 7, 5));
 
-        builder.add(createMoveUpButton(), CC.xy(8, 3));
-        builder.add(createMoveDownButton(), CC.xy(8, 5));
+        builder.add(createLoadButton(), CC.xyw(2, 2, 3));
+        builder.add(createSaveButton(), CC.xyw(6, 2, 3));
 
-        builder.add(createSaveButton(), CC.xy(2, 8));
-        builder.add(createLoadButton(), CC.xy(4, 8));
-        builder.add(createReadButton(), CC.xy(6, 8));
+        builder.add(createRemoveButton(), CC.xyw(2, 10, 3));
+        builder.add(createReadButton(), CC.xyw(6, 10, 3));
+
+        builder.add(createMoveUpButton(), CC.xy(10, 5));
+        builder.add(createMoveDownButton(), CC.xy(10, 7));
+
         return builder.getPanel();
     }
 
@@ -187,39 +194,20 @@ public class ModbusTCPGUI {
     private JComponent createTablePane() {
         AdvancedTableModel<DeviceOperationResultTO> tableModel = createModel();
         JTable modbusOperationDeviceTable = new JTable(tableModel);
-        modbusOperationDeviceTable.getColumn(modbusOperationDeviceTable.getColumnName(4)).setCellRenderer(new JButtonRenderer());
-        modbusOperationDeviceTable.getColumn(modbusOperationDeviceTable.getColumnName(4)).setCellEditor(new JButtonCellEditor());
         TableColumnModel columnModel = modbusOperationDeviceTable.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(235);
-        columnModel.getColumn(1).setPreferredWidth(260);
-        columnModel.getColumn(2).setPreferredWidth(115);
-        columnModel.getColumn(3).setPreferredWidth(360);
-        columnModel.getColumn(4).setPreferredWidth(25);
+        columnModel.getColumn(0)
+                   .setPreferredWidth(235);
+        columnModel.getColumn(1)
+                   .setPreferredWidth(260);
+        columnModel.getColumn(2)
+                   .setPreferredWidth(150);
+        columnModel.getColumn(3)
+                   .setPreferredWidth(430);
         modbusOperationDeviceTable.setColumnSelectionAllowed(false);
         selectionModel = new DefaultEventSelectionModel<>(resultEventList);
-        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        selectionModel.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         modbusOperationDeviceTable.setSelectionModel(selectionModel);
         return new JScrollPane(modbusOperationDeviceTable);
-    }
-
-    private class JButtonCellEditor extends AbstractCellEditor implements TableCellEditor {
-
-        private static final long serialVersionUID = 1L;
-
-        public Object getCellEditorValue() {
-            return null;
-        }
-
-        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-            return resultEventList.get(row).getRemoveButton();
-        }
-    }
-
-    private class JButtonRenderer implements TableCellRenderer {
-
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            return resultEventList.get(row).getRemoveButton();
-        }
     }
 
     private JComponent createWriteInputLabel() {
@@ -358,15 +346,15 @@ public class ModbusTCPGUI {
                     int response = chooser.showOpenDialog(null);
                     if (response == JFileChooser.APPROVE_OPTION) {
                         File f = getFileWithEnding(chooser.getSelectedFile());
-                        serializeTOs(f, tosToSave);
+                        write(f, tosToSave);
                     }
                 }
             }
 
-            private void serializeTOs(File f, List<DeviceOperationResultTO> tosToSave) {
-                try (FileOutputStream fos = new FileOutputStream(f); ObjectOutputStream oos = new ObjectOutputStream(fos)) {
-                    oos.writeObject(tosToSave);
-                    oos.flush();
+            private void write(File f, List<DeviceOperationResultTO> tosToSave) {
+                String json = gson.toJson(tosToSave);
+                try (PrintStream out = new PrintStream(Files.newOutputStream(f.toPath()))) {
+                    out.print(json);
                 } catch (IOException e) {
                     showErrorDialog(e, e.getMessage());
                 }
@@ -374,14 +362,17 @@ public class ModbusTCPGUI {
 
             private File getFileWithEnding(File selectedFile) {
                 Optional<String> extension = getExtensionByStringHandling(selectedFile.getName());
-                if (!extension.isPresent() || !extension.get().equalsIgnoreCase(FILE_ENDING)) {
+                if (!extension.isPresent() || !extension.get()
+                                                        .equalsIgnoreCase(FILE_ENDING)) {
                     return new File(selectedFile + FILE_ENDING_WITH_DOT);
                 }
                 return selectedFile;
             }
 
             private Optional<String> getExtensionByStringHandling(String filename) {
-                return Optional.ofNullable(filename).filter(f -> f.contains(".")).map(f -> f.substring(filename.lastIndexOf('.') + 1));
+                return Optional.ofNullable(filename)
+                               .filter(f -> f.contains("."))
+                               .map(f -> f.substring(filename.lastIndexOf('.') + 1));
             }
 
             private JFileChooser createSaveChooser() {
@@ -407,8 +398,8 @@ public class ModbusTCPGUI {
                 JFileChooser chooser = createLoadChooser();
                 int response = chooser.showOpenDialog(null);
                 if (response == JFileChooser.APPROVE_OPTION) {
-                    List<DeviceOperationResultTO> inputTOs = readTOs(new File(chooser.getSelectedFile().getAbsolutePath()));
-                    inputTOs.forEach(to -> to.setRemoveButton(createRemoveButton()));
+                    List<DeviceOperationResultTO> inputTOs = readTOs(new File(chooser.getSelectedFile()
+                                                                                     .getAbsolutePath()));
                     resultEventList.clear();
                     selectionModel.clearSelection();
                     resultEventList.addAll(inputTOs);
@@ -426,15 +417,14 @@ public class ModbusTCPGUI {
                 return chooser;
             }
 
-            @SuppressWarnings("unchecked")
             private List<DeviceOperationResultTO> readTOs(File file) {
-                List<DeviceOperationResultTO> inputTOs = new ArrayList<>();
-                try (FileInputStream fis = new FileInputStream(file); ObjectInputStream ois = new ObjectInputStream(fis)) {
-                    inputTOs = (List<DeviceOperationResultTO>) ois.readObject();
-                } catch (IOException | ClassNotFoundException e1) {
-                    showErrorDialog(e1, e1.getMessage());
+                List<DeviceOperationResultTO> tos = new ArrayList<>();
+                try (FileReader fr = new FileReader(file)) {
+                    tos = gson.fromJson(fr, new TypeToken<List<DeviceOperationResultTO>>() {});
+                } catch (IOException e) {
+                    showErrorDialog(e, e.getMessage());
                 }
-                return inputTOs;
+                return tos;
             }
         });
         return load;
@@ -443,7 +433,7 @@ public class ModbusTCPGUI {
     private JComponent createAddButton() {
         JButton add = new JButton("+");
         add.addActionListener(l -> {
-            DeviceOperationResultTO newItem = new DeviceOperationResultTO(getSelectedItem(operations), getSelectedItem(devices), createRemoveButton());
+            DeviceOperationResultTO newItem = new DeviceOperationResultTO(getSelectedItem(operations), getSelectedItem(devices));
             resultEventList.add(newItem);
             int newIndex = resultEventList.indexOf(newItem);
             selectionModel.setSelectionInterval(newIndex, newIndex);
@@ -452,9 +442,10 @@ public class ModbusTCPGUI {
     }
 
     private JButton createRemoveButton() {
-        JButton remove = new JButton("-");
+        JButton remove = new JButton("Remove Selected");
         remove.addActionListener(l -> {
-            resultEventList.remove(selectionModel.getSelected().get(0));
+            resultEventList.remove(selectionModel.getSelected()
+                                                 .get(0));
             if (!resultEventList.isEmpty()) {
                 selectionModel.setSelectionInterval(0, 0);
             }
@@ -475,13 +466,15 @@ public class ModbusTCPGUI {
     private final class WriteAction implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            if (writeInput.getText().isEmpty()) {
+            if (writeInput.getText()
+                          .isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "No input value specified!", "Write input field empty", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             ModbusTCPWriter modbusWriter = writerFromAdressfield();
             try {
-                modbusWriter.writeOperationFromDevice(getSelectedItem(operations), getSelectedItem(devices), Integer.parseInt(writeInput.getText().trim()));
+                modbusWriter.writeOperationFromDevice(getSelectedItem(operations), getSelectedItem(devices), Integer.parseInt(writeInput.getText()
+                                                                                                                                        .trim()));
                 JOptionPane.showMessageDialog(frame, "Write successful!");
             } catch (ModbusSlaveException e1) {
                 showErrorDialog(e1, "The Device doesn't support this operation!\n" + e1.getMessage());
@@ -493,12 +486,15 @@ public class ModbusTCPGUI {
         }
 
         private ModbusTCPWriter writerFromAdressfield() {
-            return new ModbusTCPWriter(ipAddress.getText().trim(), Integer.parseInt(port.getText().trim()));
+            return new ModbusTCPWriter(ipAddress.getText()
+                                                .trim(), Integer.parseInt(port.getText()
+                                                                              .trim()));
         }
     }
 
     private void showErrorDialog(Exception e, String msg) {
-        JOptionPane.showMessageDialog(frame, msg, e.getClass().getSimpleName(), JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(frame, msg, e.getClass()
+                                                   .getSimpleName(), JOptionPane.ERROR_MESSAGE);
     }
 
     private final class ReadAllAction implements ActionListener {
@@ -521,11 +517,15 @@ public class ModbusTCPGUI {
                 return "Device doesn't support Operation: " + e1.getMessage();
             } catch (ModbusException e1) {
                 return "ModbusException: " + e1.getMessage();
+            } catch (Exception e) {
+                return e.getMessage();
             }
         }
 
         private ModbusTCPReader readerFromAddressfield() {
-            return new ModbusTCPReader(ipAddress.getText().trim(), Integer.parseInt(port.getText().trim()));
+            return new ModbusTCPReader(ipAddress.getText()
+                                                .trim(), Integer.parseInt(port.getText()
+                                                                              .trim()));
         }
     }
 }

@@ -30,8 +30,6 @@ class DeviceOperationResultTableFormat implements WritableTableFormat<DeviceOper
                 return "Time";
             case 3:
                 return "Result";
-            case 4:
-                return "-";
             default:
                 return null;
         }
@@ -41,15 +39,15 @@ class DeviceOperationResultTableFormat implements WritableTableFormat<DeviceOper
     public Object getColumnValue(DeviceOperationResultTO baseObject, int column) {
         switch (column) {
             case 0:
-                return baseObject.getOperation().getName();
+                return baseObject.getOperation()
+                                 .getName();
             case 1:
-                return baseObject.getModbusDevice().getName();
+                return baseObject.getModbusDevice()
+                                 .getName();
             case 2:
                 return baseObject.getTimeOfMeasurement() != null ? ISO_DATE.format(baseObject.getTimeOfMeasurement()) : null;
             case 3:
                 return baseObject.getMeasurement();
-            case 4:
-                return "-";
             default:
                 return null;
         }
@@ -57,8 +55,7 @@ class DeviceOperationResultTableFormat implements WritableTableFormat<DeviceOper
 
     @Override
     public boolean isEditable(DeviceOperationResultTO baseObject, int column) {
-        // for the buttons in the column to be clickable the column has to be editable
-        return column == 4;
+        return false;
     }
 
     @Override
