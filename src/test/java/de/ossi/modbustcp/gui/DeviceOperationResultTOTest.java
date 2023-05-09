@@ -22,7 +22,7 @@ import static org.assertj.core.groups.Tuple.tuple;
 class DeviceOperationResultTOTest {
 
     private static final DBusUnit CELSIUS = new DBusUnit("Degrees celsius");
-    protected static final ModbusOperation BAT_BATTERY_TEMPERATURE = new ModbusOperation(Category.BATTERY, "Battery temperature", 262, Type.INT16, 10D, "", "/Dc/0/Temperature",
+    private static final ModbusOperation BAT_BATTERY_TEMPERATURE = new ModbusOperation(Category.BATTERY, "Battery temperature", 262, Type.INT16, 10D, "", "/Dc/0/Temperature",
             AccessMode.READ_ONLY, CELSIUS, "");
     private static final ModbusDevice CAN_BUS_BMS = new ModbusDevice(225, 512, "CAN-bus BMS");
 

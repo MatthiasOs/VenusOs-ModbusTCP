@@ -2,12 +2,10 @@ package de.ossi.modbustcp.gui;
 
 import de.ossi.modbustcp.data.operation.ModbusDevice;
 import de.ossi.modbustcp.data.operation.ModbusOperation;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
-import javax.swing.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -16,7 +14,6 @@ import java.time.LocalDateTime;
  *
  * @author ossi
  */
-@EqualsAndHashCode(exclude = "removeButton")
 @Getter
 public class DeviceOperationResultTO implements Serializable {
     private static final long serialVersionUID = 6004098018019229429L;
@@ -28,12 +25,9 @@ public class DeviceOperationResultTO implements Serializable {
     private transient LocalDateTime timeOfMeasurement;
     @Setter
     private transient String measurement;
-    @Setter
-    private transient JButton removeButton;
 
-    public DeviceOperationResultTO(ModbusOperation operation, ModbusDevice modbusDevice, JButton removeButton) {
+    public DeviceOperationResultTO(ModbusOperation operation, ModbusDevice modbusDevice) {
         this.operation = operation;
         this.modbusDevice = modbusDevice;
-        this.removeButton = removeButton;
     }
 }
