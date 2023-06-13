@@ -38,10 +38,8 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -53,7 +51,7 @@ public class ModbusTCPGUI {
 
     private static final String FILE_ENDING = "json";
     private static final String FILE_ENDING_WITH_DOT = "." + FILE_ENDING;
-    private static final String IP_VICTRON = "192.168.0.81";
+    private static final String DEFAULT_IP = "192.168.0.81";
     private static final int MODBUS_DEFAULT_PORT = 502;
     private static final CellConstraints CC = new CellConstraints();
 
@@ -216,7 +214,7 @@ public class ModbusTCPGUI {
                    .setPreferredWidth(430);
         modbusOperationDeviceTable.setColumnSelectionAllowed(false);
         selectionModel = new DefaultEventSelectionModel<>(resultEventList);
-        selectionModel.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         modbusOperationDeviceTable.setSelectionModel(selectionModel);
         return new JScrollPane(modbusOperationDeviceTable);
     }
@@ -242,7 +240,7 @@ public class ModbusTCPGUI {
     }
 
     private JComponent createIpAdressField() {
-        ipAddress = new JTextField(IP_VICTRON);
+        ipAddress = new JTextField(DEFAULT_IP);
         return ipAddress;
     }
 
@@ -290,43 +288,35 @@ public class ModbusTCPGUI {
 
         @Override
         public void actionPerformed(ActionEvent arg0) {
-            EventList<DeviceOperationResultTO> selectedItems = selectionModel.getSelected();
-            if (selectedItems.isEmpty()) {
+            int index = selectionModel.getLeadSelectionIndex();
+            if (index == -1) {
                 return;
             }
-            move(selectedItems.get(0));
+            move(index);
         }
 
-        protected abstract void move(DeviceOperationResultTO item);
+        protected abstract void move(int index);
     }
 
     private class MoveUpAction extends MoveItemAction {
         @Override
-        protected void move(DeviceOperationResultTO item) {
-            // Only one item is selected when move is triggered
-            int indexOld = selectionModel.getLeadSelectionIndex();
-            if (indexOld == 0) {
-                return;
+        protected void move(int index) {
+            int indexNew = index - 1;
+            if (indexNew >= 0) {
+                Collections.swap(resultEventList, index, indexNew);
+                selectionModel.setSelectionInterval(indexNew, indexNew);
             }
-            resultEventList.remove(indexOld);
-            int indexNew = indexOld - 1;
-            resultEventList.add(indexNew, item);
-            selectionModel.setSelectionInterval(indexNew, indexNew);
         }
     }
 
     private class MoveDownAction extends MoveItemAction {
         @Override
-        protected void move(DeviceOperationResultTO item) {
-            // Only one item is selected when move is triggered
-            int indexOld = selectionModel.getLeadSelectionIndex();
-            if (indexOld == resultEventList.size() - 1) {
-                return;
+        protected void move(int index) {
+            int indexNew = index + 1;
+            if (indexNew < resultEventList.size()) {
+                Collections.swap(resultEventList, index, indexNew);
+                selectionModel.setSelectionInterval(indexNew, indexNew);
             }
-            resultEventList.remove(indexOld);
-            int indexNew = indexOld + 1;
-            resultEventList.add(indexNew, item);
-            selectionModel.setSelectionInterval(indexNew, indexNew);
         }
     }
 
@@ -443,10 +433,8 @@ public class ModbusTCPGUI {
     private JComponent createAddButton() {
         JButton add = new JButton("+");
         add.addActionListener(l -> {
-            DeviceOperationResultTO newItem = new DeviceOperationResultTO(getSelectedItem(operations), getSelectedItem(devices));
+            DeviceOperationResultTO newItem = new DeviceOperationResultTO(selected(operations), selected(devices));
             resultEventList.add(newItem);
-            int newIndex = resultEventList.indexOf(newItem);
-            selectionModel.setSelectionInterval(newIndex, newIndex);
         });
         return add;
     }
@@ -454,8 +442,7 @@ public class ModbusTCPGUI {
     private JButton createRemoveButton() {
         JButton remove = new JButton("Remove Selected");
         remove.addActionListener(l -> {
-            resultEventList.remove(selectionModel.getSelected()
-                                                 .get(0));
+            resultEventList.removeAll(selectionModel.getSelected());
             if (!resultEventList.isEmpty()) {
                 selectionModel.setSelectionInterval(0, 0);
             }
@@ -469,7 +456,7 @@ public class ModbusTCPGUI {
         return write;
     }
 
-    private <T> T getSelectedItem(JComboBox<T> cb) {
+    private <T> T selected(JComboBox<T> cb) {
         return cb.getItemAt(cb.getSelectedIndex());
     }
 
@@ -483,8 +470,8 @@ public class ModbusTCPGUI {
             }
             ModbusTCPWriter modbusWriter = writerFromAdressfield();
             try {
-                modbusWriter.writeOperationFromDevice(getSelectedItem(operations), getSelectedItem(devices), Integer.parseInt(writeInput.getText()
-                                                                                                                                        .trim()));
+                modbusWriter.writeOperationFromDevice(selected(operations), selected(devices), Integer.parseInt(writeInput.getText()
+                                                                                                                          .trim()));
                 JOptionPane.showMessageDialog(frame, "Write successful!");
             } catch (ModbusSlaveException e1) {
                 showErrorDialog(e1, "The Device doesn't support this operation!\n" + e1.getMessage());
