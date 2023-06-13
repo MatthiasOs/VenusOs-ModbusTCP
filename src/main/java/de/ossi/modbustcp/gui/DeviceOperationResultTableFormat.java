@@ -40,10 +40,10 @@ class DeviceOperationResultTableFormat implements WritableTableFormat<DeviceOper
         switch (column) {
             case 0:
                 return baseObject.getOperation()
-                                 .getName();
+                                 .toString();
             case 1:
                 return baseObject.getModbusDevice()
-                                 .getName();
+                                 .toString();
             case 2:
                 return baseObject.getTimeOfMeasurement() != null ? ISO_DATE.format(baseObject.getTimeOfMeasurement()) : null;
             case 3:
