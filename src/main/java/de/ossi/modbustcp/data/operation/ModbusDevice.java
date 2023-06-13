@@ -32,4 +32,8 @@ public class ModbusDevice implements Serializable {
     public String toString() {
         return name + " with UnitId: " + unitId;
     }
+
+    public boolean isValid() {
+        return unitId != null && deviceInstance != null;
+    }
 }

@@ -57,7 +57,6 @@ public class ModbusTCPGUI {
     private static final int MODBUS_DEFAULT_PORT = 502;
     private static final CellConstraints CC = new CellConstraints();
 
-    private static final String OPERATIONS_DEVICES_FILENAME = "CCGX-Modbus-TCP-register-list-2.53.xlsx";
     private static final String GITHUB_URL = "https://github.com/CommentSectionScientist/VenusOs-ModbusTCP";
     private final Gson gson = new Gson();
     private final JFrame frame;
@@ -69,8 +68,8 @@ public class ModbusTCPGUI {
     private JComboBox<ModbusOperation> operations;
     private JComboBox<ModbusDevice> devices;
     private EventList<DeviceOperationResultTO> resultEventList;
-    private final List<ModbusDevice> deviceList;
-    private final List<ModbusOperation> operationList;
+    private List<ModbusDevice> deviceList = new ArrayList<>();
+    private List<ModbusOperation> operationList = new ArrayList<>();
     private DefaultEventSelectionModel<DeviceOperationResultTO> selectionModel;
 
     private AdvancedTableModel<DeviceOperationResultTO> createModel() {
@@ -79,15 +78,12 @@ public class ModbusTCPGUI {
     }
 
     public static void main(String[] args) {
-        String fileName = args.length != 0 ? args[0] : OPERATIONS_DEVICES_FILENAME;
-        EventQueue.invokeLater(() -> new ModbusTCPGUI(fileName));
+        EventQueue.invokeLater(ModbusTCPGUI::new);
     }
 
-    public ModbusTCPGUI(String fileName) {
+    public ModbusTCPGUI() {
         setLookAndFeel();
-        ExcelListReader operationDevicesReader = new ExcelListReader(fileName);
-        deviceList = operationDevicesReader.readDevices();
-        operationList = operationDevicesReader.readOperations();
+        initTableFromExcel();
         frame = new JFrame("VenusOS ModbusTCP");
         frame.setJMenuBar(createMenu());
         frame.setIconImage(getIcon());
@@ -99,12 +95,27 @@ public class ModbusTCPGUI {
         UIManager.put("FileChooser.cancelButtonText", "Cancel");
     }
 
+    private void initTableFromExcel() {
+        ExcelFileChooser excelFileChooser = new ExcelFileChooser();
+        int response = excelFileChooser.showOpenDialog(null);
+        if (response == JFileChooser.APPROVE_OPTION) {
+            ExcelListReader operationDevicesReader = new ExcelListReader(excelFileChooser.getSelectedFile());
+            deviceList = operationDevicesReader.readDevices();
+            operationList = operationDevicesReader.readOperations();
+        } else {
+            showErrorDialog(new IllegalArgumentException(), "'CCGX-Modbus-TCP-register' Excel has to be provided!");
+            System.exit(1);
+        }
+    }
+
     private JMenuBar createMenu() {
         JMenuBar menuBar = new JMenuBar();
         JMenu menu = new JMenu("File");
-        JMenuItem menuItem = new JMenuItem("GitHub");
-        menuItem.addActionListener(new OpenGitHubAction());
-        menu.add(menuItem);
+
+        JMenuItem gitHubItem = new JMenuItem("GitHub");
+        gitHubItem.addActionListener(new OpenGitHubAction());
+        menu.add(gitHubItem);
+
         menuBar.add(menu);
         return menuBar;
     }
@@ -383,7 +394,6 @@ public class ModbusTCPGUI {
                 chooser.setApproveButtonText("Save");
                 chooser.setDialogTitle("Save");
                 chooser.setFileFilter(fileFilter);
-
                 return chooser;
             }
         });
