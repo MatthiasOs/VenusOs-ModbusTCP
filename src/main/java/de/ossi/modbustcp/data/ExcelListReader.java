@@ -29,6 +29,8 @@ public class ExcelListReader {
         }
         List<ModbusOperation> operations = Reader.of(ModbusOperation.class)
                                                  .from(file)
+                                                 //Skipping the "NOTE" row
+                                                 .skipFirstNRows(1)
                                                  .sheet(OPERATIONS_SHEET_NAME)
                                                  .list();
         return operations.stream()

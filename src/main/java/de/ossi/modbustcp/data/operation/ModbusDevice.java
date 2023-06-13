@@ -30,7 +30,7 @@ public class ModbusDevice implements Serializable {
 
     @Override
     public String toString() {
-        return name + " with UnitId: " + unitId;
+        return name + " (UnitId: " + unitId + ")";
     }
 
     public boolean isValid() {

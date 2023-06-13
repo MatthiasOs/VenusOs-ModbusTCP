@@ -58,11 +58,7 @@ public class ModbusOperation implements Serializable {
 
     @Override
     public String toString() {
-        return category + ": " + description + " on register: " + address;
-    }
-
-    public String getName() {
-        return category + ": " + description;
+        return category + ": " + description + " (Register: " + address + ")";
     }
 
     public boolean isValid() {
