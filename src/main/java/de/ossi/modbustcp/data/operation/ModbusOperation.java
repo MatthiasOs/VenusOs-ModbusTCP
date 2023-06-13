@@ -64,4 +64,8 @@ public class ModbusOperation implements Serializable {
     public String getName() {
         return category + ": " + description;
     }
+
+    public boolean isValid() {
+        return address != null;
+    }
 }
