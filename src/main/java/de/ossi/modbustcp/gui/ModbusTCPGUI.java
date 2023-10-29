@@ -363,7 +363,7 @@ public class ModbusTCPGUI {
 
             private File getFileWithEnding(File selectedFile) {
                 Optional<String> extension = getExtensionByStringHandling(selectedFile.getName());
-                if (!extension.isPresent() || !extension.get()
+                if (extension.isEmpty() || !extension.get()
                                                         .equalsIgnoreCase(FILE_ENDING)) {
                     return new File(selectedFile + FILE_ENDING_WITH_DOT);
                 }
