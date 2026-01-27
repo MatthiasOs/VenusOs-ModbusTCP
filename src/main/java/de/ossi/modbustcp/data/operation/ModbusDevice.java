@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -19,6 +20,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 public class ModbusDevice implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -7470247539480220899L;
 
     @Column(index = 0, name = "Unit ID")

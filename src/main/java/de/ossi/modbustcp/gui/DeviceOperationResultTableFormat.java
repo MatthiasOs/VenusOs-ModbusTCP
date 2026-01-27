@@ -21,36 +21,25 @@ class DeviceOperationResultTableFormat implements WritableTableFormat<DeviceOper
 
     @Override
     public String getColumnName(int column) {
-        switch (column) {
-            case 0:
-                return "Operation";
-            case 1:
-                return "Device";
-            case 2:
-                return "Time";
-            case 3:
-                return "Result";
-            default:
-                return null;
-        }
+        return switch (column) {
+            case 0 -> "Operation";
+            case 1 -> "Device";
+            case 2 -> "Time";
+            case 3 -> "Result";
+            default -> null;
+        };
     }
 
     @Override
     public Object getColumnValue(DeviceOperationResultTO baseObject, int column) {
-        switch (column) {
-            case 0:
-                return baseObject.getOperation()
-                                 .toString();
-            case 1:
-                return baseObject.getModbusDevice()
-                                 .toString();
-            case 2:
-                return baseObject.getTimeOfMeasurement() != null ? ISO_DATE.format(baseObject.getTimeOfMeasurement()) : null;
-            case 3:
-                return baseObject.getMeasurement();
-            default:
-                return null;
-        }
+        return switch (column) {
+            case 0 -> baseObject.getOperation().toString();
+            case 1 -> baseObject.getModbusDevice().toString();
+            case 2 ->
+                    baseObject.getTimeOfMeasurement() != null ? ISO_DATE.format(baseObject.getTimeOfMeasurement()) : null;
+            case 3 -> baseObject.getMeasurement();
+            default -> null;
+        };
     }
 
     @Override

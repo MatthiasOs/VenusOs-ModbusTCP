@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
  */
 @Getter
 public class DeviceOperationResultTO implements Serializable {
+    @Serial
     private static final long serialVersionUID = 6004098018019229429L;
     @NonNull
     private final ModbusOperation operation;

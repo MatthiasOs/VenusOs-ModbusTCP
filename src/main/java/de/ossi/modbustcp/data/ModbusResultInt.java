@@ -54,16 +54,14 @@ public class ModbusResultInt {
 
 	public String getValueOfOperationWithUnit() {
 		if (operation.getDbusUnit().isSpecialUnit()) {
-			return new StringBuilder(DBusSpecialUnitParser.parse(operation.getDbusUnit(), value))
-					.append(" [")
-					.append(operation.getDbusUnit().getValue())
-					.append("]")
-					.toString();
+			return DBusSpecialUnitParser.parse(operation.getDbusUnit(), value) +
+                    " [" +
+                    operation.getDbusUnit().getValue() +
+                    "]";
 		}
-		return new StringBuilder(String.valueOf(getValueInRange()))
-				.append(" ")
-				.append(operation.getDbusUnit().getValue())
-				.toString();
+		return String.valueOf(getValueInRange()) +
+                " " +
+                operation.getDbusUnit().getValue();
 	}
 
 	private double scaleValue(ModbusOperation operation, Double registerValue) {

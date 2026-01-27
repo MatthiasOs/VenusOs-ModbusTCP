@@ -1,5 +1,6 @@
 package de.ossi.modbustcp.data.unit;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import lombok.AllArgsConstructor;
@@ -14,7 +15,8 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "value")
 public class DBusUnit implements Serializable {
 
-	private static final long serialVersionUID = 1496887712045628303L;
+	@Serial
+    private static final long serialVersionUID = 1496887712045628303L;
 
 	@Getter
 	private String value;

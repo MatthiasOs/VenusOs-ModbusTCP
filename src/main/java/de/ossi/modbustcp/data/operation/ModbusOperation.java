@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -24,6 +25,7 @@ import java.io.Serializable;
 @Getter
 public class ModbusOperation implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -300082385619843600L;
 
     @Column(index = 0, name = "dbus-service-name", converterClass = CategoryConverter.class)

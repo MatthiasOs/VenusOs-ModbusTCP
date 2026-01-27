@@ -38,8 +38,8 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
 
 /**
@@ -75,7 +75,7 @@ public class ModbusTCPGUI {
         return GlazedListsSwing.eventTableModel(resultEventList, new DeviceOperationResultTableFormat());
     }
 
-    public static void main(String[] args) {
+    static void main() {
         EventQueue.invokeLater(ModbusTCPGUI::new);
     }
 
@@ -142,7 +142,7 @@ public class ModbusTCPGUI {
 
     private Image getIcon() {
         URL resource = getClass().getClassLoader()
-                                 .getResource("SolarPanel.png");
+                .getResource("SolarPanel.png");
         if (resource != null) {
             return new ImageIcon(resource).getImage();
         } else {
@@ -205,13 +205,13 @@ public class ModbusTCPGUI {
         JTable modbusOperationDeviceTable = new JTable(tableModel);
         TableColumnModel columnModel = modbusOperationDeviceTable.getColumnModel();
         columnModel.getColumn(0)
-                   .setPreferredWidth(235);
+                .setPreferredWidth(235);
         columnModel.getColumn(1)
-                   .setPreferredWidth(260);
+                .setPreferredWidth(260);
         columnModel.getColumn(2)
-                   .setPreferredWidth(150);
+                .setPreferredWidth(150);
         columnModel.getColumn(3)
-                   .setPreferredWidth(430);
+                .setPreferredWidth(430);
         modbusOperationDeviceTable.setColumnSelectionAllowed(false);
         selectionModel = new DefaultEventSelectionModel<>(resultEventList);
         selectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -364,7 +364,7 @@ public class ModbusTCPGUI {
             private File getFileWithEnding(File selectedFile) {
                 Optional<String> extension = getExtensionByStringHandling(selectedFile.getName());
                 if (extension.isEmpty() || !extension.get()
-                                                        .equalsIgnoreCase(FILE_ENDING)) {
+                        .equalsIgnoreCase(FILE_ENDING)) {
                     return new File(selectedFile + FILE_ENDING_WITH_DOT);
                 }
                 return selectedFile;
@@ -372,8 +372,8 @@ public class ModbusTCPGUI {
 
             private Optional<String> getExtensionByStringHandling(String filename) {
                 return Optional.ofNullable(filename)
-                               .filter(f -> f.contains("."))
-                               .map(f -> f.substring(filename.lastIndexOf('.') + 1));
+                        .filter(f -> f.contains("."))
+                        .map(f -> f.substring(filename.lastIndexOf('.') + 1));
             }
 
             private JFileChooser createSaveChooser() {
@@ -399,7 +399,7 @@ public class ModbusTCPGUI {
                 int response = chooser.showOpenDialog(null);
                 if (response == JFileChooser.APPROVE_OPTION) {
                     List<DeviceOperationResultTO> inputTOs = readTOs(new File(chooser.getSelectedFile()
-                                                                                     .getAbsolutePath()));
+                            .getAbsolutePath()));
                     resultEventList.clear();
                     selectionModel.clearSelection();
                     resultEventList.addAll(inputTOs);
@@ -420,7 +420,8 @@ public class ModbusTCPGUI {
             private List<DeviceOperationResultTO> readTOs(File file) {
                 List<DeviceOperationResultTO> tos = new ArrayList<>();
                 try (FileReader fr = new FileReader(file)) {
-                    tos = gson.fromJson(fr, new TypeToken<List<DeviceOperationResultTO>>() {});
+                    tos = gson.fromJson(fr, new TypeToken<>() {
+                    });
                 } catch (IOException e) {
                     showErrorDialog(e, e.getMessage());
                 }
@@ -432,7 +433,7 @@ public class ModbusTCPGUI {
 
     private JComponent createAddButton() {
         JButton add = new JButton("+");
-        add.addActionListener(l -> {
+        add.addActionListener(_ -> {
             DeviceOperationResultTO newItem = new DeviceOperationResultTO(selected(operations), selected(devices));
             resultEventList.add(newItem);
         });
@@ -441,7 +442,7 @@ public class ModbusTCPGUI {
 
     private JButton createRemoveButton() {
         JButton remove = new JButton("Remove Selected");
-        remove.addActionListener(l -> {
+        remove.addActionListener(_ -> {
             resultEventList.removeAll(selectionModel.getSelected());
             if (!resultEventList.isEmpty()) {
                 selectionModel.setSelectionInterval(0, 0);
@@ -464,14 +465,14 @@ public class ModbusTCPGUI {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (writeInput.getText()
-                          .isEmpty()) {
+                    .isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "No input value specified!", "Write input field empty", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             ModbusTCPWriter modbusWriter = writerFromAdressfield();
             try {
                 modbusWriter.writeOperationFromDevice(selected(operations), selected(devices), Integer.parseInt(writeInput.getText()
-                                                                                                                          .trim()));
+                        .trim()));
                 JOptionPane.showMessageDialog(frame, "Write successful!");
             } catch (ModbusSlaveException e1) {
                 showErrorDialog(e1, "The Device doesn't support this operation!\n" + e1.getMessage());
@@ -484,14 +485,14 @@ public class ModbusTCPGUI {
 
         private ModbusTCPWriter writerFromAdressfield() {
             return new ModbusTCPWriter(ipAddress.getText()
-                                                .trim(), Integer.parseInt(port.getText()
-                                                                              .trim()));
+                    .trim(), Integer.parseInt(port.getText()
+                    .trim()));
         }
     }
 
     private void showErrorDialog(Exception e, String msg) {
         JOptionPane.showMessageDialog(frame, msg, e.getClass()
-                                                   .getSimpleName(), JOptionPane.ERROR_MESSAGE);
+                .getSimpleName(), JOptionPane.ERROR_MESSAGE);
     }
 
     private final class ReadAllAction implements ActionListener {
@@ -521,8 +522,8 @@ public class ModbusTCPGUI {
 
         private ModbusTCPReader readerFromAddressfield() {
             return new ModbusTCPReader(ipAddress.getText()
-                                                .trim(), Integer.parseInt(port.getText()
-                                                                              .trim()));
+                    .trim(), Integer.parseInt(port.getText()
+                    .trim()));
         }
     }
 }
